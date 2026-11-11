@@ -1,0 +1,86 @@
+<fieldset
+  class="ui-radio-group"
+  [class.ui-radio-group--disabled]="isDisabled()"
+  [class.ui-radio-group--sm]="resolvedSize() === 'sm'"
+  [class.ui-radio-group--md]="resolvedSize() === 'md'"
+  [class.ui-radio-group--lg]="resolvedSize() === 'lg'"
+  [disabled]="isDisabled()"
+  [attr.aria-describedby]="
+    resolvedDescription() ? descriptionId : null
+  "
+  [attr.aria-label]="
+    resolvedLabel() ? null : (ariaLabel() || null)
+  "
+  [attr.aria-required]="isRequired()"
+>
+  @if (resolvedLabel()) {
+    <legend class="ui-radio-group__legend">
+      {{ resolvedLabel() }}
+
+      @if (isRequired()) {
+        <span class="ui-radio-group__required">*</span>
+      }
+    </legend>
+  }
+
+  @if (resolvedDescription()) {
+    <p
+      class="ui-radio-group__description"
+      [id]="descriptionId"
+    >
+      {{ resolvedDescription() }}
+    </p>
+  }
+
+  <div
+    class="ui-radio-group__options"
+    [class.ui-radio-group__options--horizontal]="
+      resolvedOrientation() === 'horizontal'
+    "
+    [class.ui-radio-group__options--vertical]="
+      resolvedOrientation() === 'vertical'
+    "
+  >
+    @for (option of options(); track $index; let i = $index) {
+      <label
+        class="ui-radio-group__option"
+        [class.ui-radio-group__option--disabled]="
+          isDisabled() || !!option.disabled
+        "
+        [for]="optionId(i)"
+      >
+        <input
+          class="ui-radio-group__input"
+          type="radio"
+          [id]="optionId(i)"
+          [name]="resolvedName()"
+          [value]="i"
+          [checked]="isSelected(option.value)"
+          [disabled]="isDisabled() || !!option.disabled"
+          [required]="isRequired()"
+          (change)="selectOption(option)"
+          (blur)="handleBlur()"
+        />
+
+        <span
+          class="ui-radio-group__control"
+          aria-hidden="true"
+        >
+          <span class="ui-radio-group__indicator"></span>
+        </span>
+
+        <span class="ui-radio-group__content">
+          <span class="ui-radio-group__option-label">
+            {{ option.label }}
+          </span>
+
+          @if (option.description) {
+            <span class="ui-radio-group__option-description">
+              {{ option.description }}
+            </span>
+          }
+        </span>
+      </label>
+    }
+  </div>
+</fieldset>

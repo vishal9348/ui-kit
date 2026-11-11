@@ -1,0 +1,64 @@
+
+<div
+  class="ui-checkbox"
+  [class.ui-checkbox--disabled]="isDisabled()"
+  [class.ui-checkbox--sm]="resolvedSize() === 'sm'"
+  [class.ui-checkbox--md]="resolvedSize() === 'md'"
+  [class.ui-checkbox--lg]="resolvedSize() === 'lg'"
+>
+  <label class="ui-checkbox__label">
+
+    <!-- Native Checkbox -->
+    <input
+      class="ui-checkbox__input"
+      type="checkbox"
+      [id]="id() || null"
+      [checked]="isChecked()"
+      [indeterminate]="isIndeterminate()"
+      [disabled]="isDisabled()"
+      [required]="isRequired()"
+      [attr.aria-label]="
+        resolvedLabel() ? null : ariaLabel() || null
+      "
+      [attr.aria-describedby]="descriptionId()"
+      (change)="handleChange($event)"
+      (blur)="handleBlur()"
+    />
+
+    <!-- Checkbox Visual -->
+    <span class="ui-checkbox__box" aria-hidden="true">
+      @if (isIndeterminate()) {
+        <span class="ui-checkbox__indeterminate"></span>
+      } @else if (isChecked()) {
+        <span class="ui-checkbox__checkmark"></span>
+      }
+    </span>
+
+    <!-- Label and Description -->
+    @if (resolvedLabel() || resolvedDescription()) {
+      <span class="ui-checkbox__content">
+
+        @if (resolvedLabel()) {
+          <span class="ui-checkbox__text">
+            {{ resolvedLabel() }}
+
+            @if (isRequired()) {
+              <span class="ui-checkbox__required">*</span>
+            }
+          </span>
+        }
+
+        @if (resolvedDescription()) {
+          <span
+            class="ui-checkbox__description"
+            [id]="descriptionId()"
+          >
+            {{ resolvedDescription() }}
+          </span>
+        }
+
+      </span>
+    }
+
+  </label>
+</div>

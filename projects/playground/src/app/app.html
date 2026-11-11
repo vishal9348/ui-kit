@@ -66,16 +66,24 @@
           <span class="nav-status">Ready</span>
         </button>
 
-        <button class="nav-item" disabled>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'checkbox'"
+          (click)="setActiveComponent('checkbox')"
+        >
           <span class="nav-icon">☑</span>
           Checkbox
-          <span class="coming-soon">Soon</span>
+          <span class="nav-status">Ready</span>
         </button>
 
-        <button class="nav-item" disabled>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'radio'"
+          (click)="setActiveComponent('radio')"
+        >
           <span class="nav-icon">◉</span>
           Radio
-          <span class="coming-soon">Soon</span>
+          <span class="nav-status">Ready</span>
         </button>
 
         <button class="nav-item" disabled>
@@ -125,7 +133,17 @@
         <span>Components</span>
         <span class="breadcrumb-separator">/</span>
         <strong>
-          {{ activeComponent() === 'button' ? 'Button' : 'Dropdown' }}
+          {{
+            activeComponent() === 'button'
+              ? 'Button'
+              : activeComponent() === 'dropdown'
+                ? 'Dropdown'
+                : activeComponent() === 'checkbox'
+                  ? 'Checkbox'
+                  : activeComponent() === 'radio'
+                    ? 'Radio Group'
+                    : 'Button'
+          }}
         </strong>
       </div>
 
@@ -451,6 +469,234 @@
         </section>
 
         <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    @if (activeComponent() === 'checkbox') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">FORM COMPONENTS</div>
+
+          <h1>Checkbox</h1>
+
+          <p>
+            A reusable checkbox component supporting checked, indeterminate, disabled and required
+            states.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Configurable</span>
+            <span>Angular Forms</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Interact with the checkbox component.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box">
+            <ui-checkbox
+              label="Accept Terms and Conditions"
+              description="I agree to the terms and privacy policy."
+              [checked]="checkboxChecked()"
+              [indeterminate]="checkboxIndeterminate()"
+              [disabled]="checkboxDisabled()"
+              [required]="checkboxRequired()"
+              [size]="checkboxSize()"
+              (checkedChange)="checkboxChecked.set($event)"
+            />
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change checkbox properties and preview the result.</p>
+            </div>
+
+            <button
+              class="reset-button"
+              (click)="
+                checkboxChecked.set(false);
+                checkboxIndeterminate.set(false);
+                checkboxDisabled.set(false);
+                checkboxRequired.set(false);
+                checkboxSize.set('md')
+              "
+            >
+              ↺ Reset
+            </button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="checkbox-size">Size</label>
+
+              <select
+                id="checkbox-size"
+                [value]="checkboxSize()"
+                (change)="checkboxSize.set($any($event.target).value)"
+              >
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="checkboxChecked()"
+                (change)="checkboxChecked.set($any($event.target).checked)"
+              />
+              Checked
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="checkboxIndeterminate()"
+                (change)="checkboxIndeterminate.set($any($event.target).checked)"
+              />
+              Indeterminate
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="checkboxDisabled()"
+                (change)="checkboxDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="checkboxRequired()"
+                (change)="checkboxRequired.set($any($event.target).checked)"
+              />
+              Required
+            </label>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Generated code based on the current configuration.</p>
+            </div>
+
+            <span class="preview-label">LIVE CODE</span>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ checkboxUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- radio group -->
+
+    @if (activeComponent() === 'radio') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Radio Group</h1>
+          <p>A configurable radio group for selecting one option from a list.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box">
+            <ui-radio-group
+              label="Select Department"
+              description="Choose your department."
+              [options]="radioOptions"
+              [orientation]="radioOrientation()"
+              [size]="radioSize()"
+              [disabled]="radioDisabled()"
+              [required]="radioRequired()"
+              [ngModel]="selectedRadioValue()"
+              (ngModelChange)="selectedRadioValue.set($event)"
+            />
+
+            <p class="mt-4 text-sm">Selected value: {{ selectedRadioValue() }}</p>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Configuration</h2>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Orientation</label>
+              <select [ngModel]="radioOrientation()" (ngModelChange)="radioOrientation.set($event)">
+                <option value="vertical">Vertical</option>
+                <option value="horizontal">Horizontal</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="radioSize()" (ngModelChange)="radioSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="radioDisabled()"
+                (ngModelChange)="radioDisabled.set($event)"
+              />
+              Disabled
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="radioRequired()"
+                (ngModelChange)="radioRequired.set($event)"
+              />
+              Required
+            </label>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+
+          <div class="code-container">
+            <pre><code>{{ radioUsageCode() }}</code></pre>
+          </div>
+        </section>
       </section>
     }
   </main>

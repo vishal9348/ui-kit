@@ -21,3 +21,13 @@ export * from './lib/components/button/ui-button.types';
 // Dropdown
 export * from './lib/components/dropdown/ui-dropdown.component';
 export * from './lib/components/dropdown/ui-dropdown.types';
+
+// Checkbox
+export * from './lib/components/checkbox/ui-checkbox.component';
+export * from './lib/components/checkbox/ui-checkbox.types';
+
+
+// radio group
+
+export * from './lib/components/radio-group/ui-radio-group.types';
+export * from './lib/components/radio-group/ui-radio-group.component';
