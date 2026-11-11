@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { UiButtonComponent, UiSize, UiVariant, UiDropdownComponent, UiDropdownOption } from 'ui-kit';
+import { UiButtonComponent, UiSize, UiVariant, UiDropdownComponent, UiDropdownOption, UiCheckboxComponent } from 'ui-kit';
 import { FormsModule } from '@angular/forms';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -14,7 +14,7 @@ type PlaygroundTheme = 'light' | 'dark';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [UiButtonComponent, UiDropdownComponent, FormsModule],
+  imports: [UiButtonComponent, UiDropdownComponent, FormsModule, UiCheckboxComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -183,5 +183,25 @@ export class App {
 
 <!-- Component TypeScript -->
 selectedValue = signal<${selectionType}>(${multiple ? '[]' : 'null'});`;
+  });
+
+  // checkbox
+
+  checkboxChecked = signal(false);
+  checkboxIndeterminate = signal(false);
+  checkboxDisabled = signal(false);
+  checkboxRequired = signal(false);
+  checkboxSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  readonly checkboxUsageCode = computed(() => {
+    return `<ui-checkbox
+  label="Accept Terms and Conditions"
+  [checked]="checkboxChecked()"
+  [indeterminate]="${this.checkboxIndeterminate()}"
+  [disabled]="${this.checkboxDisabled()}"
+  [required]="${this.checkboxRequired()}"
+  size="${this.checkboxSize()}"
+  (checkedChange)="checkboxChecked.set($event)"
+/>`;
   });
 }
