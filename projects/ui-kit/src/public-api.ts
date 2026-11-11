@@ -49,3 +49,20 @@ export * from './lib/components/progress-bar/ui-progress-bar.component';
 // Breadcrumb
 export * from './lib/components/breadcrumb/ui-breadcrumb.types';
 export * from './lib/components/breadcrumb/ui-breadcrumb.component';
+
+// Toast
+export * from './lib/components/toast/ui-toast.types';
+export * from './lib/components/toast/ui-toast.service';
+export * from './lib/components/toast/ui-toast-container.component';
+
+// Input
+export * from './lib/components/input/ui-input.types';
+export * from './lib/components/input/ui-input.component';
+
+// Textarea
+export * from './lib/components/textarea/ui-textarea.types';
+export * from './lib/components/textarea/ui-textarea.component';
+
+// Switch
+export * from './lib/components/switch/ui-switch.types';
+export * from './lib/components/switch/ui-switch.component';

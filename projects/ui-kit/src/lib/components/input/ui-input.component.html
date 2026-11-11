@@ -1,0 +1,89 @@
+<div class="ui-input-wrapper">
+  @if (resolvedLabel()) {
+    <label
+      class="ui-input__label"
+      [attr.for]="id() || null"
+    >
+      {{ resolvedLabel() }}
+
+      @if (resolvedRequired()) {
+        <span class="ui-input__required">*</span>
+      }
+    </label>
+  }
+
+  <div
+    class="ui-input"
+    [class.ui-input--sm]="resolvedSize() === 'sm'"
+    [class.ui-input--md]="resolvedSize() === 'md'"
+    [class.ui-input--lg]="resolvedSize() === 'lg'"
+    [class.ui-input--disabled]="resolvedDisabled()"
+    [class.ui-input--error]="!!resolvedError()"
+  >
+    @if (resolvedPrefix()) {
+      <span class="ui-input__prefix">
+        {{ resolvedPrefix() }}
+      </span>
+    }
+
+    <input
+      class="ui-input__field"
+      [id]="id() || null"
+      [name]="name() || null"
+      [type]="inputType()"
+      [value]="resolvedValue()"
+      [placeholder]="resolvedPlaceholder()"
+      [disabled]="resolvedDisabled()"
+      [readonly]="resolvedReadonly()"
+      [required]="resolvedRequired()"
+      [attr.minlength]="resolvedMinLength() ?? null"
+      [attr.maxlength]="resolvedMaxLength() ?? null"
+      [attr.pattern]="resolvedPattern() ?? null"
+      [attr.aria-invalid]="!!resolvedError()"
+      [attr.aria-describedby]="
+        resolvedError()
+          ? (id() ? id() + '-error' : null)
+          : resolvedHint() && id()
+            ? id() + '-hint'
+            : null
+      "
+      (input)="handleInput($event)"
+      (blur)="handleBlur()"
+    />
+
+    @if (canTogglePassword()) {
+      <button
+        type="button"
+        class="ui-input__action"
+        [disabled]="resolvedDisabled()"
+        [attr.aria-label]="
+          passwordVisible() ? 'Hide password' : 'Show password'
+        "
+        (click)="togglePassword()"
+      >
+        {{ passwordVisible() ? 'Hide' : 'Show' }}
+      </button>
+    } @else if (resolvedSuffix()) {
+      <span class="ui-input__suffix">
+        {{ resolvedSuffix() }}
+      </span>
+    }
+  </div>
+
+  @if (resolvedError()) {
+    <p
+      class="ui-input__error"
+      [id]="id() ? id() + '-error' : null"
+      role="alert"
+    >
+      {{ resolvedError() }}
+    </p>
+  } @else if (resolvedHint()) {
+    <p
+      class="ui-input__hint"
+      [id]="id() ? id() + '-hint' : null"
+    >
+      {{ resolvedHint() }}
+    </p>
+  }
+</div>

@@ -1,0 +1,102 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.ui-textarea-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.ui-textarea__label {
+    color: var(--ui-text-primary, #374151);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ui-textarea__required {
+    margin-left: 3px;
+    color: var(--ui-danger, #dc2626);
+}
+
+.ui-textarea {
+    display: block;
+    width: 100%;
+    min-height: 60px;
+    padding: 10px 12px;
+    border: 1px solid var(--ui-border, #d1d5db);
+    border-radius: 7px;
+    outline: none;
+    background: var(--ui-surface, #ffffff);
+    color: var(--ui-text-primary, #111827);
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.ui-textarea::placeholder {
+    color: var(--ui-text-secondary, #9ca3af);
+}
+
+.ui-textarea:focus {
+    border-color: var(--ui-primary, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.ui-textarea--error {
+    border-color: var(--ui-danger, #dc2626);
+}
+
+.ui-textarea:disabled {
+    background: var(--ui-surface-hover, #f3f4f6);
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.ui-textarea--sm {
+    font-size: 12px;
+}
+
+.ui-textarea--md {
+    font-size: 14px;
+}
+
+.ui-textarea--lg {
+    font-size: 16px;
+}
+
+.ui-textarea__footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.ui-textarea__hint,
+.ui-textarea__error {
+    margin: 0;
+    font-size: 12px;
+}
+
+.ui-textarea__hint {
+    color: var(--ui-text-secondary, #6b7280);
+}
+
+.ui-textarea__error {
+    color: var(--ui-danger, #dc2626);
+}
+
+.ui-textarea__counter {
+    flex-shrink: 0;
+    color: var(--ui-text-secondary, #6b7280);
+    font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ui-textarea {
+        transition: none;
+    }
+}
