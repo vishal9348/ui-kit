@@ -1,0 +1,457 @@
+<div class="app-shell" [attr.data-ui-theme]="theme()">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">U</div>
+
+      <div>
+        <div class="brand-name">Angular UI Kit</div>
+        <div class="brand-version">Version {{ version }}</div>
+      </div>
+    </div>
+
+    <div class="sidebar-content">
+      <!-- Getting Started -->
+      <div class="nav-section">
+        <div class="nav-heading">GETTING STARTED</div>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">⌂</span>
+          Overview
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">◈</span>
+          Installation
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">⚙</span>
+          Configuration
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">◐</span>
+          Theming
+        </button>
+      </div>
+
+      <!-- Components -->
+      <div class="nav-section">
+        <div class="nav-heading">COMPONENTS</div>
+
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'button'"
+          (click)="setActiveComponent('button')"
+        >
+          <span class="nav-icon">▰</span>
+          Button
+          <span class="nav-status">Ready</span>
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">▤</span>
+          Data Table
+          <span class="coming-soon">Soon</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'dropdown'"
+          (click)="setActiveComponent('dropdown')"
+        >
+          <span class="nav-icon">▾</span>
+          Dropdown
+          <span class="nav-status">Ready</span>
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">☑</span>
+          Checkbox
+          <span class="coming-soon">Soon</span>
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">◉</span>
+          Radio
+          <span class="coming-soon">Soon</span>
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">▱</span>
+          Alert
+          <span class="coming-soon">Soon</span>
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">▣</span>
+          Dialog
+          <span class="coming-soon">Soon</span>
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">◌</span>
+          Loader
+          <span class="coming-soon">Soon</span>
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">▰</span>
+          Progress Bar
+          <span class="coming-soon">Soon</span>
+        </button>
+
+        <button class="nav-item" disabled>
+          <span class="nav-icon">⌘</span>
+          Breadcrumb
+          <span class="coming-soon">Soon</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="status-indicator"></div>
+      Library development environment
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-area">
+    <!-- Header -->
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Components</span>
+        <span class="breadcrumb-separator">/</span>
+        <strong>
+          {{ activeComponent() === 'button' ? 'Button' : 'Dropdown' }}
+        </strong>
+      </div>
+
+      <div class="header-actions">
+        <span class="version-label">v{{ version }}</span>
+
+        <button
+          class="theme-button"
+          (click)="setTheme()"
+          [attr.aria-label]="theme() === 'light' ? 'Switch to dark theme' : 'Switch to light theme'"
+        >
+          {{ theme() === 'light' ? '☾' : '☀' }}
+        </button>
+      </div>
+    </header>
+
+    <!-- ================================================= -->
+    <!-- BUTTON DOCUMENTATION -->
+    <!-- ================================================= -->
+
+    @if (activeComponent() === 'button') {
+      <section class="page-content">
+        <!-- Page Heading -->
+        <div class="page-heading">
+          <div class="eyebrow">FORM COMPONENTS</div>
+
+          <h1>Button</h1>
+
+          <p>
+            A configurable button component for building consistent and accessible user interfaces.
+            Supports multiple variants, sizes and states.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Configurable</span>
+            <span>Accessible</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Interact with the component and explore its variants.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box">
+            <ui-button
+              label="Save Employee"
+              [config]="buttonConfig()"
+              (clicked)="handleButtonClick()"
+            />
+
+            @if (clickCount() > 0) {
+              <div class="click-message">Button clicked {{ clickCount() }} time(s).</div>
+            }
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change properties to customize the button.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="variant">Variant</label>
+
+              <select
+                id="variant"
+                [value]="variant()"
+                (change)="setVariant($any($event.target).value)"
+              >
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="danger">Danger</option>
+                <option value="outline">Outline</option>
+                <option value="ghost">Ghost</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="size">Size</label>
+
+              <select id="size" [value]="size()" (change)="setSize($any($event.target).value)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="loading()"
+                (change)="loading.set($any($event.target).checked)"
+              />
+              Loading
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="disabled()"
+                (change)="disabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="fullWidth()"
+                (change)="fullWidth.set($any($event.target).checked)"
+              />
+              Full width
+            </label>
+          </div>
+        </section>
+
+        <!-- Generated Code -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of this configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyCode()">
+              {{ copyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ generatedCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- ================================================= -->
+    <!-- DROPDOWN DOCUMENTATION -->
+    <!-- ================================================= -->
+
+    @if (activeComponent() === 'dropdown') {
+      <section class="page-content">
+        <!-- Page Heading -->
+        <div class="page-heading">
+          <div class="eyebrow">FORM COMPONENTS</div>
+
+          <h1>Dropdown</h1>
+
+          <p>
+            A configurable dropdown component supporting single selection, multiple selection,
+            searching, disabled options and Angular Forms integration.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Searchable</span>
+            <span>Reactive Forms</span>
+            <span>Configurable</span>
+          </div>
+        </div>
+
+        <!-- Dropdown Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Interact with the dropdown and explore its configuration.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-dropdown
+                [options]="departments"
+                [multiple]="dropdownMultiple()"
+                [searchable]="dropdownSearchable()"
+                [clearable]="dropdownClearable()"
+                [disabled]="dropdownDisabled()"
+                [loading]="dropdownLoading()"
+                [ngModel]="selectedDropdownValue()"
+                (ngModelChange)="selectedDropdownValue.set($event)"
+              />
+
+              <p class="click-message">Selected value: {{ selectedDropdownValue() ?? 'None' }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dropdown Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change dropdown properties and see the preview update instantly.</p>
+            </div>
+
+            <button
+              class="reset-button"
+              (click)="
+                dropdownMultiple.set(false);
+                dropdownSearchable.set(true);
+                dropdownClearable.set(true);
+                dropdownDisabled.set(false);
+                dropdownLoading.set(false);
+                selectedDropdownValue.set(null)
+              "
+            >
+              ↺ Reset
+            </button>
+          </div>
+
+          <div class="config-grid">
+            <!-- Selection Mode -->
+            <div class="config-field">
+              <label for="dropdown-mode">Selection Mode</label>
+
+              <select
+                id="dropdown-mode"
+                [value]="dropdownMultiple() ? 'multiple' : 'single'"
+                (change)="
+                  dropdownMultiple.set($any($event.target).value === 'multiple');
+                  selectedDropdownValue.set(null)
+                "
+              >
+                <option value="single">Single Selection</option>
+                <option value="multiple">Multiple Selection</option>
+              </select>
+            </div>
+
+            <!-- Search -->
+            <div class="config-field">
+              <label for="dropdown-search">Search</label>
+
+              <select
+                id="dropdown-search"
+                [value]="dropdownSearchable() ? 'enabled' : 'disabled'"
+                (change)="dropdownSearchable.set($any($event.target).value === 'enabled')"
+              >
+                <option value="enabled">Enabled</option>
+                <option value="disabled">Disabled</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Additional Options -->
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="dropdownClearable()"
+                (change)="dropdownClearable.set($any($event.target).checked)"
+              />
+              Clearable
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="dropdownDisabled()"
+                (change)="dropdownDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="dropdownLoading()"
+                (change)="dropdownLoading.set($any($event.target).checked)"
+              />
+              Loading
+            </label>
+          </div>
+        </section>
+
+        <!-- Dropdown Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Generated Angular code based on your current dropdown configuration.</p>
+            </div>
+
+            <span class="preview-label">LIVE CODE</span>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ dropdownUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+  </main>
+</div>

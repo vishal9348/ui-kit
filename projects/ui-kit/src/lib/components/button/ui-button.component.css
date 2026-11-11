@@ -1,0 +1,176 @@
+:host {
+    display: inline-block;
+    max-width: 100%;
+}
+
+.ui-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    border: 1px solid transparent;
+    border-radius: var(--ui-radius, 6px);
+
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease,
+        box-shadow 150ms ease;
+
+    outline: none;
+}
+
+.ui-button:focus-visible {
+    outline: 2px solid var(--ui-focus-ring, #2563eb);
+    outline-offset: 2px;
+}
+
+/* Sizes */
+
+.ui-button--sm {
+    min-height: 32px;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.ui-button--md {
+    min-height: 40px;
+    padding: 9px 16px;
+    font-size: 14px;
+}
+
+.ui-button--lg {
+    min-height: 48px;
+    padding: 12px 20px;
+    font-size: 16px;
+}
+
+/* Variants */
+
+.ui-button--primary {
+    color: #ffffff;
+    background: var(--ui-primary, #2563eb);
+}
+
+.ui-button--primary:hover:not(:disabled) {
+    background: var(--ui-primary-hover, #1d4ed8);
+}
+
+.ui-button--secondary {
+    color: #ffffff;
+    background: var(--ui-secondary, #475569);
+}
+
+.ui-button--success {
+    color: #ffffff;
+    background: var(--ui-success, #16a34a);
+}
+
+.ui-button--warning {
+    color: #111827;
+    background: var(--ui-warning, #facc15);
+}
+
+.ui-button--danger {
+    color: #ffffff;
+    background: var(--ui-danger, #dc2626);
+}
+
+.ui-button--outline {
+    color: var(--ui-primary, #2563eb);
+    background: transparent;
+    border-color: var(--ui-primary, #2563eb);
+}
+
+.ui-button--ghost {
+    color: var(--ui-primary, #2563eb);
+    background: transparent;
+}
+
+.ui-button--ghost:hover:not(:disabled) {
+    background: var(--ui-primary-subtle, #eff6ff);
+}
+
+/* States */
+
+.ui-button--disabled,
+.ui-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ui-button--full-width {
+    display: flex;
+    width: 100%;
+}
+
+.ui-button__content {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ui-button__spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: ui-button-spin 650ms linear infinite;
+}
+
+
+.ui-button--icon-only {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.ui-button--icon-only.ui-button--sm {
+  width: 32px;
+  height: 32px;
+}
+
+.ui-button--icon-only.ui-button--lg {
+  width: 48px;
+  height: 48px;
+}
+
+.ui-button--icon-only ::ng-deep [uiButtonIcon] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ui-button:disabled {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-button {
+    transition: none;
+  }
+}
+
+
+@keyframes ui-button-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ui-button {
+        transition: none;
+    }
+
+    .ui-button__spinner {
+        animation-duration: 2s;
+    }
+}

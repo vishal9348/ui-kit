@@ -1,0 +1,31 @@
+:root {
+    /* Brand */
+    --ui-primary: #2563eb;
+    --ui-primary-hover: #1d4ed8;
+    --ui-primary-subtle: #eff6ff;
+
+    /* Semantic */
+    --ui-secondary: #475569;
+    --ui-success: #16a34a;
+    --ui-warning: #facc15;
+    --ui-danger: #dc2626;
+
+    /* Surface */
+    --ui-background: #ffffff;
+    --ui-foreground: #111827;
+    --ui-border: #e5e7eb;
+
+    /* Shape */
+    --ui-radius: 6px;
+
+    /* Focus */
+    --ui-focus-ring: #2563eb;
+}
+
+[data-ui-theme="dark"] {
+    --ui-background: #111827;
+    --ui-foreground: #f9fafb;
+    --ui-border: #374151;
+
+    --ui-primary-subtle: #1e3a8a;
+}

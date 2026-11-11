@@ -1,0 +1,127 @@
+<div class="ui-dropdown">
+  <!-- Trigger -->
+  <button
+    #origin="cdkOverlayOrigin"
+    cdkOverlayOrigin
+    type="button"
+    class="ui-dropdown__trigger"
+    [class.ui-dropdown__trigger--open]="isOpen()"
+    [class.ui-dropdown__trigger--disabled]="isDisabled()"
+    [class.ui-dropdown__trigger--sm]="resolvedSize() === 'sm'"
+    [class.ui-dropdown__trigger--lg]="resolvedSize() === 'lg'"
+    [disabled]="isDisabled()"
+    [attr.aria-expanded]="isOpen()"
+    aria-haspopup="listbox"
+    [attr.aria-label]="resolvedPlaceholder()"
+    (click)="toggleDropdown()"
+    (keydown)="handleTriggerKeydown($event)"
+  >
+    <span class="ui-dropdown__value" [class.ui-dropdown__placeholder]="!hasSelection()">
+      {{ selectedLabel() || resolvedPlaceholder() }}
+    </span>
+
+    <span class="ui-dropdown__actions">
+      @if (isLoading()) {
+        <span class="ui-dropdown__spinner" aria-hidden="true"></span>
+      } @else {
+        @if (isClearable() && hasSelection() && !isDisabled()) {
+          <span class="ui-dropdown__clear" aria-hidden="true" (click)="clearSelection($event)">
+            ×
+          </span>
+        }
+
+        <span class="ui-dropdown__arrow" aria-hidden="true">
+          {{ isOpen() ? '⌃' : '⌄' }}
+        </span>
+      }
+    </span>
+  </button>
+
+  <!-- Overlay -->
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="isOpen()"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    [cdkConnectedOverlayPush]="true"
+    (backdropClick)="closeDropdown()"
+  >
+    <div class="ui-dropdown__panel" role="presentation" [style.max-height.px]="resolvedMaxHeight()">
+      <!-- Search -->
+      @if (isSearchable()) {
+        <div class="ui-dropdown__search">
+          <span class="ui-dropdown__search-icon">⌕</span>
+
+          <input
+            #searchInput
+            type="text"
+            [placeholder]="resolvedSearchPlaceholder()"
+            [value]="searchTerm()"
+            (input)="updateSearch(searchInput.value)"
+            (keydown)="handleSearchKeydown($event)"
+            aria-label="Search options"
+          />
+        </div>
+      }
+
+      <!-- Options -->
+      <div
+        class="ui-dropdown__options"
+        role="listbox"
+        [attr.aria-multiselectable]="isMultiple()"
+        [tabindex]="isSearchable() ? -1 : 0"
+        (keydown)="handleOptionKeydown($event)"
+      >
+        @if (isLoading()) {
+          <div class="ui-dropdown__message" role="status">
+            {{ resolvedLoadingMessage() }}
+          </div>
+        } @else if (filteredOptions().length === 0) {
+          <div class="ui-dropdown__message">
+            {{ resolvedEmptyMessage() }}
+          </div>
+        } @else {
+          @for (option of filteredOptions(); track $index; let i = $index) {
+            <div
+              class="ui-dropdown__option"
+              [class.ui-dropdown__option--selected]="isSelected(option.value)"
+              [class.ui-dropdown__option--active]="activeIndex() === i"
+              [class.ui-dropdown__option--disabled]="option.disabled"
+              role="option"
+              [attr.aria-selected]="isSelected(option.value)"
+              [attr.aria-disabled]="option.disabled || null"
+              [attr.tabindex]="-1"
+              (click)="selectOption(option)"
+              (mouseenter)="activeIndex.set(i)"
+            >
+              @if (isMultiple()) {
+                <span class="ui-dropdown__checkbox">
+                  @if (isSelected(option.value)) {
+                    ✓
+                  }
+                </span>
+              }
+
+              <span class="ui-dropdown__option-content">
+                <span class="ui-dropdown__option-label">
+                  {{ option.label }}
+                </span>
+
+                @if (option.description) {
+                  <span class="ui-dropdown__option-description">
+                    {{ option.description }}
+                  </span>
+                }
+              </span>
+
+              @if (!isMultiple() && isSelected(option.value)) {
+                <span class="ui-dropdown__check">✓</span>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </ng-template>
+</div>
