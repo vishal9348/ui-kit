@@ -1,20 +1,30 @@
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
-
-import { UiButtonComponent, UiSize, UiVariant, UiDropdownComponent, UiDropdownOption, UiCheckboxComponent } from 'ui-kit';
+  UiButtonComponent,
+  UiSize,
+  UiVariant,
+  UiDropdownComponent,
+  UiDropdownOption,
+  UiCheckboxComponent,
+  UiRadioGroupComponent,
+} from 'ui-kit';
 import { FormsModule } from '@angular/forms';
+
+import type { UiRadioOption } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [UiButtonComponent, UiDropdownComponent, FormsModule, UiCheckboxComponent],
+  imports: [
+    UiButtonComponent,
+    UiDropdownComponent,
+    FormsModule,
+    UiCheckboxComponent,
+    UiRadioGroupComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -203,5 +213,56 @@ selectedValue = signal<${selectionType}>(${multiple ? '[]' : 'null'});`;
   size="${this.checkboxSize()}"
   (checkedChange)="checkboxChecked.set($event)"
 />`;
+  });
+
+  // radio group
+
+  radioOptions: UiRadioOption<string>[] = [
+    {
+      label: 'Engineering',
+      value: 'engineering',
+      description: 'Software development and technology',
+    },
+    {
+      label: 'Human Resources',
+      value: 'hr',
+      description: 'People and recruitment',
+    },
+    {
+      label: 'Finance',
+      value: 'finance',
+      description: 'Accounts and financial operations',
+    },
+  ];
+
+  radioOrientation = signal<'horizontal' | 'vertical'>('vertical');
+
+  radioSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  radioDisabled = signal(false);
+
+  radioRequired = signal(false);
+
+  selectedRadioValue = signal<string | null>('engineering');
+
+  radioUsageCode = computed(() => {
+    const orientation = this.radioOrientation();
+    const size = this.radioSize();
+    const disabled = this.radioDisabled();
+    const required = this.radioRequired();
+
+    return `<ui-radio-group
+  label="Select Department"
+  [options]="radioOptions"
+  orientation="${orientation}"
+  size="${size}"
+  [disabled]="${disabled}"
+  [required]="${required}"
+  [ngModel]="selectedRadioValue()"
+  (ngModelChange)="selectedRadioValue.set($event)"
+/>
+
+// Component TypeScript
+selectedRadioValue = signal<string | null>('engineering');`;
   });
 }

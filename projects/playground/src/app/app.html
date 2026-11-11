@@ -76,10 +76,14 @@
           <span class="nav-status">Ready</span>
         </button>
 
-        <button class="nav-item" disabled>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'radio'"
+          (click)="setActiveComponent('radio')"
+        >
           <span class="nav-icon">◉</span>
           Radio
-          <span class="coming-soon">Soon</span>
+          <span class="nav-status">Ready</span>
         </button>
 
         <button class="nav-item" disabled>
@@ -134,7 +138,11 @@
               ? 'Button'
               : activeComponent() === 'dropdown'
                 ? 'Dropdown'
-                : 'Checkbox'
+                : activeComponent() === 'checkbox'
+                  ? 'Checkbox'
+                  : activeComponent() === 'radio'
+                    ? 'Radio Group'
+                    : 'Button'
           }}
         </strong>
       </div>
@@ -607,6 +615,88 @@
         </section>
 
         <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- radio group -->
+
+    @if (activeComponent() === 'radio') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Radio Group</h1>
+          <p>A configurable radio group for selecting one option from a list.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box">
+            <ui-radio-group
+              label="Select Department"
+              description="Choose your department."
+              [options]="radioOptions"
+              [orientation]="radioOrientation()"
+              [size]="radioSize()"
+              [disabled]="radioDisabled()"
+              [required]="radioRequired()"
+              [ngModel]="selectedRadioValue()"
+              (ngModelChange)="selectedRadioValue.set($event)"
+            />
+
+            <p class="mt-4 text-sm">Selected value: {{ selectedRadioValue() }}</p>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Configuration</h2>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Orientation</label>
+              <select [ngModel]="radioOrientation()" (ngModelChange)="radioOrientation.set($event)">
+                <option value="vertical">Vertical</option>
+                <option value="horizontal">Horizontal</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="radioSize()" (ngModelChange)="radioSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="radioDisabled()"
+                (ngModelChange)="radioDisabled.set($event)"
+              />
+              Disabled
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="radioRequired()"
+                (ngModelChange)="radioRequired.set($event)"
+              />
+              Required
+            </label>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+
+          <div class="code-container">
+            <pre><code>{{ radioUsageCode() }}</code></pre>
+          </div>
+        </section>
       </section>
     }
   </main>
