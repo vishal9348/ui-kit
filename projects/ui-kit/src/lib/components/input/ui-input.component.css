@@ -1,0 +1,120 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.ui-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.ui-input__label {
+    color: var(--ui-text-primary, #374151);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ui-input__required {
+    margin-left: 3px;
+    color: var(--ui-danger, #dc2626);
+}
+
+.ui-input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--ui-border, #d1d5db);
+    border-radius: 7px;
+    background: var(--ui-surface, #ffffff);
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.ui-input:focus-within {
+    border-color: var(--ui-primary, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.ui-input--error {
+    border-color: var(--ui-danger, #dc2626);
+}
+
+.ui-input--disabled {
+    background: var(--ui-surface-hover, #f3f4f6);
+    opacity: 0.65;
+}
+
+.ui-input--sm {
+    min-height: 32px;
+}
+
+.ui-input--md {
+    min-height: 40px;
+}
+
+.ui-input--lg {
+    min-height: 48px;
+}
+
+.ui-input__field {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0 12px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--ui-text-primary, #111827);
+    font: inherit;
+    font-size: 14px;
+}
+
+.ui-input__field::placeholder {
+    color: var(--ui-text-secondary, #9ca3af);
+}
+
+.ui-input__prefix,
+.ui-input__suffix {
+    padding: 0 10px;
+    color: var(--ui-text-secondary, #6b7280);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.ui-input__action {
+    margin-right: 8px;
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    color: var(--ui-primary, #2563eb);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ui-input__action:disabled {
+    cursor: not-allowed;
+}
+
+.ui-input__hint,
+.ui-input__error {
+    margin: 0;
+    font-size: 12px;
+}
+
+.ui-input__hint {
+    color: var(--ui-text-secondary, #6b7280);
+}
+
+.ui-input__error {
+    color: var(--ui-danger, #dc2626);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ui-input {
+        transition: none;
+    }
+}

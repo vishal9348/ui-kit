@@ -1,0 +1,139 @@
+:host {
+    display: contents;
+}
+
+.ui-toast-container {
+    position: fixed;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: min(380px, calc(100vw - 32px));
+    padding: 16px;
+    pointer-events: none;
+}
+
+.ui-toast-container--top-right {
+    top: 0;
+    right: 0;
+}
+
+.ui-toast-container--top-left {
+    top: 0;
+    left: 0;
+}
+
+.ui-toast-container--bottom-right {
+    right: 0;
+    bottom: 0;
+}
+
+.ui-toast-container--bottom-left {
+    bottom: 0;
+    left: 0;
+}
+
+.ui-toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--ui-border, #e5e7eb);
+    border-left: 4px solid var(--ui-primary, #2563eb);
+    border-radius: 9px;
+    background: var(--ui-surface, #ffffff);
+    color: var(--ui-text-primary, #111827);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    pointer-events: auto;
+    animation: ui-toast-enter 180ms ease-out;
+}
+
+.ui-toast--success {
+    border-left-color: var(--ui-success, #16a34a);
+}
+
+.ui-toast--error {
+    border-left-color: var(--ui-danger, #dc2626);
+}
+
+.ui-toast--warning {
+    border-left-color: var(--ui-warning, #d97706);
+}
+
+.ui-toast--info {
+    border-left-color: var(--ui-info, #0891b2);
+}
+
+.ui-toast__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.ui-toast--success .ui-toast__icon {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.ui-toast--error .ui-toast__icon {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.ui-toast--warning .ui-toast__icon {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.ui-toast__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.ui-toast__title {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 13px;
+}
+
+.ui-toast__message {
+    margin: 0;
+    color: var(--ui-text-secondary, #6b7280);
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.ui-toast__close {
+    border: 0;
+    background: transparent;
+    color: var(--ui-text-secondary, #6b7280);
+    font-size: 21px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+@keyframes ui-toast-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ui-toast {
+        animation: none;
+    }
+}

@@ -1,0 +1,55 @@
+@if (toasts().length > 0) {
+  <section
+    class="ui-toast-container"
+    [class.ui-toast-container--top-right]="position() === 'top-right'"
+    [class.ui-toast-container--top-left]="position() === 'top-left'"
+    [class.ui-toast-container--bottom-right]="position() === 'bottom-right'"
+    [class.ui-toast-container--bottom-left]="position() === 'bottom-left'"
+    aria-label="Notifications"
+  >
+    @for (toast of toasts(); track toast.id) {
+      <article
+        class="ui-toast"
+        [class.ui-toast--success]="toast.variant === 'success'"
+        [class.ui-toast--error]="toast.variant === 'error'"
+        [class.ui-toast--warning]="toast.variant === 'warning'"
+        [class.ui-toast--info]="toast.variant === 'info'"
+        [attr.aria-live]="toast.variant === 'error' ? 'assertive' : 'polite'"
+        (mouseenter)="pause(toast.id)"
+        (mouseleave)="resume(toast.id)"
+      >
+        <span class="ui-toast__icon" aria-hidden="true">
+          @switch (toast.variant) {
+            @case ('success') { ✓ }
+            @case ('error') { × }
+            @case ('warning') { ! }
+            @default { i }
+          }
+        </span>
+
+        <div class="ui-toast__content">
+          @if (toast.title) {
+            <strong class="ui-toast__title">
+              {{ toast.title }}
+            </strong>
+          }
+
+          <p class="ui-toast__message">
+            {{ toast.message }}
+          </p>
+        </div>
+
+        @if (toast.closable) {
+          <button
+            type="button"
+            class="ui-toast__close"
+            aria-label="Dismiss notification"
+            (click)="dismiss(toast.id)"
+          >
+            ×
+          </button>
+        }
+      </article>
+    }
+  </section>
+}

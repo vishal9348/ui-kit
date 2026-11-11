@@ -13,11 +13,16 @@ import {
   UiLoaderComponent,
   UiProgressBarComponent,
   UiBreadcrumbComponent,
+  UiToastContainerComponent,
+  UiToastService,
+  UiInputComponent,
+  UiTextareaComponent,
+  UiSwitchComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
 
-import type { UiRadioOption, UiBreadcrumbItem } from 'ui-kit';
+import type { UiRadioOption, UiBreadcrumbItem, UiToastPosition } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
 
@@ -34,6 +39,10 @@ type PlaygroundTheme = 'light' | 'dark';
     UiLoaderComponent,
     UiProgressBarComponent,
     UiBreadcrumbComponent,
+    UiToastContainerComponent,
+    UiInputComponent,
+    UiTextareaComponent,
+    UiSwitchComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -47,7 +56,18 @@ export class App {
 
   // readonly activeComponent = signal('button');
   activeComponent = signal<
-    'button' | 'dropdown' | 'checkbox' | 'radio' | 'dialog' | 'loader' | 'progress' | 'breadcrumb'
+    | 'button'
+    | 'dropdown'
+    | 'checkbox'
+    | 'radio'
+    | 'dialog'
+    | 'loader'
+    | 'progress'
+    | 'breadcrumb'
+    | 'toast'
+    | 'input'
+    | 'textarea'
+    | 'switch'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -113,7 +133,11 @@ export class App {
       | 'dialog'
       | 'loader'
       | 'progress'
-      | 'breadcrumb',
+      | 'breadcrumb'
+      | 'toast'
+      | 'input'
+      | 'textarea'
+      | 'switch',
   ): void {
     this.activeComponent.set(component);
   }
@@ -427,5 +451,129 @@ breadcrumbItems: UiBreadcrumbItem[] = [
   { label: 'Employees', href: '/employees' },
   { label: 'Employee Details' }
 ];`;
+  });
+
+  private readonly toastService = inject(UiToastService);
+
+  toastPosition = signal<UiToastPosition>('top-right');
+
+  showSuccessToast(): void {
+    this.toastService.success('Employee saved successfully.', 'Success');
+  }
+
+  showErrorToast(): void {
+    this.toastService.error('Unable to save employee.', 'Error');
+  }
+
+  showWarningToast(): void {
+    this.toastService.warning('Please check the entered information.', 'Warning');
+  }
+
+  showInfoToast(): void {
+    this.toastService.info('A new update is available.', 'Information');
+  }
+
+  toastUsageCode = computed(() => {
+    return `private readonly toast = inject(UiToastService);
+
+this.toast.success(
+  'Employee saved successfully.',
+  'Success'
+);
+
+this.toast.setPosition('${this.toastPosition()}');`;
+  });
+
+  inputSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  inputType = signal<'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url'>('text');
+
+  inputDisabled = signal(false);
+
+  inputRequired = signal(false);
+
+  inputPrefix = signal('');
+
+  inputSuffix = signal('');
+
+  inputError = signal('');
+
+  inputValue = signal('');
+  inputEmail = signal('');
+  inputUsername = signal('');
+  inputCustomPattern = signal('');
+  inputMinLength = signal<number | undefined>(2);
+  inputMaxLength = signal<number | undefined>(100);
+
+  inputUsageCode = computed(() => {
+    return `<ui-input
+  label="User Input"
+  type="${this.inputType()}"
+  size="${this.inputSize()}"
+  placeholder="Enter value"
+  prefix="${this.inputPrefix()}"
+  suffix="${this.inputSuffix()}"
+  [disabled]="${this.inputDisabled()}"
+  [required]="${this.inputRequired()}"
+  [minLength]="${this.inputMinLength() ?? 'undefined'}"
+  [maxLength]="${this.inputMaxLength() ?? 'undefined'}"
+  [error]="${JSON.stringify(this.inputError())}"
+  [ngModel]="inputValue()"
+(ngModelChange)="inputValue.set($event)"
+/>
+
+// Component TypeScript
+inputValue = '';
+`;
+  });
+
+  textareaSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  textareaResize = signal<'none' | 'vertical' | 'horizontal' | 'both'>('vertical');
+
+  textareaDisabled = signal(false);
+
+  textareaRequired = signal(false);
+
+  textareaCounter = signal(true);
+
+  textareaValue = signal('');
+
+  textareaMaxLength = signal(250);
+
+  textareaUsageCode = computed(() => {
+    return `<ui-textarea
+  label="Description"
+  placeholder="Enter description"
+  size="${this.textareaSize()}"
+  resize="${this.textareaResize()}"
+  [maxLength]="${this.textareaMaxLength()}"
+  [showCounter]="${this.textareaCounter()}"
+  [disabled]="${this.textareaDisabled()}"
+  [required]="${this.textareaRequired()}"
+  [(ngModel)]="description"
+/>
+
+// Component TypeScript
+description = '';`;
+  });
+
+  switchSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  switchDisabled = signal(false);
+
+  switchChecked = signal(true);
+
+  switchUsageCode = computed(() => {
+    return `<ui-switch
+  label="Email Notifications"
+  description="Receive notifications through email."
+  size="${this.switchSize()}"
+  [disabled]="${this.switchDisabled()}"
+  [(ngModel)]="notificationsEnabled"
+/>
+
+// Component TypeScript
+notificationsEnabled = true;`;
   });
 }

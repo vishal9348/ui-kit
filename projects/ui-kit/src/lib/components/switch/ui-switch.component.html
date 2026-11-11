@@ -1,0 +1,41 @@
+<label
+  class="ui-switch"
+  [class.ui-switch--sm]="resolvedSize() === 'sm'"
+  [class.ui-switch--md]="resolvedSize() === 'md'"
+  [class.ui-switch--lg]="resolvedSize() === 'lg'"
+  [class.ui-switch--disabled]="isDisabled()"
+  [attr.for]="id() || null"
+>
+  <input
+    class="ui-switch__input"
+    type="checkbox"
+    [id]="id() || null"
+    [name]="name() || null"
+    [checked]="isChecked()"
+    [disabled]="isDisabled()"
+    [required]="isRequired()"
+    role="switch"
+    (change)="handleChange($event)"
+    (blur)="handleBlur()"
+  />
+
+  <span class="ui-switch__track" aria-hidden="true">
+    <span class="ui-switch__thumb"></span>
+  </span>
+
+  @if (resolvedLabel() || resolvedDescription()) {
+    <span class="ui-switch__content">
+      @if (resolvedLabel()) {
+        <span class="ui-switch__label">
+          {{ resolvedLabel() }}
+        </span>
+      }
+
+      @if (resolvedDescription()) {
+        <span class="ui-switch__description">
+          {{ resolvedDescription() }}
+        </span>
+      }
+    </span>
+  }
+</label>

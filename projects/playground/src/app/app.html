@@ -1,3 +1,4 @@
+<ui-toast-container />
 <div class="app-shell" [attr.data-ui-theme]="theme()">
   <!-- Sidebar -->
   <aside class="sidebar">
@@ -129,6 +130,46 @@
         >
           <span class="nav-icon">⌂</span>
           Breadcrumb
+          <span class="nav-status">Ready</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'toast'"
+          (click)="setActiveComponent('toast')"
+        >
+          <span class="nav-icon">●</span>
+          Toast
+          <span class="nav-status">Ready</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'input'"
+          (click)="setActiveComponent('input')"
+        >
+          <span class="nav-icon">▤</span>
+          Input
+          <span class="nav-status">Ready</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'textarea'"
+          (click)="setActiveComponent('textarea')"
+        >
+          <span class="nav-icon">▧</span>
+          Textarea
+          <span class="nav-status">Ready</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'switch'"
+          (click)="setActiveComponent('switch')"
+        >
+          <span class="nav-icon">◉</span>
+          Switch
           <span class="nav-status">Ready</span>
         </button>
       </div>
@@ -1038,6 +1079,349 @@
       </section>
     }
 
-    
+    @if (activeComponent() === 'toast') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Toast Notification</h1>
+          <p>Display temporary application notifications.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box flex flex-wrap gap-3">
+            <button class="demo-button" (click)="showSuccessToast()">Success</button>
+
+            <button class="demo-button" (click)="showErrorToast()">Error</button>
+
+            <button class="demo-button" (click)="showWarningToast()">Warning</button>
+
+            <button class="demo-button" (click)="showInfoToast()">Info</button>
+
+            <div class="config-field">
+              <label>Position</label>
+              <select
+                [ngModel]="toastPosition()"
+                (ngModelChange)="toastPosition.set($event); toastService.setPosition($event)"
+              >
+                <option value="top-right">Top Right</option>
+                <option value="top-left">Top Left</option>
+                <option value="bottom-right">Bottom Right</option>
+                <option value="bottom-left">Bottom Left</option>
+              </select>
+            </div>
+
+            <button class="demo-button" (click)="toastService.dismissAll()">Dismiss All</button>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+          <div class="code-container">
+            <pre><code>{{ toastUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'input') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Input / Text Field</h1>
+          <p>Configurable form input with validation and prefix/suffix support.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box">
+            <ui-input
+              id="playground-input"
+              label="User Input"
+              [type]="inputType()"
+              [size]="inputSize()"
+              placeholder="Enter value"
+              [prefix]="inputPrefix()"
+              [suffix]="inputSuffix()"
+              [disabled]="inputDisabled()"
+              [required]="inputRequired()"
+              [minLength]="inputMinLength()"
+              [maxLength]="inputMaxLength()"
+              [error]="inputError()"
+              [ngModel]="inputValue()"
+              (ngModelChange)="inputValue.set($event)"
+            />
+
+            <p class="mt-3 text-sm">Current value: {{ inputValue() }}</p>
+
+            <p class="mt-1 text-sm">
+              Validation:
+              {{
+                inputType() === 'email'
+                  ? 'Email format validation enabled'
+                  : 'Standard input validation'
+              }}
+            </p>
+
+            <p class="mt-1 text-sm">
+              Length: {{ inputValue().length }} / {{ inputMaxLength() ?? 'Unlimited' }}
+            </p>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Configuration</h2>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Type</label>
+              <select [ngModel]="inputType()" (ngModelChange)="inputType.set($event)">
+                <option value="text">Text</option>
+                <option value="email">Email</option>
+                <option value="password">Password</option>
+                <option value="number">Number</option>
+                <option value="search">Search</option>
+                <option value="tel">Telephone</option>
+                <option value="url">URL</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="inputSize()" (ngModelChange)="inputSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Prefix</label>
+              <input [ngModel]="inputPrefix()" (ngModelChange)="inputPrefix.set($event)" />
+            </div>
+
+            <div class="config-field">
+              <label>Suffix</label>
+              <input [ngModel]="inputSuffix()" (ngModelChange)="inputSuffix.set($event)" />
+            </div>
+
+            <div class="config-field">
+              <label>Error message</label>
+              <input [ngModel]="inputError()" (ngModelChange)="inputError.set($event)" />
+            </div>
+
+            <div class="config-field">
+              <label>Minimum length</label>
+              <input
+                type="number"
+                min="0"
+                [ngModel]="inputMinLength()"
+                (ngModelChange)="
+                  inputMinLength.set($event === null || $event === '' ? undefined : +$event)
+                "
+              />
+            </div>
+
+            <div class="config-field">
+              <label>Maximum length</label>
+              <input
+                type="number"
+                min="0"
+                [ngModel]="inputMaxLength()"
+                (ngModelChange)="
+                  inputMaxLength.set($event === null || $event === '' ? undefined : +$event)
+                "
+              />
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="inputDisabled()"
+                (ngModelChange)="inputDisabled.set($event)"
+              />
+              Disabled
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="inputRequired()"
+                (ngModelChange)="inputRequired.set($event)"
+              />
+              Required
+            </label>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+
+          <div class="code-container">
+            <pre><code>{{ inputUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'textarea') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Textarea</h1>
+          <p>Multiline input with character count and resize controls.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box">
+            <ui-textarea
+              label="Description"
+              placeholder="Enter description"
+              [size]="textareaSize()"
+              [resize]="textareaResize()"
+              [maxLength]="textareaMaxLength()"
+              [showCounter]="textareaCounter()"
+              [disabled]="textareaDisabled()"
+              [required]="textareaRequired()"
+              [(ngModel)]="textareaValue"
+            />
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Configuration</h2>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="textareaSize()" (ngModelChange)="textareaSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Resize</label>
+              <select [ngModel]="textareaResize()" (ngModelChange)="textareaResize.set($event)">
+                <option value="none">None</option>
+                <option value="vertical">Vertical</option>
+                <option value="horizontal">Horizontal</option>
+                <option value="both">Both</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Maximum characters</label>
+              <input
+                type="number"
+                min="1"
+                [ngModel]="textareaMaxLength()"
+                (ngModelChange)="textareaMaxLength.set(+$event)"
+              />
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="textareaCounter()"
+                (ngModelChange)="textareaCounter.set($event)"
+              />
+              Character counter
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="textareaDisabled()"
+                (ngModelChange)="textareaDisabled.set($event)"
+              />
+              Disabled
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="textareaRequired()"
+                (ngModelChange)="textareaRequired.set($event)"
+              />
+              Required
+            </label>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+          <div class="code-container">
+            <pre><code>{{ textareaUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'switch') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Switch / Toggle</h1>
+          <p>Control boolean settings with an accessible toggle.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box">
+            <ui-switch
+              label="Email Notifications"
+              description="Receive notifications through email."
+              [size]="switchSize()"
+              [disabled]="switchDisabled()"
+              [(ngModel)]="switchChecked"
+            />
+
+            <p class="mt-3 text-sm">
+              Current state: {{ switchChecked() ? 'Enabled' : 'Disabled' }}
+            </p>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Configuration</h2>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="switchSize()" (ngModelChange)="switchSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="switchDisabled()"
+                (ngModelChange)="switchDisabled.set($event)"
+              />
+              Disabled
+            </label>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+          <div class="code-container">
+            <pre><code>{{ switchUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
   </main>
 </div>

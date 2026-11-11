@@ -1,0 +1,56 @@
+<div class="ui-textarea-wrapper">
+  @if (resolvedLabel()) {
+    <label class="ui-textarea__label" [attr.for]="id() || null">
+      {{ resolvedLabel() }}
+
+      @if (resolvedRequired()) {
+        <span class="ui-textarea__required">*</span>
+      }
+    </label>
+  }
+
+  <textarea
+    class="ui-textarea"
+    [class.ui-textarea--sm]="resolvedSize() === 'sm'"
+    [class.ui-textarea--md]="resolvedSize() === 'md'"
+    [class.ui-textarea--lg]="resolvedSize() === 'lg'"
+    [class.ui-textarea--error]="!!resolvedError()"
+    [id]="id() || null"
+    [name]="name() || null"
+    [value]="resolvedValue()"
+    [placeholder]="resolvedPlaceholder()"
+    [rows]="resolvedRows()"
+    [attr.minlength]="resolvedMinLength()"
+    [attr.maxlength]="resolvedMaxLength()"
+    [disabled]="resolvedDisabled()"
+    [readonly]="resolvedReadonly()"
+    [required]="resolvedRequired()"
+    [style.resize]="resolvedResize()"
+    [attr.aria-invalid]="!!resolvedError()"
+    (input)="handleInput($event)"
+    (blur)="handleBlur()"
+  ></textarea>
+
+  <div class="ui-textarea__footer">
+    <div>
+      @if (resolvedError()) {
+        <p class="ui-textarea__error" role="alert">
+          {{ resolvedError() }}
+        </p>
+      } @else if (resolvedHint()) {
+        <p class="ui-textarea__hint">
+          {{ resolvedHint() }}
+        </p>
+      }
+    </div>
+
+    @if (resolvedShowCounter()) {
+      <span class="ui-textarea__counter">
+        {{ characterCount() }}
+        @if (resolvedMaxLength() !== null) {
+          / {{ resolvedMaxLength() }}
+        }
+      </span>
+    }
+  </div>
+</div>

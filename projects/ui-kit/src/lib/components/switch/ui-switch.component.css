@@ -1,0 +1,99 @@
+:host {
+    display: inline-block;
+}
+
+.ui-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ui-switch__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ui-switch__track {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--ui-border, #d1d5db);
+    transition: background 180ms ease;
+}
+
+.ui-switch__thumb {
+    position: absolute;
+    left: 3px;
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
+    max-width: calc(50% - 1px);
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 180ms ease;
+}
+
+.ui-switch__input:checked+.ui-switch__track {
+    background: var(--ui-primary, #2563eb);
+}
+
+.ui-switch__input:checked+.ui-switch__track .ui-switch__thumb {
+    transform: translateX(100%);
+}
+
+.ui-switch__input:focus-visible+.ui-switch__track {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 2px;
+}
+
+.ui-switch--sm .ui-switch__track {
+    width: 32px;
+    height: 18px;
+}
+
+.ui-switch--md .ui-switch__track {
+    width: 42px;
+    height: 24px;
+}
+
+.ui-switch--lg .ui-switch__track {
+    width: 52px;
+    height: 30px;
+}
+
+.ui-switch__content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.ui-switch__label {
+    color: var(--ui-text-primary, #111827);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ui-switch__description {
+    color: var(--ui-text-secondary, #6b7280);
+    font-size: 12px;
+}
+
+.ui-switch--disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ui-switch__track,
+    .ui-switch__thumb {
+        transition: none;
+    }
+}
