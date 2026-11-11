@@ -1,0 +1,321 @@
+<div class="ui-table-wrapper">
+  <!-- Search -->
+  @if (resolvedSearchable() || resolvedColumnManagement()) {
+    <div class="ui-table__toolbar">
+      @if (resolvedSearchable()) {
+        <div class="ui-table__search">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-4-4"></path>
+          </svg>
+
+          <input
+            type="search"
+            class="ui-table__search-input"
+            [placeholder]="resolvedSearchPlaceholder()"
+            [value]="searchTerm()"
+            (input)="handleSearch($any($event.target).value)"
+            aria-label="Search table records"
+          />
+        </div>
+      }
+
+      @if (resolvedColumnManagement()) {
+        <details class="ui-table__column-menu">
+          <summary class="ui-table__column-menu-trigger">
+            <span>Columns</span>
+            <span aria-hidden="true">▾</span>
+          </summary>
+
+          <div class="ui-table__column-menu-panel">
+            <div class="ui-table__column-menu-heading">Manage columns</div>
+
+            @for (column of orderedColumns(); track column.key) {
+              <label class="ui-table__column-option">
+                <input
+                  type="checkbox"
+                  [checked]="isColumnVisible(column)"
+                  [disabled]="column.hideable === false"
+                  (change)="toggleColumnVisibility(column, $any($event.target).checked)"
+                />
+
+                <span>{{ column.header }}</span>
+              </label>
+            }
+          </div>
+        </details>
+      }
+    </div>
+  }
+
+  <!-- Table -->
+  <div class="ui-table__scroll">
+    <table class="ui-table">
+      <!-- Header -->
+
+      <thead>
+        <tr
+          cdkDropList
+          cdkDropListOrientation="horizontal"
+          [cdkDropListData]="visibleColumns()"
+          [cdkDropListDisabled]="!resolvedColumnReordering()"
+          (cdkDropListDropped)="dropColumn($event)"
+        >
+          <!-- Select all -->
+          @if (resolvedSelectable()) {
+            <th class="ui-table__selection-cell">
+              @if (resolvedMultiSelect()) {
+                <input
+                  type="checkbox"
+                  class="ui-table__checkbox"
+                  [checked]="allVisibleSelected()"
+                  [indeterminate]="selectedKeys().size > 0 && !allVisibleSelected()"
+                  (change)="toggleSelectAll()"
+                  aria-label="Select all visible rows"
+                />
+              }
+            </th>
+          }
+
+          <!-- Row number -->
+          @if (resolvedShowRowNumber()) {
+            <th class="ui-table__number-cell">#</th>
+          }
+
+          <!-- Dynamic columns -->
+          @for (column of visibleColumns(); track column.key) {
+            <th
+              cdkDrag
+              [cdkDragData]="column"
+              [cdkDragDisabled]="!resolvedColumnReordering() || column.reorderable === false"
+              [style.width]="getColumnWidth(column)"
+              [style.min-width]="column.minWidth || null"
+              [style.max-width]="column.maxWidth || null"
+              [style.text-align]="column.align || 'left'"
+              [class.ui-table__sortable]="resolvedSortable() && column.sortable !== false"
+            >
+              <div class="ui-table__header-content">
+                @if (resolvedColumnReordering() && column.reorderable !== false) {
+                  <span
+                    class="ui-table__drag-handle"
+                    cdkDragHandle
+                    title="Drag to reorder column"
+                    aria-label="Drag to reorder column"
+                  >
+                    ⠿
+                  </span>
+                }
+
+                <button
+                  type="button"
+                  class="ui-table__sort-button"
+                  [disabled]="!resolvedSortable() || column.sortable === false"
+                  (click)="toggleSort(column)"
+                >
+                  <span>{{ column.header }}</span>
+
+                  @if (resolvedSortable() && column.sortable !== false) {
+                    <span class="ui-table__sort-icon">
+                      @if (getSortDirection(getColumnKey(column.key)) === 'asc') {
+                        ↑
+                      } @else if (getSortDirection(getColumnKey(column.key)) === 'desc') {
+                        ↓
+                      } @else {
+                        ↕
+                      }
+                    </span>
+                  }
+                </button>
+
+                @if (resolvedColumnResizing()) {
+                  <span
+                    class="ui-table__resize-handle"
+                    role="separator"
+                    aria-orientation="vertical"
+                    [attr.aria-label]="'Resize ' + column.header + ' column'"
+                    title="Drag to resize column"
+                    (pointerdown)="startColumnResize($event, column)"
+                  ></span>
+                }
+              </div>
+            </th>
+          }
+        </tr>
+      </thead>
+
+      <!-- Body -->
+      <tbody>
+        <!-- Loading -->
+        @if (resolvedLoading()) {
+          <tr>
+            <td
+              class="ui-table__state-cell"
+              [attr.colspan]="
+                visibleColumns().length +
+                (resolvedSelectable() ? 1 : 0) +
+                (resolvedShowRowNumber() ? 1 : 0)
+              "
+            >
+              <div class="ui-table__loading">
+                <span class="ui-table__spinner"></span>
+                <span>Loading records...</span>
+              </div>
+            </td>
+          </tr>
+        }
+
+        <!-- Empty state -->
+        @else if (paginatedData().length === 0) {
+          <tr>
+            <td
+              class="ui-table__state-cell"
+              [attr.colspan]="
+                visibleColumns().length +
+                (resolvedSelectable() ? 1 : 0) +
+                (resolvedShowRowNumber() ? 1 : 0)
+              "
+            >
+              <div class="ui-table__empty">
+                {{ resolvedEmptyMessage() }}
+              </div>
+            </td>
+          </tr>
+        }
+
+        <!-- Data rows -->
+        @else {
+          @for (row of paginatedData(); track getRowKey(row, data().indexOf(row)); let i = $index) {
+            <tr class="ui-table__row" (click)="handleRowClick(row, data().indexOf(row))">
+              <!-- Row selection -->
+              @if (resolvedSelectable()) {
+                <td class="ui-table__selection-cell" (click)="$event.stopPropagation()">
+                  <input
+                    type="checkbox"
+                    class="ui-table__checkbox"
+                    [checked]="isRowSelected(row)"
+                    (change)="toggleRowSelection(row, data().indexOf(row))"
+                    [attr.aria-label]="'Select row ' + (i + 1)"
+                  />
+                </td>
+              }
+
+              <!-- Row number -->
+              @if (resolvedShowRowNumber()) {
+                <td class="ui-table__number-cell">
+                  {{
+                    resolvedPagination() ? currentPageIndex() * currentPageSize() + i + 1 : i + 1
+                  }}
+                </td>
+              }
+
+              <!-- Dynamic cells -->
+              @for (column of visibleColumns(); track column.key) {
+                <td [style.text-align]="column.align || 'left'">
+                  @switch (column.type) {
+                    @case ('boolean') {
+                      <span
+                        class="ui-table__boolean"
+                        [class.ui-table__boolean--true]="getCellValue(row, column.key) === true"
+                        [class.ui-table__boolean--false]="getCellValue(row, column.key) === false"
+                      >
+                        {{
+                          getCellValue(row, column.key) === true
+                            ? 'Yes'
+                            : getCellValue(row, column.key) === false
+                              ? 'No'
+                              : '—'
+                        }}
+                      </span>
+                    }
+
+                    @case ('currency') {
+                      {{ getCellValue(row, column.key) | currency: column.currency || 'USD' }}
+                    }
+
+                    @case ('date') {
+                      {{
+                        getCellValue(row, column.key)
+                          ? (getCellValue(row, column.key)
+                            | date: column.dateFormat || 'mediumDate')
+                          : '—'
+                      }}
+                    }
+
+                    @default {
+                      {{ getCellValue(row, column.key) ?? '—' }}
+                    }
+                  }
+                </td>
+              }
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer and pagination -->
+  @if (resolvedShowFooter() && resolvedPagination()) {
+    <div class="ui-table__footer">
+      <div class="ui-table__footer-info">
+        Showing
+        <strong>{{ startItem() }}</strong>
+        to
+        <strong>{{ endItem() }}</strong>
+        of
+        <strong>{{ totalItems() }}</strong>
+        records
+      </div>
+
+      <div class="ui-table__pagination">
+        <label class="ui-table__page-size">
+          Rows per page
+
+          <select
+            [value]="currentPageSize()"
+            (change)="changePageSize(+$any($event.target).value)"
+            aria-label="Rows per page"
+          >
+            @for (size of resolvedPageSizeOptions(); track size) {
+              <option [value]="size" [selected]="size === currentPageSize()">
+                {{ size }}
+              </option>
+            }
+          </select>
+        </label>
+
+        <div class="ui-table__page-controls">
+          <button
+            type="button"
+            class="ui-table__page-button"
+            [disabled]="currentPageIndex() === 0"
+            (click)="previousPage()"
+            aria-label="Previous page"
+          >
+            ‹
+          </button>
+
+          <span class="ui-table__page-number">
+            Page {{ currentPageIndex() + 1 }} of {{ totalPages() }}
+          </span>
+
+          <button
+            type="button"
+            class="ui-table__page-button"
+            [disabled]="currentPageIndex() >= totalPages() - 1"
+            (click)="nextPage()"
+            aria-label="Next page"
+          >
+            ›
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
