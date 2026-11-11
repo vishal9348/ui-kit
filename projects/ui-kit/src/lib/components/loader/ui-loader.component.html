@@ -1,0 +1,28 @@
+@if (isVisible()) {
+  <div
+    class="ui-loader"
+    [class.ui-loader--overlay]="isOverlay()"
+    [class.ui-loader--fullscreen]="isFullscreen()"
+    [class.ui-loader--sm]="resolvedSize() === 'sm'"
+    [class.ui-loader--md]="resolvedSize() === 'md'"
+    [class.ui-loader--lg]="resolvedSize() === 'lg'"
+    [class.ui-loader--primary]="resolvedVariant() === 'primary'"
+    [class.ui-loader--secondary]="resolvedVariant() === 'secondary'"
+    [class.ui-loader--light]="resolvedVariant() === 'light'"
+    [class.ui-loader--dark]="resolvedVariant() === 'dark'"
+    role="status"
+    aria-live="polite"
+  >
+    <span class="ui-loader__spinner" aria-hidden="true"></span>
+
+    @if (resolvedText()) {
+      <span class="ui-loader__text">
+        {{ resolvedText() }}
+      </span>
+    }
+
+    <span class="ui-loader__sr-only">
+      {{ resolvedText() || 'Loading' }}
+    </span>
+  </div>
+}

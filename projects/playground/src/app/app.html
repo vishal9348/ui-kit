@@ -92,28 +92,44 @@
           <span class="coming-soon">Soon</span>
         </button>
 
-        <button class="nav-item" disabled>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'dialog'"
+          (click)="setActiveComponent('dialog')"
+        >
           <span class="nav-icon">▣</span>
           Dialog
-          <span class="coming-soon">Soon</span>
+          <span class="nav-status">Ready</span>
         </button>
 
-        <button class="nav-item" disabled>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'loader'"
+          (click)="setActiveComponent('loader')"
+        >
           <span class="nav-icon">◌</span>
           Loader
-          <span class="coming-soon">Soon</span>
+          <span class="nav-status">Ready</span>
         </button>
 
-        <button class="nav-item" disabled>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'progress'"
+          (click)="setActiveComponent('progress')"
+        >
           <span class="nav-icon">▰</span>
           Progress Bar
-          <span class="coming-soon">Soon</span>
+          <span class="nav-status">Ready</span>
         </button>
 
-        <button class="nav-item" disabled>
-          <span class="nav-icon">⌘</span>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'breadcrumb'"
+          (click)="setActiveComponent('breadcrumb')"
+        >
+          <span class="nav-icon">⌂</span>
           Breadcrumb
-          <span class="coming-soon">Soon</span>
+          <span class="nav-status">Ready</span>
         </button>
       </div>
     </div>
@@ -142,7 +158,15 @@
                   ? 'Checkbox'
                   : activeComponent() === 'radio'
                     ? 'Radio Group'
-                    : 'Button'
+                    : activeComponent() === 'dialog'
+                      ? 'Dialog'
+                      : activeComponent() === 'loader'
+                        ? 'Loader'
+                        : activeComponent() === 'progress'
+                          ? 'Progress Bar'
+                          : activeComponent() === 'breadcrumb'
+                            ? 'Breadcrumb'
+                            : 'Button'
           }}
         </strong>
       </div>
@@ -699,5 +723,321 @@
         </section>
       </section>
     }
+
+    <!-- dialog -->
+
+    @if (activeComponent() === 'dialog') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Dialog</h1>
+          <p>Configurable alert and confirmation dialogs.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box">
+            <button class="demo-button" (click)="dialogOpen.set(true)">Open Dialog</button>
+
+            <button class="demo-button" (click)="openServiceDialog()">Open Service Dialog</button>
+          </div>
+
+          <ui-dialog
+            [open]="dialogOpen()"
+            title="Confirm Action"
+            message="Are you sure you want to continue?"
+            [variant]="dialogVariant()"
+            [mode]="dialogMode()"
+            [size]="dialogSize()"
+            confirmText="Continue"
+            cancelText="Cancel"
+            [loading]="dialogLoading()"
+            (confirmed)="dialogOpen.set(false)"
+            (cancelled)="dialogOpen.set(false)"
+            (closed)="dialogOpen.set(false)"
+          />
+        </section>
+
+        <section class="demo-section">
+          <h2>Configuration</h2>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Variant</label>
+              <select [ngModel]="dialogVariant()" (ngModelChange)="dialogVariant.set($event)">
+                <option value="info">Info</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="danger">Danger</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Mode</label>
+              <select [ngModel]="dialogMode()" (ngModelChange)="dialogMode.set($event)">
+                <option value="alert">Alert</option>
+                <option value="confirm">Confirmation</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="dialogSize()" (ngModelChange)="dialogSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+
+          <div class="code-container">
+            <pre><code>{{ dialogUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'loader') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Loader / Spinner</h1>
+          <p>Configurable loading indicators for your applications.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box">
+            <ui-loader
+              [size]="loaderSize()"
+              [variant]="loaderVariant()"
+              [text]="loaderText()"
+              [overlay]="loaderOverlay()"
+              [fullscreen]="loaderFullscreen()"
+              [visible]="loaderVisible()"
+            />
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Configuration</h2>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="loaderSize()" (ngModelChange)="loaderSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Variant</label>
+              <select [ngModel]="loaderVariant()" (ngModelChange)="loaderVariant.set($event)">
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="loaderOverlay()"
+                (ngModelChange)="loaderOverlay.set($event)"
+              />
+              Overlay
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="loaderFullscreen()"
+                (ngModelChange)="loaderFullscreen.set($event)"
+              />
+              Fullscreen
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="loaderVisible()"
+                (ngModelChange)="loaderVisible.set($event)"
+              />
+              Visible
+            </label>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+          <div class="code-container">
+            <pre><code>{{ loaderUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'progress') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Progress Bar</h1>
+          <p>Display task progress and completion status.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box">
+            <ui-progress-bar
+              [value]="progressValue()"
+              [size]="progressSize()"
+              [variant]="progressVariant()"
+              [label]="progressLabel()"
+              [indeterminate]="progressIndeterminate()"
+              [striped]="progressStriped()"
+              [animated]="progressAnimated()"
+              [showValue]="progressShowValue()"
+            />
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Configuration</h2>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Progress Value: {{ progressValue() }}%</label>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                [ngModel]="progressValue()"
+                (ngModelChange)="progressValue.set(+$event)"
+              />
+            </div>
+
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="progressSize()" (ngModelChange)="progressSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Variant</label>
+              <select [ngModel]="progressVariant()" (ngModelChange)="progressVariant.set($event)">
+                <option value="primary">Primary</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="danger">Danger</option>
+                <option value="info">Info</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="progressIndeterminate()"
+                (ngModelChange)="progressIndeterminate.set($event)"
+              />
+              Indeterminate
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="progressStriped()"
+                (ngModelChange)="progressStriped.set($event)"
+              />
+              Striped
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="progressAnimated()"
+                (ngModelChange)="progressAnimated.set($event)"
+              />
+              Animated
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [ngModel]="progressShowValue()"
+                (ngModelChange)="progressShowValue.set($event)"
+              />
+              Show percentage
+            </label>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+          <div class="code-container">
+            <pre><code>{{ progressUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'breadcrumb') {
+      <section class="page-content">
+        <div class="page-heading">
+          <h1>Breadcrumb</h1>
+          <p>Show the current page location in a navigation hierarchy.</p>
+        </div>
+
+        <section class="demo-section">
+          <h2>Preview</h2>
+
+          <div class="preview-box">
+            <ui-breadcrumb [items]="breadcrumbItems" [separator]="breadcrumbSeparator()" />
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Configuration</h2>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Separator</label>
+              <select
+                [ngModel]="breadcrumbSeparator()"
+                (ngModelChange)="breadcrumbSeparator.set($event)"
+              >
+                <option value="/">Slash /</option>
+                <option value=">">Arrow ></option>
+                <option value="›">Chevron ›</option>
+                <option value="-">Dash -</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Usage</h2>
+
+          <div class="code-container">
+            <pre><code>{{ breadcrumbUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
+
+    
   </main>
 </div>

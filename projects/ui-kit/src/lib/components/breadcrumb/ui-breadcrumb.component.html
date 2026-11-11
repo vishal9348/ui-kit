@@ -1,0 +1,45 @@
+@if (resolvedItems().length > 0) {
+  <nav
+    class="ui-breadcrumb"
+    [attr.aria-label]="resolvedAriaLabel()"
+  >
+    <ol class="ui-breadcrumb__list">
+      @for (item of resolvedItems(); track $index; let last = $last) {
+        <li class="ui-breadcrumb__item">
+          @if (!last && item.href && !item.disabled) {
+            <a
+              class="ui-breadcrumb__link"
+              [href]="item.href"
+              (click)="handleItemClick(item)"
+            >
+              {{ item.label }}
+            </a>
+          } @else if (!last) {
+            <span
+              class="ui-breadcrumb__text"
+              [class.ui-breadcrumb__text--disabled]="item.disabled"
+            >
+              {{ item.label }}
+            </span>
+          } @else {
+            <span
+              class="ui-breadcrumb__current"
+              aria-current="page"
+            >
+              {{ item.label }}
+            </span>
+          }
+
+          @if (!last) {
+            <span
+              class="ui-breadcrumb__separator"
+              aria-hidden="true"
+            >
+              {{ resolvedSeparator() }}
+            </span>
+          }
+        </li>
+      }
+    </ol>
+  </nav>
+}

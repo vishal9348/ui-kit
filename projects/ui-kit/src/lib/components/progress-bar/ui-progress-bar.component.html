@@ -1,0 +1,42 @@
+<div class="ui-progress">
+  @if (resolvedLabel()) {
+    <div class="ui-progress__header">
+      <span class="ui-progress__label">
+        {{ resolvedLabel() }}
+      </span>
+
+      @if (shouldShowValue() && !isIndeterminate()) {
+        <span class="ui-progress__value">
+          {{ displayValue() }}
+        </span>
+      }
+    </div>
+  }
+
+  <div
+    class="ui-progress__track"
+    [class.ui-progress__track--sm]="resolvedSize() === 'sm'"
+    [class.ui-progress__track--md]="resolvedSize() === 'md'"
+    [class.ui-progress__track--lg]="resolvedSize() === 'lg'"
+    [class.ui-progress__track--indeterminate]="isIndeterminate()"
+    role="progressbar"
+    [attr.aria-label]="resolvedLabel() || 'Progress'"
+    [attr.aria-valuemin]="isIndeterminate() ? null : resolvedMin()"
+    [attr.aria-valuemax]="isIndeterminate() ? null : resolvedMax()"
+    [attr.aria-valuenow]="isIndeterminate() ? null : resolvedMin() + (percentage() / 100) * (resolvedMax() - resolvedMin())"
+    [attr.aria-valuetext]="isIndeterminate() ? 'Progress ongoing' : displayValue()"
+  >
+    <div
+      class="ui-progress__bar"
+      [class.ui-progress__bar--primary]="resolvedVariant() === 'primary'"
+      [class.ui-progress__bar--success]="resolvedVariant() === 'success'"
+      [class.ui-progress__bar--warning]="resolvedVariant() === 'warning'"
+      [class.ui-progress__bar--danger]="resolvedVariant() === 'danger'"
+      [class.ui-progress__bar--info]="resolvedVariant() === 'info'"
+      [class.ui-progress__bar--striped]="isStriped()"
+      [class.ui-progress__bar--animated]="isAnimated()"
+      [class.ui-progress__bar--indeterminate]="isIndeterminate()"
+      [style.width.%]="isIndeterminate() ? 35 : percentage()"
+    ></div>
+  </div>
+</div>

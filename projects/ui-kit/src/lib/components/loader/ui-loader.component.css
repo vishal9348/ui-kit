@@ -1,0 +1,101 @@
+:host {
+    display: inline-block;
+}
+
+.ui-loader {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--ui-primary, #2563eb);
+}
+
+.ui-loader__spinner {
+    display: inline-block;
+    flex-shrink: 0;
+    border: 3px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: ui-loader-spin 700ms linear infinite;
+}
+
+.ui-loader--sm .ui-loader__spinner {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+}
+
+.ui-loader--md .ui-loader__spinner {
+    width: 24px;
+    height: 24px;
+}
+
+.ui-loader--lg .ui-loader__spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 4px;
+}
+
+.ui-loader--primary {
+    color: var(--ui-primary, #2563eb);
+}
+
+.ui-loader--secondary {
+    color: var(--ui-text-secondary, #6b7280);
+}
+
+.ui-loader--light {
+    color: #ffffff;
+}
+
+.ui-loader--dark {
+    color: #111827;
+}
+
+.ui-loader__text {
+    font-size: 14px;
+    color: var(--ui-text-primary, #374151);
+}
+
+.ui-loader--overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(2px);
+}
+
+.ui-loader--overlay .ui-loader__text {
+    color: var(--ui-text-primary, #111827);
+}
+
+.ui-loader--fullscreen {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.ui-loader__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@keyframes ui-loader-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ui-loader__spinner {
+        animation-duration: 2s;
+    }
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
 import {
   UiButtonComponent,
@@ -8,10 +8,16 @@ import {
   UiDropdownOption,
   UiCheckboxComponent,
   UiRadioGroupComponent,
+  UiDialogComponent,
+  UiDialogService,
+  UiLoaderComponent,
+  UiProgressBarComponent,
+  UiBreadcrumbComponent,
 } from 'ui-kit';
+
 import { FormsModule } from '@angular/forms';
 
-import type { UiRadioOption } from 'ui-kit';
+import type { UiRadioOption, UiBreadcrumbItem } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
 
@@ -24,6 +30,10 @@ type PlaygroundTheme = 'light' | 'dark';
     FormsModule,
     UiCheckboxComponent,
     UiRadioGroupComponent,
+    UiDialogComponent,
+    UiLoaderComponent,
+    UiProgressBarComponent,
+    UiBreadcrumbComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -35,7 +45,10 @@ export class App {
 
   readonly theme = signal<PlaygroundTheme>('light');
 
-  readonly activeComponent = signal('button');
+  // readonly activeComponent = signal('button');
+  activeComponent = signal<
+    'button' | 'dropdown' | 'checkbox' | 'radio' | 'dialog' | 'loader' | 'progress' | 'breadcrumb'
+  >('button');
 
   readonly variant = signal<UiVariant>('primary');
 
@@ -91,7 +104,17 @@ export class App {
     this.theme.update((current) => (current === 'light' ? 'dark' : 'light'));
   }
 
-  setActiveComponent(component: string): void {
+  setActiveComponent(
+    component:
+      | 'button'
+      | 'dropdown'
+      | 'checkbox'
+      | 'radio'
+      | 'dialog'
+      | 'loader'
+      | 'progress'
+      | 'breadcrumb',
+  ): void {
     this.activeComponent.set(component);
   }
 
@@ -264,5 +287,145 @@ selectedValue = signal<${selectionType}>(${multiple ? '[]' : 'null'});`;
 
 // Component TypeScript
 selectedRadioValue = signal<string | null>('engineering');`;
+  });
+
+  // dialog
+
+  readonly dialogService = inject(UiDialogService);
+
+  dialogOpen = signal(false);
+
+  dialogVariant = signal<'info' | 'success' | 'warning' | 'danger'>('info');
+
+  dialogMode = signal<'alert' | 'confirm'>('confirm');
+
+  dialogSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  dialogLoading = signal(false);
+
+  dialogUsageCode = computed(() => {
+    const variant = this.dialogVariant();
+    const mode = this.dialogMode();
+    const size = this.dialogSize();
+
+    return `<ui-dialog
+  [open]="showDialog()"
+  title="Confirm Action"
+  message="Are you sure you want to continue?"
+  variant="${variant}"
+  mode="${mode}"
+  size="${size}"
+  confirmText="Continue"
+  cancelText="Cancel"
+  (confirmed)="handleConfirm()"
+  (closed)="showDialog.set(false)"
+/>
+
+// Component TypeScript
+showDialog = signal(false);`;
+  });
+
+  openServiceDialog(): void {
+    this.dialogService
+      .confirm({
+        title: 'Service Dialog',
+        message: 'This dialog was opened using UiDialogService.',
+        variant: 'success',
+        confirmText: 'Continue',
+        cancelText: 'Cancel',
+      })
+      .closed.subscribe((confirmed) => {
+        console.log('Confirmed:', confirmed);
+      });
+  }
+
+  // Breadcrumb
+
+  // ======================================
+  // LOADER
+  // ======================================
+
+  loaderSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  loaderVariant = signal<'primary' | 'secondary' | 'light' | 'dark'>('primary');
+
+  loaderText = signal('Loading data...');
+
+  loaderOverlay = signal(false);
+
+  loaderFullscreen = signal(false);
+
+  loaderVisible = signal(true);
+
+  loaderUsageCode = computed(() => {
+    return `<ui-loader
+  size="${this.loaderSize()}"
+  variant="${this.loaderVariant()}"
+  text="${this.loaderText()}"
+  [overlay]="${this.loaderOverlay()}"
+  [fullscreen]="${this.loaderFullscreen()}"
+  [visible]="${this.loaderVisible()}"
+/>`;
+  });
+
+  // ======================================
+  // PROGRESS BAR
+  // ======================================
+
+  progressValue = signal(65);
+
+  progressSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  progressVariant = signal<'primary' | 'success' | 'warning' | 'danger' | 'info'>('primary');
+
+  progressLabel = signal('Uploading document');
+
+  progressIndeterminate = signal(false);
+
+  progressStriped = signal(false);
+
+  progressAnimated = signal(false);
+
+  progressShowValue = signal(true);
+
+  progressUsageCode = computed(() => {
+    return `<ui-progress-bar
+  [value]="${this.progressValue()}"
+  label="${this.progressLabel()}"
+  size="${this.progressSize()}"
+  variant="${this.progressVariant()}"
+  [indeterminate]="${this.progressIndeterminate()}"
+  [striped]="${this.progressStriped()}"
+  [animated]="${this.progressAnimated()}"
+  [showValue]="${this.progressShowValue()}"
+/>`;
+  });
+
+  // ======================================
+  // BREADCRUMB
+  // ======================================
+
+  breadcrumbSeparator = signal('/');
+
+  breadcrumbItems: UiBreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Employees', href: '/employees' },
+    { label: 'Employee Details' },
+  ];
+
+  breadcrumbUsageCode = computed(() => {
+    return `<ui-breadcrumb
+  [items]="breadcrumbItems"
+  separator="${this.breadcrumbSeparator()}"
+/>
+
+// Component TypeScript
+breadcrumbItems: UiBreadcrumbItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Employees', href: '/employees' },
+  { label: 'Employee Details' }
+];`;
   });
 }
