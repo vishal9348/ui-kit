@@ -31,3 +31,21 @@ export * from './lib/components/checkbox/ui-checkbox.types';
 
 export * from './lib/components/radio-group/ui-radio-group.types';
 export * from './lib/components/radio-group/ui-radio-group.component';
+
+// dialog
+
+export * from './lib/components/dialog/ui-dialog.types';
+export * from './lib/components/dialog/ui-dialog.component';
+export * from './lib/components/dialog/ui-dialog.service';
+
+// Loader
+export * from './lib/components/loader/ui-loader.types';
+export * from './lib/components/loader/ui-loader.component';
+
+// Progress Bar
+export * from './lib/components/progress-bar/ui-progress-bar.types';
+export * from './lib/components/progress-bar/ui-progress-bar.component';
+
+// Breadcrumb
+export * from './lib/components/breadcrumb/ui-breadcrumb.types';
+export * from './lib/components/breadcrumb/ui-breadcrumb.component';

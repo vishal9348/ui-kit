@@ -1,0 +1,104 @@
+@if (isVisible()) {
+  @if (!isServiceDialog) {
+    <div
+      class="ui-dialog__backdrop"
+      (click)="handleBackdropClick($event)"
+    >
+      <div
+        class="ui-dialog"
+        [class.ui-dialog--sm]="resolvedSize() === 'sm'"
+        [class.ui-dialog--md]="resolvedSize() === 'md'"
+        [class.ui-dialog--lg]="resolvedSize() === 'lg'"
+        [class.ui-dialog--service]="isServiceDialog"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="resolvedTitle()"
+      >
+        <ng-container *ngTemplateOutlet="dialogContent" />
+      </div>
+    </div>
+  } @else {
+    <div
+      class="ui-dialog"
+      [class.ui-dialog--sm]="resolvedSize() === 'sm'"
+      [class.ui-dialog--md]="resolvedSize() === 'md'"
+      [class.ui-dialog--lg]="resolvedSize() === 'lg'"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="resolvedTitle()"
+    >
+      <ng-container *ngTemplateOutlet="dialogContent" />
+    </div>
+  }
+}
+
+<ng-template #dialogContent>
+  <div
+    class="ui-dialog__header"
+    [class.ui-dialog__header--success]="resolvedVariant() === 'success'"
+    [class.ui-dialog__header--warning]="resolvedVariant() === 'warning'"
+    [class.ui-dialog__header--danger]="resolvedVariant() === 'danger'"
+  >
+    <div class="ui-dialog__heading">
+      <span
+        class="ui-dialog__icon"
+        aria-hidden="true"
+      >
+        @switch (resolvedVariant()) {
+          @case ('success') { ✓ }
+          @case ('warning') { ! }
+          @case ('danger') { × }
+          @default { i }
+        }
+      </span>
+
+      <h2 class="ui-dialog__title">
+        {{ resolvedTitle() }}
+      </h2>
+    </div>
+
+    @if (hasCloseButton()) {
+      <button
+        type="button"
+        class="ui-dialog__close"
+        aria-label="Close dialog"
+        [disabled]="isLoading()"
+        (click)="close()"
+      >
+        ×
+      </button>
+    }
+  </div>
+
+  <div class="ui-dialog__body">
+    {{ resolvedMessage() }}
+  </div>
+
+  <div class="ui-dialog__footer">
+    @if (resolvedMode() === 'confirm') {
+      <button
+        type="button"
+        class="ui-dialog__button ui-dialog__button--secondary"
+        [disabled]="isLoading()"
+        (click)="cancel()"
+      >
+        {{ resolvedCancelText() }}
+      </button>
+    }
+
+    <button
+      type="button"
+      class="ui-dialog__button ui-dialog__button--primary"
+      [class.ui-dialog__button--danger]="resolvedVariant() === 'danger'"
+      [disabled]="isLoading()"
+      (click)="confirm()"
+    >
+      @if (isLoading()) {
+        <span class="ui-dialog__spinner"></span>
+        Processing...
+      } @else {
+        {{ resolvedConfirmText() }}
+      }
+    </button>
+  </div>
+</ng-template>
