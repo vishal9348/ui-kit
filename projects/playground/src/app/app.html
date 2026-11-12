@@ -176,6 +176,15 @@
           Switch
           <span class="nav-status">Ready</span>
         </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'date-picker'"
+          (click)="setActiveComponent('date-picker')"
+        >
+          <span class="nav-icon">▦</span>
+          Date Picker
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -1708,5 +1717,102 @@
         </section>
       </section>
     }
+
+    @if (activeComponent() === 'date-picker') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">FORM COMPONENTS</div>
+          <h1>Date Picker</h1>
+          <p>
+            A configurable date picker with single-date and date-range selection, date restrictions
+            and Angular Forms integration.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Single Date</span>
+            <span>Date Range</span>
+            <span>Angular Forms</span>
+          </div>
+        </div>
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Single Date Selection</h2>
+              <p>Select a date of birth.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Date of Birth"
+                placeholder="Select your date of birth"
+                dateFormat="dd/MM/yyyy"
+                [minDate]="minDate"
+                [maxDate]="maxDate"
+                [(ngModel)]="dateOfBirth"
+              />
+            </div>
+          </div>
+
+          <p>
+            Selected value:
+            {{ dateOfBirth()?.toDateString() ?? 'No date selected' }}
+          </p>
+        </section>
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Date Range Selection</h2>
+              <p>Select a start date and an end date.</p>
+            </div>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Travel Period"
+                placeholder="Select travel period"
+                selectionMode="range"
+                dateFormat="dd/MM/yyyy"
+                [(ngModel)]="travelDates"
+              />
+            </div>
+          </div>
+
+          <p>
+            Start:
+            {{ travelDates().start?.toDateString() ?? 'Not selected' }}
+          </p>
+          <p>
+            End:
+            {{ travelDates().end?.toDateString() ?? 'Not selected' }}
+          </p>
+        </section>
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Other Configurations</h2>
+              <p>Different sizes and states.</p>
+            </div>
+          </div>
+
+          <div class="preview-box" style="display: grid; gap: 20px">
+            <ui-date-picker label="Small" size="sm" />
+            <ui-date-picker label="Medium" size="md" />
+            <ui-date-picker label="Large" size="lg" />
+            <ui-date-picker label="Disabled" [disabled]="true" />
+            <ui-date-picker label="With validation error" error="Please select a valid date." />
+          </div>
+        </section>
+      </section>
+    }
+
+    
   </main>
 </div>

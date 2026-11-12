@@ -19,6 +19,7 @@ import {
   UiTextareaComponent,
   UiSwitchComponent,
   UiDataTableComponent,
+  UiDatePickerComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -65,8 +66,9 @@ interface Employee extends Record<string, unknown> {
     UiInputComponent,
     UiTextareaComponent,
     UiSwitchComponent,
-    UiDataTableComponent
-],
+    UiDataTableComponent,
+    UiDatePickerComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -92,6 +94,7 @@ export class App {
     | 'textarea'
     | 'switch'
     | 'data-table'
+    | 'date-picker'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -162,7 +165,8 @@ export class App {
       | 'input'
       | 'textarea'
       | 'switch'
-      | 'data-table',
+      | 'data-table'
+      | 'date-picker',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1070,4 +1074,17 @@ notificationsEnabled = true;`;
 />
 `,
   );
+
+  readonly dateOfBirth = signal<Date | null>(null);
+
+  readonly travelDates = signal<{
+    start: Date | null;
+    end: Date | null;
+  }>({
+    start: null,
+    end: null,
+  });
+
+  readonly minDate = new Date(1950, 0, 1);
+  readonly maxDate = new Date();
 }

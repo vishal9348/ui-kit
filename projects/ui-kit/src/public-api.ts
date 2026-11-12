@@ -72,3 +72,14 @@ export * from './lib/components/switch/ui-switch.component';
 // Data Table
 export * from './lib/components/data-table/ui-data-table.component';
 export * from './lib/components/data-table/ui-data-table.types';
+
+export { UiDatePickerComponent } from './lib/components/date-picker/ui-date-picker.component';
+
+export type {
+  UiDatePickerSelectionMode,
+  UiDatePickerSize,
+  UiDateRange,
+  UiDatePickerValue,
+  UiDatePickerConfig,
+  UiCalendarDay,
+} from './lib/components/date-picker/ui-date-picker.types';
