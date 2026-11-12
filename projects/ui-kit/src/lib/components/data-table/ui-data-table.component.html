@@ -147,6 +147,159 @@
             </th>
           }
         </tr>
+
+        @if (resolvedColumnFiltering()) {
+          <tr class="ui-table__filter-row">
+            @if (resolvedSelectable()) {
+              <th class="ui-table__selection-cell"></th>
+            }
+
+            @if (resolvedShowRowNumber()) {
+              <th class="ui-table__number-cell"></th>
+            }
+
+            @for (column of visibleColumns(); track column.key) {
+              <th class="ui-table__filter-cell">
+                @if (column.filterable !== false) {
+                  @switch (column.type) {
+                    <!-- Boolean filter -->
+                    @case ('boolean') {
+                      <select
+                        class="ui-table__filter-control"
+                        [value]="columnFilters()[getColumnKey(column.key)]?.value ?? ''"
+                        (change)="setColumnFilter(column, $any($event.target).value, 'equals')"
+                        [attr.aria-label]="'Filter ' + column.header"
+                      >
+                        <option value="">All</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
+                    }
+
+                    <!-- Number and currency filter -->
+                    @case ('number') {
+                      <div class="ui-table__filter-group">
+                        <select
+                          class="ui-table__filter-operator"
+                          [value]="columnFilters()[getColumnKey(column.key)]?.operator ?? 'equals'"
+                          (change)="
+                            setColumnFilter(
+                              column,
+                              columnFilters()[getColumnKey(column.key)]?.value ?? '',
+                              $any($event.target).value
+                            )
+                          "
+                          [attr.aria-label]="'Filter operator for ' + column.header"
+                        >
+                          <option value="equals">=</option>
+                          <option value="gt">&gt;</option>
+                          <option value="lt">&lt;</option>
+                        </select>
+
+                        <input
+                          type="number"
+                          class="ui-table__filter-control"
+                          [value]="columnFilters()[getColumnKey(column.key)]?.value ?? ''"
+                          (input)="
+                            setColumnFilter(
+                              column,
+                              $any($event.target).value,
+                              columnFilters()[getColumnKey(column.key)]?.operator ?? 'equals'
+                            )
+                          "
+                          [attr.aria-label]="'Filter ' + column.header"
+                        />
+                      </div>
+                    }
+
+                    @case ('currency') {
+                      <div class="ui-table__filter-group">
+                        <select
+                          class="ui-table__filter-operator"
+                          [value]="columnFilters()[getColumnKey(column.key)]?.operator ?? 'equals'"
+                          (change)="
+                            setColumnFilter(
+                              column,
+                              columnFilters()[getColumnKey(column.key)]?.value ?? '',
+                              $any($event.target).value
+                            )
+                          "
+                          [attr.aria-label]="'Filter operator for ' + column.header"
+                        >
+                          <option value="equals">=</option>
+                          <option value="gt">&gt;</option>
+                          <option value="lt">&lt;</option>
+                        </select>
+
+                        <input
+                          type="number"
+                          class="ui-table__filter-control"
+                          [value]="columnFilters()[getColumnKey(column.key)]?.value ?? ''"
+                          (input)="
+                            setColumnFilter(
+                              column,
+                              $any($event.target).value,
+                              columnFilters()[getColumnKey(column.key)]?.operator ?? 'equals'
+                            )
+                          "
+                          [attr.aria-label]="'Filter ' + column.header"
+                        />
+                      </div>
+                    }
+
+                    <!-- Date filter -->
+                    @case ('date') {
+                      <div class="ui-table__filter-group">
+                        <select
+                          class="ui-table__filter-operator"
+                          [value]="columnFilters()[getColumnKey(column.key)]?.operator ?? 'equals'"
+                          (change)="
+                            setColumnFilter(
+                              column,
+                              columnFilters()[getColumnKey(column.key)]?.value ?? '',
+                              $any($event.target).value
+                            )
+                          "
+                          [attr.aria-label]="'Filter operator for ' + column.header"
+                        >
+                          <option value="equals">On</option>
+                          <option value="before">Before</option>
+                          <option value="after">After</option>
+                        </select>
+
+                        <input
+                          type="date"
+                          class="ui-table__filter-control"
+                          [value]="columnFilters()[getColumnKey(column.key)]?.value ?? ''"
+                          (change)="
+                            setColumnFilter(
+                              column,
+                              $any($event.target).value,
+                              columnFilters()[getColumnKey(column.key)]?.operator ?? 'equals'
+                            )
+                          "
+                          [attr.aria-label]="'Filter ' + column.header"
+                        />
+                      </div>
+                    }
+
+                    <!-- Default text filter -->
+                    @default {
+                      <input
+                        type="text"
+                        class="ui-table__filter-control"
+                        placeholder="Filter..."
+                        [value]="columnFilters()[getColumnKey(column.key)]?.value ?? ''"
+                        (input)="setColumnFilter(column, $any($event.target).value)"
+                        [attr.aria-label]="'Filter ' + column.header"
+                      />
+                    }
+                  }
+                }
+              </th>
+            }
+          </tr>
+        }
       </thead>
 
       <!-- Body -->

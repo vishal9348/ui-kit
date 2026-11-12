@@ -18,6 +18,12 @@ import {
   UiTableSort,
   UiTableSortChange,
   UiTableSortDirection,
+  UiTableColumnFilter,
+  UiTableFilterChange,
+  UiTableFilters,
+  UiTableFilterOperator,
+  UiTableColumnType,
+  UiTableQueryChange,
 } from './ui-data-table.types';
 
 import {
@@ -136,29 +142,60 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
   // readonly visibleColumns = computed(() => this.columns().filter((column) => !column.hidden));
 
   // Search
+
   readonly filteredData = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
     const rows = this.data();
+    const filters = this.columnFilters();
 
-    if (!term) {
+    // Server already filtered the data.
+    if (this.resolvedServerSide()) {
       return rows;
     }
 
-    return rows.filter((row) =>
-      this.visibleColumns().some((column) => {
+    return rows.filter((row) => {
+      // Existing global search
+      if (term) {
+        const matchesSearch = this.visibleColumns().some((column) => {
+          const value = this.getCellValue(row, column.key);
+
+          return String(value ?? '')
+            .toLowerCase()
+            .includes(term);
+        });
+
+        if (!matchesSearch) {
+          return false;
+        }
+      }
+
+      // Column-level filters
+      if (!this.resolvedColumnFiltering()) {
+        return true;
+      }
+
+      return Object.entries(filters).every(([key, filter]) => {
+        const column = this.columns().find((item) => this.getColumnKey(item.key) === key);
+
+        if (!column || column.filterable === false) {
+          return true;
+        }
+
         const value = this.getCellValue(row, column.key);
 
-        return String(value ?? '')
-          .toLowerCase()
-          .includes(term);
-      }),
-    );
-  });
+        return this.matchesColumnFilter(value, filter, column.type);
+      });
+    });
+  };);
 
   // Sorting
   readonly sortedData = computed(() => {
     const rows = [...this.filteredData()];
     const sort = this.currentSort();
+
+    if (this.resolvedServerSide()) {
+      return [...rows];
+    }
 
     if (!sort) {
       return rows;
@@ -181,8 +218,16 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
   });
 
   // Pagination
-  readonly totalItems = computed(() => this.sortedData().length);
+  readonly totalItems = computed(() => {
+  if (this.resolvedServerSide()) {
+    return Math.max(
+      0,
+      this.totalItemsInput() ?? this.data().length
+    );
+  }
 
+  return this.sortedData().length;
+});
   readonly totalPages = computed(() => {
     if (!this.resolvedPagination()) {
       return 1;
@@ -287,6 +332,7 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
       active: key,
       direction,
     });
+    this.emitQueryChange()
   }
 
   getSortDirection(key: string): UiTableSortDirection {
@@ -303,6 +349,7 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
 
     this.searchTerm.set(value);
     this.currentPageIndex.set(0);
+    this.emitQueryChange()
   }
 
   // Pagination
@@ -338,6 +385,7 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
       pageIndex: this.currentPageIndex(),
       pageSize: this.currentPageSize(),
     });
+    this.emitQueryChange()
   }
 
   // Row selection
@@ -631,4 +679,193 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
       columnOrder: this.orderedColumns().map((column) => this.getColumnKey(column.key)),
     });
   }
+
+  // Column filtering
+  readonly columnFiltering = input<boolean | undefined>();
+
+  readonly filterChange = output<UiTableFilterChange>();
+
+  readonly columnFilters = signal<UiTableFilters>({});
+
+  readonly resolvedColumnFiltering = computed(
+    () => this.columnFiltering() ?? this.config().columnFiltering ?? false,
+  );
+
+  readonly activeFilterCount = computed(() => Object.keys(this.columnFilters()).length);
+
+  private matchesColumnFilter(
+    cellValue: unknown,
+    filter: UiTableColumnFilter,
+    type: UiTableColumnType | undefined,
+  ): boolean {
+    const filterValue = filter.value.trim();
+
+    if (!filterValue) {
+      return true;
+    }
+
+    if (cellValue === null || cellValue === undefined) {
+      return false;
+    }
+
+    switch (type ?? 'text') {
+      case 'number':
+      case 'currency': {
+        const cellNumber = Number(cellValue);
+        const filterNumber = Number(filterValue);
+
+        if (!Number.isFinite(cellNumber) || !Number.isFinite(filterNumber)) {
+          return false;
+        }
+
+        switch (filter.operator) {
+          case 'equals':
+            return cellNumber === filterNumber;
+          case 'gt':
+            return cellNumber > filterNumber;
+          case 'lt':
+            return cellNumber < filterNumber;
+          default:
+            return false;
+        }
+      }
+
+      case 'date': {
+        const cellDate =
+          cellValue instanceof Date ? cellValue : new Date(cellValue as string | number);
+
+        const filterDate = new Date(filterValue);
+
+        if (Number.isNaN(cellDate.getTime()) || Number.isNaN(filterDate.getTime())) {
+          return false;
+        }
+
+        const cellTime = cellDate.getTime();
+        const filterTime = filterDate.getTime();
+
+        switch (filter.operator) {
+          case 'equals':
+            return cellDate.toDateString() === filterDate.toDateString();
+          case 'before':
+            return cellTime < filterTime;
+          case 'after':
+            return cellTime > filterTime;
+          default:
+            return false;
+        }
+      }
+
+      case 'boolean': {
+        const normalized = String(filterValue).toLowerCase();
+
+        if (normalized === 'true' || normalized === 'yes') {
+          return cellValue === true;
+        }
+
+        if (normalized === 'false' || normalized === 'no') {
+          return cellValue === false;
+        }
+
+        return false;
+      }
+
+      default: {
+        const cellText = String(cellValue).toLowerCase();
+        const searchText = filterValue.toLowerCase();
+
+        switch (filter.operator) {
+          case 'equals':
+            return cellText === searchText;
+          case 'startsWith':
+            return cellText.startsWith(searchText);
+          case 'contains':
+          default:
+            return cellText.includes(searchText);
+        }
+      }
+    }
+  }
+
+  setColumnFilter(column: UiTableColumn<T>, value: string, operator?: UiTableFilterOperator): void {
+    if (!this.resolvedColumnFiltering() || column.filterable === false) {
+      return;
+    }
+
+    const key = this.getColumnKey(column.key);
+    const next = { ...this.columnFilters() };
+
+    if (!value.trim()) {
+      delete next[key];
+    } else {
+      next[key] = {
+        value,
+        operator: operator ?? this.getDefaultFilterOperator(column.type),
+      };
+    }
+
+    this.columnFilters.set(next);
+    this.currentPageIndex.set(0);
+    this.emitFilterChange();
+  }
+
+  clearColumnFilter(column: UiTableColumn<T>): void {
+    const key = this.getColumnKey(column.key);
+    const next = { ...this.columnFilters() };
+
+    delete next[key];
+
+    this.columnFilters.set(next);
+    this.currentPageIndex.set(0);
+    this.emitFilterChange();
+  }
+
+  clearAllColumnFilters(): void {
+    this.columnFilters.set({});
+    this.currentPageIndex.set(0);
+    this.emitFilterChange();
+  }
+
+  private getDefaultFilterOperator(type: UiTableColumnType | undefined): UiTableFilterOperator {
+    switch (type) {
+      case 'number':
+      case 'currency':
+      case 'date':
+      case 'boolean':
+        return 'equals';
+      default:
+        return 'contains';
+    }
+  }
+
+  private emitFilterChange(): void {
+    this.filterChange.emit({
+      filters: this.columnFilters(),
+      activeFilterCount: this.activeFilterCount(),
+    });
+    this.emitQueryChange()
+  }
+
+  //  server side
+
+  readonly serverSide = input<boolean | undefined>();
+  readonly totalItemsInput = input<number | undefined>();
+  readonly queryChange = output<UiTableQueryChange>();
+
+  readonly resolvedServerSide = computed(
+    () => this.serverSide() ?? this.config().serverSide ?? false,
+  );
+
+  private emitQueryChange(): void {
+  if (!this.resolvedServerSide()) {
+    return;
+  }
+
+  this.queryChange.emit({
+    pageIndex: this.currentPageIndex(),
+    pageSize: this.currentPageSize(),
+    search: this.searchTerm().trim(),
+    sort: this.currentSort(),
+    filters: this.columnFilters()
+  });
+}
 }

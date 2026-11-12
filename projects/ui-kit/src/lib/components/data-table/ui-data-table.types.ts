@@ -72,6 +72,7 @@ export interface UiTableConfig {
   sortable?: boolean;
   selectable?: boolean;
   multiSelect?: boolean;
+  serverSide?: boolean;
 
   pageSize?: number;
   pageSizeOptions?: number[];
@@ -101,10 +102,37 @@ export interface UiTableConfig {
 
   /** Optional key for persisting user preferences */
   storageKey?: string;
+  columnFiltering?: boolean;
 }
 
 export interface UiTableColumnChange<T = Record<string, unknown>> {
   columns: UiTableColumn<T>[];
   visibleColumns: string[];
   columnOrder: string[];
+}
+
+
+
+export type UiTableFilterOperator =
+  'contains' | 'equals' | 'startsWith' | 'gt' | 'lt' | 'before' | 'after';
+
+export interface UiTableColumnFilter {
+  value: string;
+  operator: UiTableFilterOperator;
+}
+
+export type UiTableFilters = Record<string, UiTableColumnFilter>;
+
+export interface UiTableFilterChange {
+  filters: UiTableFilters;
+  activeFilterCount: number;
+}
+
+
+export interface UiTableQueryChange {
+  pageIndex: number;
+  pageSize: number;
+  search: string;
+  sort: UiTableSort | null;
+  filters: UiTableFilters;
 }

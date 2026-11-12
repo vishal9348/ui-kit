@@ -185,6 +185,7 @@ const meta: Meta<UiDataTableComponent<Employee>> = {
     columnManagement: true,
     columnReordering: true,
     columnResizing: true,
+    columnFiltering: true,
   },
 };
 
