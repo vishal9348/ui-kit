@@ -66,3 +66,9 @@ export * from './lib/components/textarea/ui-textarea.component';
 // Switch
 export * from './lib/components/switch/ui-switch.types';
 export * from './lib/components/switch/ui-switch.component';
+
+// data tables
+
+// Data Table
+export * from './lib/components/data-table/ui-data-table.component';
+export * from './lib/components/data-table/ui-data-table.types';

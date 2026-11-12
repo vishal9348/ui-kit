@@ -84,25 +84,15 @@ export interface UiTableConfig {
 
   showRowNumber?: boolean;
   showFooter?: boolean;
-
-  /** Enable column visibility selector */
   columnManagement?: boolean;
-
-  /** Enable drag-and-drop column rearrangement */
   columnReordering?: boolean;
-
-  /** Enable column resizing */
   columnResizing?: boolean;
-
-  /** Enable sticky table header */
   stickyHeader?: boolean;
-
-  /** Initial table density */
   density?: UiTableDensity;
-
-  /** Optional key for persisting user preferences */
   storageKey?: string;
   columnFiltering?: boolean;
+  csvExport?: boolean;
+  csvFileName?: string;
 }
 
 export interface UiTableColumnChange<T = Record<string, unknown>> {

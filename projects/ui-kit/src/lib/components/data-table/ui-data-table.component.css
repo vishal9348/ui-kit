@@ -77,15 +77,16 @@
 .ui-table__scroll {
     width: 100%;
     overflow-x: auto;
+    overflow-y: visible;
 }
 
 .ui-table {
-    width: 100%;
-    min-width: 600px;
+    width: max-content;
+    min-width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
     text-align: left;
-    table-layout: fixed;
+    table-layout: auto;
 }
 
 /* Table header */
@@ -96,6 +97,7 @@
 
 .ui-table th {
     height: 48px;
+    min-width: 140px;
     padding: 12px 16px;
     color: #4b5563;
     font-size: 12px;
@@ -104,20 +106,15 @@
     text-transform: uppercase;
     white-space: nowrap;
     border-bottom: 1px solid var(--ui-table-border);
+    box-sizing: border-box;
 }
 
 .ui-table__sort-button {
     display: inline-flex;
     align-items: center;
+    flex-shrink: 0;
     gap: 8px;
-    padding: 0;
-    color: inherit;
-    background: transparent;
-    border: 0;
-    font: inherit;
-    text-transform: inherit;
-    letter-spacing: inherit;
-    cursor: pointer;
+    white-space: nowrap;
 }
 
 .ui-table__sort-button:disabled {
@@ -464,9 +461,14 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    position: relative;
+    width: max-content;
+    min-width: 100%;
+    white-space: nowrap;
 }
 
 .ui-table__drag-handle {
+    flex-shrink: 0;
     color: var(--ui-table-muted);
     cursor: grab;
     user-select: none;
@@ -580,4 +582,35 @@
 
 .ui-table__filter-group .ui-table__filter-control {
     flex: 1;
+}
+
+.ui-table__export-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 1px solid var(--ui-table-border, #d1d5db);
+    border-radius: 6px;
+    background: var(--ui-table-surface, #ffffff);
+    color: var(--ui-table-text, #374151);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 150ms ease, border-color 150ms ease;
+}
+
+.ui-table__export-button:hover:not(:disabled) {
+    background: var(--ui-table-hover, #f3f4f6);
+}
+
+.ui-table__export-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ui-table__export-button:focus-visible {
+    outline: 2px solid var(--ui-table-primary, #2563eb);
+    outline-offset: 2px;
 }

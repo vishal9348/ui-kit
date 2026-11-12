@@ -186,7 +186,7 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
         return this.matchesColumnFilter(value, filter, column.type);
       });
     });
-  };);
+  });
 
   // Sorting
   readonly sortedData = computed(() => {
@@ -219,15 +219,12 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
 
   // Pagination
   readonly totalItems = computed(() => {
-  if (this.resolvedServerSide()) {
-    return Math.max(
-      0,
-      this.totalItemsInput() ?? this.data().length
-    );
-  }
+    if (this.resolvedServerSide()) {
+      return Math.max(0, this.totalItemsInput() ?? this.data().length);
+    }
 
-  return this.sortedData().length;
-});
+    return this.sortedData().length;
+  });
   readonly totalPages = computed(() => {
     if (!this.resolvedPagination()) {
       return 1;
@@ -303,6 +300,20 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
     return row[key as keyof T];
   }
 
+  getCurrencyValue(row: T, key: keyof T | string): string | number | null {
+    const value = this.getCellValue(row, key);
+
+    return typeof value === 'string' || typeof value === 'number' ? value : null;
+  }
+
+  getDateValue(row: T, key: keyof T | string): string | number | Date | null {
+    const value = this.getCellValue(row, key);
+
+    return value instanceof Date || typeof value === 'string' || typeof value === 'number'
+      ? value
+      : null;
+  }
+
   // Sorting
   toggleSort(column: UiTableColumn<T>): void {
     if (!this.resolvedSortable() || column.sortable === false) {
@@ -332,7 +343,7 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
       active: key,
       direction,
     });
-    this.emitQueryChange()
+    this.emitQueryChange();
   }
 
   getSortDirection(key: string): UiTableSortDirection {
@@ -349,7 +360,7 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
 
     this.searchTerm.set(value);
     this.currentPageIndex.set(0);
-    this.emitQueryChange()
+    this.emitQueryChange();
   }
 
   // Pagination
@@ -385,7 +396,7 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
       pageIndex: this.currentPageIndex(),
       pageSize: this.currentPageSize(),
     });
-    this.emitQueryChange()
+    this.emitQueryChange();
   }
 
   // Row selection
@@ -842,7 +853,7 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
       filters: this.columnFilters(),
       activeFilterCount: this.activeFilterCount(),
     });
-    this.emitQueryChange()
+    this.emitQueryChange();
   }
 
   //  server side
@@ -856,16 +867,97 @@ export class UiDataTableComponent<T extends Record<string, unknown>> {
   );
 
   private emitQueryChange(): void {
-  if (!this.resolvedServerSide()) {
-    return;
+    if (!this.resolvedServerSide()) {
+      return;
+    }
+
+    this.queryChange.emit({
+      pageIndex: this.currentPageIndex(),
+      pageSize: this.currentPageSize(),
+      search: this.searchTerm().trim(),
+      sort: this.currentSort(),
+      filters: this.columnFilters(),
+    });
   }
 
-  this.queryChange.emit({
-    pageIndex: this.currentPageIndex(),
-    pageSize: this.currentPageSize(),
-    search: this.searchTerm().trim(),
-    sort: this.currentSort(),
-    filters: this.columnFilters()
-  });
-}
+  //  csv export
+
+  readonly csvExport = input<boolean | undefined>();
+  readonly csvFileName = input<string | undefined>();
+
+  readonly resolvedCsvExport = computed(() => this.csvExport() ?? this.config().csvExport ?? false);
+
+  readonly resolvedCsvFileName = computed(
+    () => this.csvFileName() ?? this.config().csvFileName ?? 'table-export.csv',
+  );
+
+  exportCsv(): void {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const columns = this.visibleColumns();
+
+    // Client-side: export all filtered and sorted records.
+    // Server-side: export records currently loaded from the API.
+    const rows = this.resolvedServerSide() ? this.data() : this.sortedData();
+
+    if (columns.length === 0) {
+      return;
+    }
+
+    const headers = columns.map((column) => this.escapeCsvValue(column.header));
+
+    const records = rows.map((row) =>
+      columns.map((column) => this.escapeCsvValue(this.getCellValue(row, column.key))),
+    );
+
+    const csvContent = [headers.join(','), ...records.map((record) => record.join(','))].join(
+      '\r\n',
+    );
+
+    const blob = new Blob(['\uFEFF', csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+
+    const configuredName = this.resolvedCsvFileName();
+
+    const fileName = configuredName.toLowerCase().endsWith('.csv')
+      ? configuredName
+      : `${configuredName}.csv`;
+
+    anchor.href = url;
+    anchor.download = fileName;
+
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+
+    URL.revokeObjectURL(url);
+  }
+
+  private escapeCsvValue(value: unknown): string {
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    let formattedValue: string;
+
+    if (value instanceof Date) {
+      formattedValue = value.toISOString();
+    } else if (typeof value === 'object') {
+      formattedValue = JSON.stringify(value);
+    } else {
+      formattedValue = String(value);
+    }
+
+    // Protect against common spreadsheet formula injection.
+    if (/^[\s]*[=+\-@\t\r]/.test(formattedValue)) {
+      formattedValue = `'${formattedValue}`;
+    }
+
+    // Escape quotes according to CSV rules.
+    return `"${formattedValue.replace(/"/g, '""')}"`;
+  }
 }

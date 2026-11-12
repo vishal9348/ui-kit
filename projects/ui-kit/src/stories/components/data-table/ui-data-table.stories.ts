@@ -186,6 +186,8 @@ const meta: Meta<UiDataTableComponent<Employee>> = {
     columnReordering: true,
     columnResizing: true,
     columnFiltering: true,
+    csvExport: true,
+    csvFileName: 'employees.csv',
   },
 };
 
@@ -244,5 +246,27 @@ export const WithoutColumnManagement: Story = {
   args: {
     columnManagement: false,
     columnReordering: false,
+  },
+};
+
+// export const CsvExport: Story = {
+//   args: {
+//     ...Default.args,
+//     config: {
+//       searchable: true,
+//       pagination: true,
+//       sortable: true,
+//       columnFiltering: true,
+//       csvExport: true,
+//       csvFileName: 'employees.csv',
+//     },
+//   },
+// };
+
+export const CsvExport: Story = {
+  args: {
+    ...Default.args,
+    csvExport: true,
+    csvFileName: 'employees.csv',
   },
 };

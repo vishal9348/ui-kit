@@ -51,6 +51,18 @@
           </div>
         </details>
       }
+      @if (resolvedCsvExport()) {
+        <button
+          type="button"
+          class="ui-table__export-button"
+          (click)="exportCsv()"
+          [disabled]="resolvedLoading() || visibleColumns().length === 0"
+          aria-label="Export table data as CSV"
+        >
+          <span aria-hidden="true">↓</span>
+          Export CSV
+        </button>
+      }
     </div>
   }
 
@@ -388,13 +400,17 @@
                     }
 
                     @case ('currency') {
-                      {{ getCellValue(row, column.key) | currency: column.currency || 'USD' }}
+                      {{
+                        getCurrencyValue(row, column.key) !== null
+                          ? (getCurrencyValue(row, column.key) | currency: column.currency || 'USD')
+                          : '—'
+                      }}
                     }
 
                     @case ('date') {
                       {{
-                        getCellValue(row, column.key)
-                          ? (getCellValue(row, column.key)
+                        getDateValue(row, column.key) !== null
+                          ? (getDateValue(row, column.key)
                             | date: column.dateFormat || 'mediumDate')
                           : '—'
                       }}
@@ -436,7 +452,7 @@
             aria-label="Rows per page"
           >
             @for (size of resolvedPageSizeOptions(); track size) {
-              <option [value]="size" [selected]="size === currentPageSize()">
+              <option [value]="size">
                 {{ size }}
               </option>
             }
