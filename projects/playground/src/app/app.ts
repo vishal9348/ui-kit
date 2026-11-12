@@ -21,6 +21,8 @@ import {
   UiSwitchComponent,
   UiDataTableComponent,
   UiDatePickerComponent,
+  UiTabsComponent,
+  UiTabContentDirective,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -36,6 +38,10 @@ import type {
   UiTableRowClick,
   UiTableColumnChange,
   UiTableFilterChange,
+  UiTab,
+  UiTabsVariant,
+  UiTabsOrientation,
+  UiTabsSize,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -70,6 +76,8 @@ interface Employee extends Record<string, unknown> {
     UiDataTableComponent,
     UiDatePickerComponent,
     DatePipe,
+    UiTabsComponent,
+    UiTabContentDirective,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -97,6 +105,7 @@ export class App {
     | 'switch'
     | 'data-table'
     | 'date-picker'
+    | 'tabs'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -168,7 +177,8 @@ export class App {
       | 'textarea'
       | 'switch'
       | 'data-table'
-      | 'date-picker',
+      | 'date-picker'
+      | 'tabs',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1145,4 +1155,70 @@ maxDate = new Date(2035, 11, 31);
 
   readonly datePickerRangeMin = new Date(2026, 0, 1);
   readonly datePickerRangeMax = new Date(2027, 11, 31);
+
+  // ======================================
+  // TABS
+  // ======================================
+
+  readonly tabsVariant = signal<UiTabsVariant>('underline');
+
+  readonly tabsOrientation = signal<UiTabsOrientation>('horizontal');
+
+  readonly tabsSize = signal<UiTabsSize>('md');
+
+  readonly selectedTab = signal<string | null>('overview');
+
+  readonly tabs: UiTab[] = [
+    {
+      id: 'overview',
+      label: 'Overview',
+      icon: '⌂',
+      description: 'General information',
+    },
+    {
+      id: 'profile',
+      label: 'Profile',
+      icon: '👤',
+      description: 'Personal details',
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙',
+      description: 'Application preferences',
+    },
+    {
+      id: 'billing',
+      label: 'Billing',
+      disabled: true,
+    },
+  ];
+
+  readonly tabsUsageCode = computed(() => {
+    return `<ui-tabs
+  [tabs]="tabs"
+  variant="${this.tabsVariant()}"
+  orientation="${this.tabsOrientation()}"
+  size="${this.tabsSize()}"
+  [(activeTab)]="selectedTab"
+>
+  <ng-template uiTabContent="overview">
+    <h3>Overview</h3>
+    <p>Overview content goes here.</p>
+  </ng-template>
+
+  <ng-template uiTabContent="profile">
+    <h3>Profile</h3>
+    <p>Profile content goes here.</p>
+  </ng-template>
+
+  <ng-template uiTabContent="settings">
+    <h3>Settings</h3>
+    <p>Settings content goes here.</p>
+  </ng-template>
+</ui-tabs>
+
+// Component TypeScript
+selectedTab = signal<string | null>('overview');`;
+  });
 }

@@ -83,3 +83,8 @@ export type {
   UiDatePickerConfig,
   UiCalendarDay,
 } from './lib/components/date-picker/ui-date-picker.types';
+
+
+export * from './lib/components/tabs/ui-tabs.component';
+export * from './lib/components/tabs/ui-tabs.types';
+export * from './lib/components/tabs/ui-tab-content.directive';

@@ -185,6 +185,15 @@
           Date Picker
           <span class="nav-status">Ready</span>
         </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'tabs'"
+          (click)="setActiveComponent('tabs')"
+        >
+          <span class="nav-icon">▤</span>
+          Tabs
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -1926,6 +1935,175 @@
             <pre><code>{{ datePickerUsageCode() }}</code></pre>
           </div>
         </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'tabs') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">NAVIGATION COMPONENTS</div>
+          <h1>Tabs</h1>
+          <p>
+            Organize related content into selectable sections with horizontal and vertical layouts,
+            multiple visual variants, keyboard navigation and custom content.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Keyboard Accessible</span>
+            <span>Custom Content</span>
+            <span>Configurable</span>
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Change tabs and interact with the selected content.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box">
+            <ui-tabs
+              [tabs]="tabs"
+              [variant]="tabsVariant()"
+              [orientation]="tabsOrientation()"
+              [size]="tabsSize()"
+              ariaLabel="Playground tabs"
+              [(activeTab)]="selectedTab"
+            >
+              <ng-template uiTabContent="overview">
+                <div class="tabs-demo-content">
+                  <h3>Overview</h3>
+                  <p>
+                    Welcome to the employee dashboard. This section displays general information and
+                    key metrics.
+                  </p>
+                  <div class="tabs-demo-stat">
+                    <strong>128</strong>
+                    <span>Total employees</span>
+                  </div>
+                </div>
+              </ng-template>
+
+              <ng-template uiTabContent="profile">
+                <div class="tabs-demo-content">
+                  <h3>Profile</h3>
+                  <p>Manage employee information, contact details, and personal preferences.</p>
+                </div>
+              </ng-template>
+
+              <ng-template uiTabContent="settings">
+                <div class="tabs-demo-content">
+                  <h3>Settings</h3>
+                  <p>Configure notification preferences and application settings.</p>
+                </div>
+              </ng-template>
+            </ui-tabs>
+
+            <p class="mt-3 text-sm">
+              Selected tab:
+              <strong>{{ selectedTab() ?? 'None' }}</strong>
+            </p>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Adjust the appearance and layout of the Tabs component.</p>
+            </div>
+
+            <button
+              class="reset-button"
+              (click)="
+                tabsVariant.set('underline');
+                tabsOrientation.set('horizontal');
+                tabsSize.set('md');
+                selectedTab.set('overview')
+              "
+            >
+              ↺ Reset
+            </button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Variant</label>
+              <select [ngModel]="tabsVariant()" (ngModelChange)="tabsVariant.set($event)">
+                <option value="underline">Underline</option>
+                <option value="pills">Pills</option>
+                <option value="default">Default</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Orientation</label>
+              <select [ngModel]="tabsOrientation()" (ngModelChange)="tabsOrientation.set($event)">
+                <option value="horizontal">Horizontal</option>
+                <option value="vertical">Vertical</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="tabsSize()" (ngModelChange)="tabsSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Disabled tab demonstration -->
+        <section class="demo-section">
+          <h2>Disabled Tab</h2>
+          <p class="text-sm">Billing is disabled and cannot be selected.</p>
+
+          <div class="preview-box">
+            <ui-tabs
+              [tabs]="tabs"
+              variant="pills"
+              ariaLabel="Disabled tab example"
+              [activeTab]="'profile'"
+            >
+              <ng-template uiTabContent="overview"> Overview content </ng-template>
+
+              <ng-template uiTabContent="profile"> Profile content </ng-template>
+
+              <ng-template uiTabContent="settings"> Settings content </ng-template>
+            </ui-tabs>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation based on the current configuration.</p>
+            </div>
+
+            <span class="preview-label">LIVE CODE</span>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ tabsUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
       </section>
     }
   </main>
