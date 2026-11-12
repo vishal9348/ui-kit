@@ -81,28 +81,41 @@
       [attr.aria-modal]="false"
     >
       <header class="ui-calendar__header">
-        <button
-          type="button"
-          class="ui-calendar__nav"
-          aria-label="Previous month"
-          [disabled]="!canGoPrevious()"
-          (click)="goToPreviousMonth()"
-        >
-          &#8249;
-        </button>
+  <button
+    type="button"
+    class="ui-calendar__nav"
+    aria-label="Previous month"
+    [disabled]="!canGoPrevious()"
+    (click)="goToPreviousMonth()"
+  >
+    &#8249;
+  </button>
 
-        <div class="ui-calendar__month">{{ monthLabel() }}</div>
+  <div class="ui-calendar__header-selection">
+    <span class="ui-calendar__month">{{ monthLabel() }}</span>
 
-        <button
-          type="button"
-          class="ui-calendar__nav"
-          aria-label="Next month"
-          [disabled]="!canGoNext()"
-          (click)="goToNextMonth()"
-        >
-          &#8250;
-        </button>
-      </header>
+    <select
+      class="ui-calendar__year-select"
+      aria-label="Select year"
+      [value]="visibleMonth().getFullYear()"
+      (change)="selectYear(+$any($event.target).value)"
+    >
+      @for (year of yearOptions(); track year) {
+        <option [value]="year">{{ year }}</option>
+      }
+    </select>
+  </div>
+
+  <button
+    type="button"
+    class="ui-calendar__nav"
+    aria-label="Next month"
+    [disabled]="!canGoNext()"
+    (click)="goToNextMonth()"
+  >
+    &#8250;
+  </button>
+</header>
 
       <div class="ui-calendar__weekdays" aria-hidden="true">
         @for (weekday of weekdays(); track weekday) {

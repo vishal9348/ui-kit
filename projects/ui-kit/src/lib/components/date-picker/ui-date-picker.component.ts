@@ -93,7 +93,7 @@ export class UiDatePickerComponent implements ControlValueAccessor {
 
   readonly monthLabel = computed(() => {
     const date = this.visibleMonth();
-    return `${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+    return MONTHS[date.getMonth()];
   });
 
   readonly calendarDays = computed<UiCalendarDay[]>(() => {
@@ -475,5 +475,32 @@ export class UiDatePickerComponent implements ControlValueAccessor {
 
   private isRangeValue(value: unknown): value is UiDateRange {
     return typeof value === 'object' && value !== null && 'start' in value && 'end' in value;
+  }
+
+  readonly yearOptions = computed(() => {
+    const currentYear = new Date().getFullYear();
+
+    const minYear = this.minDate()?.getFullYear() ?? currentYear - 100;
+    const maxYear = this.maxDate()?.getFullYear() ?? currentYear + 100;
+
+    if (minYear > maxYear) return [];
+
+    return Array.from({ length: maxYear - minYear + 1 }, (_, index) => minYear + index);
+  });
+
+  selectYear(year: number): void {
+    if (!Number.isInteger(year)) return;
+
+    const minYear = this.minDate()?.getFullYear();
+    const maxYear = this.maxDate()?.getFullYear();
+
+    if (minYear !== undefined && year < minYear) return;
+    if (maxYear !== undefined && year > maxYear) return;
+
+    const current = this.visibleMonth();
+
+    this.visibleMonth.set(new Date(year, current.getMonth(), 1));
+
+    this.focusedDate.set(new Date(year, current.getMonth(), 1));
   }
 }

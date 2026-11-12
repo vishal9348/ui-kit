@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 import {
   UiButtonComponent,
@@ -68,6 +69,7 @@ interface Employee extends Record<string, unknown> {
     UiSwitchComponent,
     UiDataTableComponent,
     UiDatePickerComponent,
+    DatePipe,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -1075,6 +1077,8 @@ notificationsEnabled = true;`;
 `,
   );
 
+  // date picker
+
   readonly dateOfBirth = signal<Date | null>(null);
 
   readonly travelDates = signal<{
@@ -1087,4 +1091,58 @@ notificationsEnabled = true;`;
 
   readonly minDate = new Date(1950, 0, 1);
   readonly maxDate = new Date();
+
+  readonly selectedDate = signal<Date | null>(null);
+
+  readonly datePickerMinDate = new Date(1950, 0, 1);
+
+  readonly datePickerMaxDate = new Date(2035, 11, 31);
+
+  readonly datePickerCopyLabel = signal('Copy code');
+
+  readonly datePickerUsageCode = computed(
+    () => `
+<ui-date-picker
+  label="Date of Birth"
+  placeholder="Select date"
+  [minDate]="minDate"
+  [maxDate]="maxDate"
+  dateFormat="dd/MM/yyyy"
+  [clearable]="true"
+  [(ngModel)]="selectedDate"
+/>
+
+// Component TypeScript
+
+selectedDate = signal<Date | null>(null);
+
+minDate = new Date(1950, 0, 1);
+maxDate = new Date(2035, 11, 31);
+`,
+  );
+
+  async copyDatePickerCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.datePickerUsageCode());
+      this.datePickerCopyLabel.set('Copied!');
+    } catch {
+      this.datePickerCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // Date Picker examples
+
+  readonly datePickerDisabled = signal(false);
+  readonly datePickerReadonly = signal(false);
+
+  readonly datePickerSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  readonly datePickerDisabledDates: Date[] = [
+    new Date(2026, 10, 15),
+    new Date(2026, 10, 20),
+    new Date(2026, 10, 25),
+  ];
+
+  readonly datePickerRangeMin = new Date(2026, 0, 1);
+  readonly datePickerRangeMax = new Date(2027, 11, 31);
 }

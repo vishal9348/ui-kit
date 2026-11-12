@@ -336,3 +336,27 @@
         padding: 10px;
     }
 }
+
+.ui-calendar__header-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ui-calendar__year-select {
+    border: 1px solid var(--ui-border, #d1d5db);
+    border-radius: 6px;
+    padding: 5px 8px;
+    background: var(--ui-surface, #fff);
+    color: var(--ui-text, #111827);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+.ui-calendar__year-select:focus-visible {
+    outline: 2px solid var(--ui-primary, #2563eb);
+    outline-offset: 2px;
+}

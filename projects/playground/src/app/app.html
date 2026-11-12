@@ -1724,23 +1724,26 @@
           <div class="eyebrow">FORM COMPONENTS</div>
           <h1>Date Picker</h1>
           <p>
-            A configurable date picker with single-date and date-range selection, date restrictions
-            and Angular Forms integration.
+            A configurable date picker supporting single selection, date ranges, date restrictions,
+            disabled dates, year navigation and Angular Forms.
           </p>
 
           <div class="component-tags">
             <span>Standalone</span>
-            <span>Single Date</span>
+            <span>Single Selection</span>
             <span>Date Range</span>
+            <span>Min / Max Dates</span>
+            <span>Year Selection</span>
             <span>Angular Forms</span>
           </div>
         </div>
 
+        <!-- SINGLE DATE PICKER -->
         <section class="demo-section">
           <div class="section-header">
             <div>
               <h2>Single Date Selection</h2>
-              <p>Select a date of birth.</p>
+              <p>Select an individual date.</p>
             </div>
             <span class="preview-label">LIVE PREVIEW</span>
           </div>
@@ -1750,20 +1753,22 @@
               <ui-date-picker
                 label="Date of Birth"
                 placeholder="Select your date of birth"
-                dateFormat="dd/MM/yyyy"
                 [minDate]="minDate"
                 [maxDate]="maxDate"
+                dateFormat="dd/MM/yyyy"
+                [clearable]="true"
                 [(ngModel)]="dateOfBirth"
               />
+
+              <p class="click-message">
+                Selected date:
+                {{ dateOfBirth() ? (dateOfBirth() | date: 'dd/MM/yyyy') : 'None' }}
+              </p>
             </div>
           </div>
-
-          <p>
-            Selected value:
-            {{ dateOfBirth()?.toDateString() ?? 'No date selected' }}
-          </p>
         </section>
 
+        <!-- DATE RANGE -->
         <section class="demo-section">
           <div class="section-header">
             <div>
@@ -1776,43 +1781,152 @@
             <div style="width: 100%; max-width: 350px">
               <ui-date-picker
                 label="Travel Period"
-                placeholder="Select travel period"
+                placeholder="Select travel dates"
                 selectionMode="range"
-                dateFormat="dd/MM/yyyy"
+                [minDate]="datePickerRangeMin"
+                [maxDate]="datePickerRangeMax"
+                [clearable]="true"
                 [(ngModel)]="travelDates"
               />
+
+              <p class="click-message">
+                Start:
+                {{
+                  travelDates().start ? (travelDates().start | date: 'dd/MM/yyyy') : 'Not selected'
+                }}
+              </p>
+
+              <p class="click-message">
+                End:
+                {{ travelDates().end ? (travelDates().end | date: 'dd/MM/yyyy') : 'Not selected' }}
+              </p>
             </div>
           </div>
-
-          <p>
-            Start:
-            {{ travelDates().start?.toDateString() ?? 'Not selected' }}
-          </p>
-          <p>
-            End:
-            {{ travelDates().end?.toDateString() ?? 'Not selected' }}
-          </p>
         </section>
 
+        <!-- DISABLED DATES -->
         <section class="demo-section">
           <div class="section-header">
             <div>
-              <h2>Other Configurations</h2>
-              <p>Different sizes and states.</p>
+              <h2>Disabled Dates</h2>
+              <p>Some dates cannot be selected.</p>
             </div>
           </div>
 
-          <div class="preview-box" style="display: grid; gap: 20px">
-            <ui-date-picker label="Small" size="sm" />
-            <ui-date-picker label="Medium" size="md" />
-            <ui-date-picker label="Large" size="lg" />
-            <ui-date-picker label="Disabled" [disabled]="true" />
-            <ui-date-picker label="With validation error" error="Please select a valid date." />
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Appointment Date"
+                placeholder="Select appointment date"
+                [disabledDates]="datePickerDisabledDates"
+                [minDate]="datePickerRangeMin"
+                [maxDate]="datePickerRangeMax"
+                [(ngModel)]="selectedDate"
+              />
+
+              <p class="click-message">Disabled dates: 15, 20 and 25 November 2026.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- DISABLED AND READONLY -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Disabled and Readonly States</h2>
+              <p>Explore the component's interaction states.</p>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="datePickerDisabled()"
+                (change)="datePickerDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="datePickerReadonly()"
+                (change)="datePickerReadonly.set($any($event.target).checked)"
+              />
+              Readonly
+            </label>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Configured Date Picker"
+                placeholder="Select date"
+                [disabled]="datePickerDisabled()"
+                [readonly]="datePickerReadonly()"
+                [(ngModel)]="selectedDate"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- SIZE CONFIGURATION -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Size Variants</h2>
+              <p>Change the size of the Date Picker.</p>
+            </div>
+          </div>
+
+          <div class="config-field">
+            <label for="date-picker-size">Size</label>
+            <select
+              id="date-picker-size"
+              [value]="datePickerSize()"
+              (change)="datePickerSize.set($any($event.target).value)"
+            >
+              <option value="sm">Small</option>
+              <option value="md">Medium</option>
+              <option value="lg">Large</option>
+            </select>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Select Date"
+                [size]="datePickerSize()"
+                [(ngModel)]="selectedDate"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- USAGE -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Example Angular implementation.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyDatePickerCode()">
+              {{ datePickerCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ datePickerUsageCode() }}</code></pre>
           </div>
         </section>
       </section>
     }
-
-    
   </main>
 </div>
