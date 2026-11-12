@@ -51,10 +51,14 @@
           <span class="nav-status">Ready</span>
         </button>
 
-        <button class="nav-item" disabled>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'data-table'"
+          (click)="setActiveComponent('data-table')"
+        >
           <span class="nav-icon">▤</span>
           Data Table
-          <span class="coming-soon">Soon</span>
+          <span class="nav-status">Ready</span>
         </button>
 
         <button
@@ -207,7 +211,9 @@
                           ? 'Progress Bar'
                           : activeComponent() === 'breadcrumb'
                             ? 'Breadcrumb'
-                            : 'Button'
+                            : activeComponent() === 'data-table'
+                              ? 'Data Table'
+                              : 'Button'
           }}
         </strong>
       </div>
@@ -1419,6 +1425,285 @@
           <h2>Usage</h2>
           <div class="code-container">
             <pre><code>{{ switchUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'data-table') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">DATA COMPONENTS</div>
+          <h1>Data Table</h1>
+          <p>
+            Configurable data table with searching, sorting, filtering, pagination, row selection,
+            column management, server-side processing and CSV export.
+          </p>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-heading">
+            <div>
+              <h2>Live Preview</h2>
+              <p>Interact with the table to explore its features.</p>
+            </div>
+            <button class="secondary-button" (click)="resetTableConfiguration()">
+              Reset configuration
+            </button>
+          </div>
+
+          <div class="preview-box data-table-preview">
+            <ui-data-table
+              [columns]="tableColumns"
+              [data]="tableData()"
+              [config]="tableConfig()"
+              [totalItemsInput]="tableTotalItems()"
+              (queryChange)="onTableQueryChange($event)"
+              (selectionChange)="onTableSelectionChange($event)"
+              (rowClick)="onTableRowClick($event)"
+              (sortChange)="onTableSortChange($event)"
+              (pageChange)="onTablePageChange($event)"
+              (filterChange)="onTableFilterChange($event)"
+              (columnChange)="onTableColumnChange($event)"
+            />
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <h2>Configuration</h2>
+          <p>Enable or disable individual table capabilities.</p>
+
+          <div class="table-config-groups">
+            <div class="table-config-group">
+              <h3>Core features</h3>
+
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableSearchable()"
+                  (ngModelChange)="tableSearchable.set($event)"
+                />
+                Global search</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableSortable()"
+                  (ngModelChange)="tableSortable.set($event)"
+                />
+                Sorting</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tablePagination()"
+                  (ngModelChange)="tablePagination.set($event)"
+                />
+                Pagination</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableSelectable()"
+                  (ngModelChange)="tableSelectable.set($event)"
+                />
+                Row selection</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableMultiSelect()"
+                  (ngModelChange)="tableMultiSelect.set($event)"
+                />
+                Multiple selection</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableShowRowNumber()"
+                  (ngModelChange)="tableShowRowNumber.set($event)"
+                />
+                Row numbers</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableShowFooter()"
+                  (ngModelChange)="tableShowFooter.set($event)"
+                />
+                Table footer</label
+              >
+            </div>
+
+            <div class="table-config-group">
+              <h3>Column features</h3>
+
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableColumnManagement()"
+                  (ngModelChange)="tableColumnManagement.set($event)"
+                />
+                Column visibility management</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableColumnReordering()"
+                  (ngModelChange)="tableColumnReordering.set($event)"
+                />
+                Drag and drop column reordering</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableColumnResizing()"
+                  (ngModelChange)="tableColumnResizing.set($event)"
+                />
+                Column resizing</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableColumnFiltering()"
+                  (ngModelChange)="tableColumnFiltering.set($event)"
+                />
+                Column-level filtering</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableStickyHeader()"
+                  (ngModelChange)="tableStickyHeader.set($event)"
+                />
+                Sticky header</label
+              >
+            </div>
+
+            <div class="table-config-group">
+              <h3>Data and export</h3>
+
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableCsvExport()"
+                  (ngModelChange)="tableCsvExport.set($event)"
+                />
+                CSV export</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableLoading()"
+                  (ngModelChange)="tableLoading.set($event)"
+                />
+                Loading state</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  [ngModel]="tableEmptyState()"
+                  (ngModelChange)="setTableEmptyState($event)"
+                />
+                Empty state</label
+              >
+
+              <label class="table-config-label">
+                Processing mode
+                <select [ngModel]="tableServerSide()" (ngModelChange)="setTableServerSide($event)">
+                  <option [ngValue]="false">Client-side</option>
+                  <option [ngValue]="true">Server-side simulation</option>
+                </select>
+              </label>
+
+              <label class="table-config-label">
+                Page size
+                <select [ngModel]="tablePageSize()" (ngModelChange)="tablePageSize.set(+$event)">
+                  @for (size of tablePageSizeOptions; track size) {
+                    <option [ngValue]="size">{{ size }} rows</option>
+                  }
+                </select>
+              </label>
+
+              <label class="table-config-label">
+                Density
+                <select [ngModel]="tableDensity()" (ngModelChange)="tableDensity.set($event)">
+                  <option value="compact">Compact</option>
+                  <option value="comfortable">Comfortable</option>
+                  <option value="spacious">Spacious</option>
+                </select>
+              </label>
+
+              <label class="table-config-label">
+                CSV filename
+                <input
+                  type="text"
+                  [ngModel]="tableCsvFileName()"
+                  (ngModelChange)="tableCsvFileName.set($event)"
+                  placeholder="employees.csv"
+                />
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Events -->
+        <section class="demo-section">
+          <h2>Event Output</h2>
+          <p>These values update when you interact with the table.</p>
+
+          <div class="table-event-grid">
+            <div class="table-event-card">
+              <span>Selected rows</span>
+              <strong>{{ tableSelectedRows().length }}</strong>
+              <p>
+                @if (tableSelectedRows().length) {
+                  {{
+                    tableSelectedRows()
+                      .map((row) => row.name)
+                      .join(', ')
+                  }}
+                } @else {
+                  No rows selected
+                }
+              </p>
+            </div>
+
+            <div class="table-event-card">
+              <span>Last clicked row</span>
+              <strong>{{ tableLastClickedRow()?.name ?? 'None' }}</strong>
+              <p>{{ tableLastClickedRow()?.department ?? 'Click a row to see its details.' }}</p>
+            </div>
+
+            <div class="table-event-card">
+              <span>Sort change</span>
+              <strong>{{ tableLastSort() }}</strong>
+            </div>
+
+            <div class="table-event-card">
+              <span>Page change</span>
+              <strong>{{ tableLastPage() }}</strong>
+            </div>
+
+            <div class="table-event-card">
+              <span>Active column filters</span>
+              <strong>{{ tableLastFilterCount() }}</strong>
+            </div>
+
+            <div class="table-event-card">
+              <span>Column changes</span>
+              <strong>{{ tableLastColumnChange() }}</strong>
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <h2>Usage</h2>
+          <div class="code-container">
+            <pre><code>{{ tableUsageCode() }}</code></pre>
           </div>
         </section>
       </section>
