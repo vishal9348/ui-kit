@@ -72,3 +72,38 @@ export * from './lib/components/switch/ui-switch.component';
 // Data Table
 export * from './lib/components/data-table/ui-data-table.component';
 export * from './lib/components/data-table/ui-data-table.types';
+
+export { UiDatePickerComponent } from './lib/components/date-picker/ui-date-picker.component';
+
+export type {
+  UiDatePickerSelectionMode,
+  UiDatePickerSize,
+  UiDateRange,
+  UiDatePickerValue,
+  UiDatePickerConfig,
+  UiCalendarDay,
+} from './lib/components/date-picker/ui-date-picker.types';
+
+
+export * from './lib/components/tabs/ui-tabs.component';
+export * from './lib/components/tabs/ui-tabs.types';
+export * from './lib/components/tabs/ui-tab-content.directive';
+
+export * from './lib/components/tooltip/ui-tooltip.types';
+export * from './lib/components/tooltip/ui-tooltip-panel.component';
+export * from './lib/components/tooltip/ui-tooltip.directive';
+
+export * from './lib/components/ellipsis/ui-ellipsis.component';
+
+export * from './lib/components/avatar/ui-avatar.component';
+export * from './lib/components/avatar/ui-avatar.types';
+
+export * from './lib/components/badge/ui-badge.component';
+export * from './lib/components/badge/ui-badge.types';
+
+export * from './lib/components/accordion/ui-accordion.component';
+export * from './lib/components/accordion/ui-accordion.types';
+export * from './lib/components/accordion/ui-accordion-panel.directive';
+
+export * from './lib/components/select/ui-select.component';
+export * from './lib/components/select/ui-select.types';

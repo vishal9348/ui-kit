@@ -176,6 +176,79 @@
           Switch
           <span class="nav-status">Ready</span>
         </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'date-picker'"
+          (click)="setActiveComponent('date-picker')"
+        >
+          <span class="nav-icon">▦</span>
+          Date Picker
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'tabs'"
+          (click)="setActiveComponent('tabs')"
+        >
+          <span class="nav-icon">▤</span>
+          Tabs
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'tooltip'"
+          (click)="setActiveComponent('tooltip')"
+        >
+          <span class="nav-icon">ⓘ</span>
+          Tooltip
+          <span class="nav-status">Ready</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'ellipsis'"
+          (click)="setActiveComponent('ellipsis')"
+        >
+          <span class="nav-icon">ⓘ</span>
+          Ellipsis
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'avatar'"
+          (click)="setActiveComponent('avatar')"
+        >
+          <span class="nav-icon">◉</span>
+          Avatar
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'badge'"
+          (click)="setActiveComponent('badge')"
+        >
+          <span class="nav-icon">●</span>
+          Badge
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'accordion'"
+          (click)="setActiveComponent('accordion')"
+        >
+          <span class="nav-icon">▤</span>
+          Accordion
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'select'"
+          (click)="setActiveComponent('select')"
+        >
+          <span class="nav-icon">▾</span>
+          Select
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -213,7 +286,17 @@
                             ? 'Breadcrumb'
                             : activeComponent() === 'data-table'
                               ? 'Data Table'
-                              : 'Button'
+                              : activeComponent() === 'tooltip'
+                                ? 'Tooltip'
+                                : activeComponent() === 'ellipsis'
+                                  ? 'Ellipsis'
+                                  : activeComponent() === 'avatar'
+                                    ? 'Avatar'
+                                    : activeComponent() === 'accordion'
+                                      ? 'Accordion'
+                                      : activeComponent() === 'select'
+                                        ? 'Select'
+                                        : 'Button'
           }}
         </strong>
       </div>
@@ -1706,6 +1789,1831 @@
             <pre><code>{{ tableUsageCode() }}</code></pre>
           </div>
         </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'date-picker') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">FORM COMPONENTS</div>
+          <h1>Date Picker</h1>
+          <p>
+            A configurable date picker supporting single selection, date ranges, date restrictions,
+            disabled dates, year navigation and Angular Forms.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Single Selection</span>
+            <span>Date Range</span>
+            <span>Min / Max Dates</span>
+            <span>Year Selection</span>
+            <span>Angular Forms</span>
+          </div>
+        </div>
+
+        <!-- SINGLE DATE PICKER -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Single Date Selection</h2>
+              <p>Select an individual date.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Date of Birth"
+                placeholder="Select your date of birth"
+                [minDate]="minDate"
+                [maxDate]="maxDate"
+                dateFormat="dd/MM/yyyy"
+                [clearable]="true"
+                [(ngModel)]="dateOfBirth"
+              />
+
+              <p class="click-message">
+                Selected date:
+                {{ dateOfBirth() ? (dateOfBirth() | date: 'dd/MM/yyyy') : 'None' }}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- DATE RANGE -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Date Range Selection</h2>
+              <p>Select a start date and an end date.</p>
+            </div>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Travel Period"
+                placeholder="Select travel dates"
+                selectionMode="range"
+                [minDate]="datePickerRangeMin"
+                [maxDate]="datePickerRangeMax"
+                [clearable]="true"
+                [(ngModel)]="travelDates"
+              />
+
+              <p class="click-message">
+                Start:
+                {{
+                  travelDates().start ? (travelDates().start | date: 'dd/MM/yyyy') : 'Not selected'
+                }}
+              </p>
+
+              <p class="click-message">
+                End:
+                {{ travelDates().end ? (travelDates().end | date: 'dd/MM/yyyy') : 'Not selected' }}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- DISABLED DATES -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Disabled Dates</h2>
+              <p>Some dates cannot be selected.</p>
+            </div>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Appointment Date"
+                placeholder="Select appointment date"
+                [disabledDates]="datePickerDisabledDates"
+                [minDate]="datePickerRangeMin"
+                [maxDate]="datePickerRangeMax"
+                [(ngModel)]="selectedDate"
+              />
+
+              <p class="click-message">Disabled dates: 15, 20 and 25 November 2026.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- DISABLED AND READONLY -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Disabled and Readonly States</h2>
+              <p>Explore the component's interaction states.</p>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="datePickerDisabled()"
+                (change)="datePickerDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="datePickerReadonly()"
+                (change)="datePickerReadonly.set($any($event.target).checked)"
+              />
+              Readonly
+            </label>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Configured Date Picker"
+                placeholder="Select date"
+                [disabled]="datePickerDisabled()"
+                [readonly]="datePickerReadonly()"
+                [(ngModel)]="selectedDate"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- SIZE CONFIGURATION -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Size Variants</h2>
+              <p>Change the size of the Date Picker.</p>
+            </div>
+          </div>
+
+          <div class="config-field">
+            <label for="date-picker-size">Size</label>
+            <select
+              id="date-picker-size"
+              [value]="datePickerSize()"
+              (change)="datePickerSize.set($any($event.target).value)"
+            >
+              <option value="sm">Small</option>
+              <option value="md">Medium</option>
+              <option value="lg">Large</option>
+            </select>
+          </div>
+
+          <div class="preview-box">
+            <div style="width: 100%; max-width: 350px">
+              <ui-date-picker
+                label="Select Date"
+                [size]="datePickerSize()"
+                [(ngModel)]="selectedDate"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- USAGE -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Example Angular implementation.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyDatePickerCode()">
+              {{ datePickerCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ datePickerUsageCode() }}</code></pre>
+          </div>
+        </section>
+      </section>
+    }
+
+    @if (activeComponent() === 'tabs') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">NAVIGATION COMPONENTS</div>
+          <h1>Tabs</h1>
+          <p>
+            Organize related content into selectable sections with horizontal and vertical layouts,
+            multiple visual variants, keyboard navigation and custom content.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Keyboard Accessible</span>
+            <span>Custom Content</span>
+            <span>Configurable</span>
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Change tabs and interact with the selected content.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box">
+            <ui-tabs
+              [tabs]="tabs"
+              [variant]="tabsVariant()"
+              [orientation]="tabsOrientation()"
+              [size]="tabsSize()"
+              ariaLabel="Playground tabs"
+              [(activeTab)]="selectedTab"
+            >
+              <ng-template uiTabContent="overview">
+                <div class="tabs-demo-content">
+                  <h3>Overview</h3>
+                  <p>
+                    Welcome to the employee dashboard. This section displays general information and
+                    key metrics.
+                  </p>
+                  <div class="tabs-demo-stat">
+                    <strong>128</strong>
+                    <span>Total employees</span>
+                  </div>
+                </div>
+              </ng-template>
+
+              <ng-template uiTabContent="profile">
+                <div class="tabs-demo-content">
+                  <h3>Profile</h3>
+                  <p>Manage employee information, contact details, and personal preferences.</p>
+                </div>
+              </ng-template>
+
+              <ng-template uiTabContent="settings">
+                <div class="tabs-demo-content">
+                  <h3>Settings</h3>
+                  <p>Configure notification preferences and application settings.</p>
+                </div>
+              </ng-template>
+            </ui-tabs>
+
+            <p class="mt-3 text-sm">
+              Selected tab:
+              <strong>{{ selectedTab() ?? 'None' }}</strong>
+            </p>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Adjust the appearance and layout of the Tabs component.</p>
+            </div>
+
+            <button
+              class="reset-button"
+              (click)="
+                tabsVariant.set('underline');
+                tabsOrientation.set('horizontal');
+                tabsSize.set('md');
+                selectedTab.set('overview')
+              "
+            >
+              ↺ Reset
+            </button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Variant</label>
+              <select [ngModel]="tabsVariant()" (ngModelChange)="tabsVariant.set($event)">
+                <option value="underline">Underline</option>
+                <option value="pills">Pills</option>
+                <option value="default">Default</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Orientation</label>
+              <select [ngModel]="tabsOrientation()" (ngModelChange)="tabsOrientation.set($event)">
+                <option value="horizontal">Horizontal</option>
+                <option value="vertical">Vertical</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label>Size</label>
+              <select [ngModel]="tabsSize()" (ngModelChange)="tabsSize.set($event)">
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Disabled tab demonstration -->
+        <section class="demo-section">
+          <h2>Disabled Tab</h2>
+          <p class="text-sm">Billing is disabled and cannot be selected.</p>
+
+          <div class="preview-box">
+            <ui-tabs
+              [tabs]="tabs"
+              variant="pills"
+              ariaLabel="Disabled tab example"
+              [activeTab]="'profile'"
+            >
+              <ng-template uiTabContent="overview"> Overview content </ng-template>
+
+              <ng-template uiTabContent="profile"> Profile content </ng-template>
+
+              <ng-template uiTabContent="settings"> Settings content </ng-template>
+            </ui-tabs>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation based on the current configuration.</p>
+            </div>
+
+            <span class="preview-label">LIVE CODE</span>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ tabsUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- ================================================= -->
+    <!-- TOOLTIP DOCUMENTATION -->
+    <!-- ================================================= -->
+
+    @if (activeComponent() === 'tooltip') {
+      <section class="page-content">
+        <!-- Page Heading -->
+        <div class="page-heading">
+          <div class="eyebrow">UTILITY COMPONENTS</div>
+
+          <h1>Tooltip</h1>
+
+          <p>
+            Display contextual information when users hover over, focus on, or click an element.
+            Supports flexible positioning, configurable delays and custom content.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone Directive</span>
+            <span>CDK Overlay</span>
+            <span>Accessible</span>
+            <span>Configurable</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Explore the available tooltip positions.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box tooltip-preview">
+            <button
+              class="tooltip-demo-button"
+              uiTooltip="Tooltip displayed above the element"
+              uiTooltipPosition="top"
+            >
+              Top
+            </button>
+
+            <button
+              class="tooltip-demo-button"
+              uiTooltip="Tooltip displayed below the element"
+              uiTooltipPosition="bottom"
+            >
+              Bottom
+            </button>
+
+            <button
+              class="tooltip-demo-button"
+              uiTooltip="Tooltip displayed on the left"
+              uiTooltipPosition="left"
+            >
+              Left
+            </button>
+
+            <button
+              class="tooltip-demo-button"
+              uiTooltip="Tooltip displayed on the right"
+              uiTooltipPosition="right"
+            >
+              Right
+            </button>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Modify the tooltip properties and see the preview update.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetTooltipConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="tooltip-config-layout">
+            <!-- Controls -->
+            <div class="tooltip-controls">
+              <div class="config-field">
+                <label for="tooltip-position">Position</label>
+
+                <select
+                  id="tooltip-position"
+                  [value]="tooltipPosition()"
+                  (change)="tooltipPosition.set($any($event.target).value)"
+                >
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="tooltip-trigger">Trigger</label>
+
+                <select
+                  id="tooltip-trigger"
+                  [value]="tooltipTrigger()"
+                  (change)="tooltipTrigger.set($any($event.target).value)"
+                >
+                  <option value="hover">Hover / Focus</option>
+                  <option value="click">Click</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="tooltip-delay"> Show Delay: {{ tooltipDelay() }} ms </label>
+
+                <input
+                  id="tooltip-delay"
+                  type="range"
+                  min="0"
+                  max="1500"
+                  step="100"
+                  [value]="tooltipDelay()"
+                  (input)="tooltipDelay.set(+$any($event.target).value)"
+                />
+              </div>
+
+              <div class="config-field">
+                <label for="tooltip-width"> Maximum Width: {{ tooltipMaxWidth() }} px </label>
+
+                <input
+                  id="tooltip-width"
+                  type="range"
+                  min="120"
+                  max="400"
+                  step="20"
+                  [value]="tooltipMaxWidth()"
+                  (input)="tooltipMaxWidth.set(+$any($event.target).value)"
+                />
+              </div>
+
+              <div class="config-field">
+                <label for="tooltip-text">Tooltip Content</label>
+
+                <input
+                  id="tooltip-text"
+                  type="text"
+                  [value]="tooltipText()"
+                  (input)="tooltipText.set($any($event.target).value)"
+                  placeholder="Enter tooltip content"
+                />
+              </div>
+
+              <div class="config-options">
+                <label class="config-checkbox">
+                  <input
+                    type="checkbox"
+                    [checked]="tooltipDisabled()"
+                    (change)="tooltipDisabled.set($any($event.target).checked)"
+                  />
+                  Disable Tooltip
+                </label>
+              </div>
+            </div>
+
+            <!-- Live Preview -->
+            <div class="tooltip-live-preview">
+              <span class="preview-label">LIVE PREVIEW</span>
+
+              <button
+                class="tooltip-demo-button tooltip-primary-button"
+                [uiTooltip]="tooltipText()"
+                [uiTooltipPosition]="tooltipPosition()"
+                [uiTooltipTrigger]="tooltipTrigger()"
+                [uiTooltipDelay]="tooltipDelay()"
+                [uiTooltipMaxWidth]="tooltipMaxWidth()"
+                [uiTooltipDisabled]="tooltipDisabled()"
+              >
+                {{ tooltipTrigger() === 'click' ? 'Click me' : 'Hover me' }}
+              </button>
+
+              <p class="tooltip-preview-hint">
+                {{
+                  tooltipTrigger() === 'click'
+                    ? 'Click the button to toggle the tooltip.'
+                    : 'Hover over or focus the button to display the tooltip.'
+                }}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Additional Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common tooltip usage patterns.</p>
+            </div>
+          </div>
+
+          <div class="tooltip-examples">
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Default Tooltip</strong>
+                <p>Simple hover interaction.</p>
+              </div>
+
+              <button class="tooltip-demo-button" uiTooltip="This is a default tooltip.">
+                Hover me
+              </button>
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Delayed Tooltip</strong>
+                <p>Tooltip appears after 800 milliseconds.</p>
+              </div>
+
+              <button
+                class="tooltip-demo-button"
+                uiTooltip="This tooltip has an 800ms delay."
+                [uiTooltipDelay]="800"
+              >
+                Hover me
+              </button>
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Click Tooltip</strong>
+                <p>Click to open and click outside to close.</p>
+              </div>
+
+              <button
+                class="tooltip-demo-button"
+                uiTooltip="Click outside or press Escape to close."
+                uiTooltipTrigger="click"
+              >
+                Click me
+              </button>
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Disabled Tooltip</strong>
+                <p>Tooltip will not be displayed.</p>
+              </div>
+
+              <button
+                class="tooltip-demo-button"
+                uiTooltip="You should not see this."
+                [uiTooltipDisabled]="true"
+              >
+                Disabled
+              </button>
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Long Content</strong>
+                <p>Tooltip text wraps based on its maximum width.</p>
+              </div>
+
+              <button
+                class="tooltip-demo-button"
+                uiTooltip="This is a longer tooltip message that demonstrates how the tooltip content wraps across multiple lines."
+                [uiTooltipMaxWidth]="280"
+              >
+                Hover for details
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Generated Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the selected configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyTooltipCode()">
+              {{ copyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ tooltipUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- ellipses -->
+
+    @if (activeComponent() === 'ellipsis') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">UTILITY COMPONENTS</div>
+          <h1>Ellipsis</h1>
+          <p>
+            Truncate long text content with single-line or multiline ellipsis. Optionally display
+            the complete content in a tooltip.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone Component</span>
+            <span>Responsive</span>
+            <span>Tooltip Integration</span>
+            <span>Configurable</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Explore single-line and multiline text truncation.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="ellipsis-preview">
+            <div class="ellipsis-preview-item">
+              <strong>Single line</strong>
+              <ui-ellipsis
+                text="This is a very long employee description that will be truncated when it exceeds the available width."
+                [maxWidth]="220"
+              />
+            </div>
+
+            <div class="ellipsis-preview-item">
+              <strong>Two lines</strong>
+              <ui-ellipsis
+                text="This is a longer description demonstrating multiline truncation. The remaining content is hidden after two lines."
+                [maxWidth]="260"
+                [lines]="2"
+              />
+            </div>
+
+            <div class="ellipsis-preview-item">
+              <strong>Short content</strong>
+              <ui-ellipsis text="This is short text." [maxWidth]="220" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change the properties and see the result immediately.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetEllipsisConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="ellipsis-config-layout">
+            <div class="ellipsis-controls">
+              <div class="config-field">
+                <label for="ellipsis-text">Text Content</label>
+                <textarea
+                  id="ellipsis-text"
+                  rows="4"
+                  [value]="ellipsisText()"
+                  (input)="ellipsisText.set($any($event.target).value)"
+                ></textarea>
+              </div>
+
+              <div class="config-field">
+                <label for="ellipsis-width"> Maximum Width: {{ ellipsisMaxWidth() }} px </label>
+                <input
+                  id="ellipsis-width"
+                  type="range"
+                  min="100"
+                  max="500"
+                  step="20"
+                  [value]="ellipsisMaxWidth()"
+                  (input)="ellipsisMaxWidth.set(+$any($event.target).value)"
+                />
+              </div>
+
+              <div class="config-field">
+                <label for="ellipsis-lines">Visible Lines</label>
+                <select
+                  id="ellipsis-lines"
+                  [value]="ellipsisLines()"
+                  (change)="ellipsisLines.set(+$any($event.target).value)"
+                >
+                  <option [value]="1">1 line</option>
+                  <option [value]="2">2 lines</option>
+                  <option [value]="3">3 lines</option>
+                  <option [value]="4">4 lines</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="ellipsis-position">Tooltip Position</label>
+                <select
+                  id="ellipsis-position"
+                  [value]="ellipsisPosition()"
+                  (change)="ellipsisPosition.set($any($event.target).value)"
+                >
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </div>
+
+              <div class="config-options">
+                <label class="config-checkbox">
+                  <input
+                    type="checkbox"
+                    [checked]="ellipsisTooltip()"
+                    (change)="ellipsisTooltip.set($any($event.target).checked)"
+                  />
+                  Enable Tooltip
+                </label>
+              </div>
+            </div>
+
+            <div class="ellipsis-live-preview">
+              <span class="preview-label">LIVE PREVIEW</span>
+
+              <ui-ellipsis
+                [text]="ellipsisText()"
+                [maxWidth]="ellipsisMaxWidth()"
+                [lines]="ellipsisLines()"
+                [showTooltip]="ellipsisTooltip()"
+                [tooltipPosition]="ellipsisPosition()"
+              />
+
+              <p class="tooltip-preview-hint">
+                Hover or focus the text when it is truncated to view its full content.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common Ellipsis usage patterns.</p>
+            </div>
+          </div>
+
+          <div class="tooltip-examples">
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Single Line</strong>
+                <p>Truncate content to one line.</p>
+              </div>
+
+              <ui-ellipsis
+                text="This is an example of single-line text truncation."
+                [maxWidth]="180"
+              />
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Multiline</strong>
+                <p>Display content over two lines.</p>
+              </div>
+
+              <ui-ellipsis
+                text="This is a longer description that will be truncated after two lines when the available height is exceeded."
+                [maxWidth]="200"
+                [lines]="2"
+              />
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Without Tooltip</strong>
+                <p>Truncate without showing the complete text.</p>
+              </div>
+
+              <ui-ellipsis
+                text="This is truncated without a tooltip."
+                [maxWidth]="150"
+                [showTooltip]="false"
+              />
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Custom Width</strong>
+                <p>Control the available text width.</p>
+              </div>
+
+              <ui-ellipsis text="Custom width example with longer content." [maxWidth]="280" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the selected configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyEllipsisCode()">Copy code</button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ ellipsisUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- Avatar -->
+    @if (activeComponent() === 'avatar') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">DISPLAY COMPONENTS</div>
+          <h1>Avatar</h1>
+          <p>
+            Display a user's profile image, initials, or placeholder. Supports configurable sizes,
+            shapes, and online status indicators.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Configurable</span>
+            <span>Fallback Support</span>
+            <span>Accessible</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>See how the avatar changes with your configuration.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box avatar-preview">
+            <ui-avatar
+              [name]="avatarName()"
+              [alt]="avatarAlt()"
+              [src]="avatarSrc() || null"
+              [size]="avatarSize()"
+              [shape]="avatarShape()"
+              [status]="avatarStatus()"
+              [showStatus]="avatarShowStatus()"
+            />
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change the avatar properties interactively.</p>
+            </div>
+
+            <button
+              class="reset-button"
+              (click)="
+                avatarName.set('Vishal Kumar');
+                avatarAlt.set('');
+                avatarSrc.set('');
+                avatarSize.set('xl');
+                avatarShape.set('circle');
+                avatarStatus.set('online');
+                avatarShowStatus.set(true)
+              "
+            >
+              ↺ Reset
+            </button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="avatarName">Name</label>
+              <input
+                id="avatarName"
+                type="text"
+                [value]="avatarName()"
+                (input)="avatarName.set($any($event.target).value)"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="avatarAlt">Alt text</label>
+              <input
+                id="avatarAlt"
+                type="text"
+                [value]="avatarAlt()"
+                (input)="avatarAlt.set($any($event.target).value)"
+                placeholder="Optional accessible label"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="avatarSrc">Image URL</label>
+              <input
+                id="avatarSrc"
+                type="url"
+                [value]="avatarSrc()"
+                (input)="avatarSrc.set($any($event.target).value)"
+                placeholder="https://example.com/avatar.jpg"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="avatarSize">Size</label>
+              <select
+                id="avatarSize"
+                [value]="avatarSize()"
+                (change)="
+                  avatarSize.set(
+                    $any($event.target).value === 'custom' ? 80 : $any($event.target).value
+                  )
+                "
+              >
+                <option value="xs">Extra Small</option>
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+                <option value="xl">Extra Large</option>
+                <option value="custom">Custom (80px)</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="avatarShape">Shape</label>
+              <select
+                id="avatarShape"
+                [value]="avatarShape()"
+                (change)="avatarShape.set($any($event.target).value)"
+              >
+                <option value="circle">Circle</option>
+                <option value="square">Square</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="avatarStatus">Status</label>
+              <select
+                id="avatarStatus"
+                [value]="avatarStatus() ?? 'none'"
+                (change)="
+                  avatarStatus.set(
+                    $any($event.target).value === 'none' ? null : $any($event.target).value
+                  )
+                "
+              >
+                <option value="none">No status</option>
+                <option value="online">Online</option>
+                <option value="offline">Offline</option>
+                <option value="away">Away</option>
+                <option value="busy">Busy</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="avatarShowStatus()"
+                (change)="avatarShowStatus.set($any($event.target).checked)"
+              />
+              Show status indicator
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common Avatar variations.</p>
+            </div>
+          </div>
+
+          <div class="preview-box avatar-examples">
+            <div class="avatar-example">
+              <ui-avatar name="John Doe" size="xl" />
+              <span>Initials</span>
+            </div>
+
+            <div class="avatar-example">
+              <ui-avatar name="Jane Smith" size="xl" status="online" />
+              <span>Online</span>
+            </div>
+
+            <div class="avatar-example">
+              <ui-avatar name="Alex Morgan" size="xl" status="away" />
+              <span>Away</span>
+            </div>
+
+            <div class="avatar-example">
+              <ui-avatar name="David Lee" size="xl" shape="square" />
+              <span>Square</span>
+            </div>
+
+            <div class="avatar-example">
+              <ui-avatar size="xl" />
+              <span>Placeholder</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyAvatarCode()">
+              {{ avatarCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ avatarUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    @if (activeComponent() === 'badge') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">DISPLAY COMPONENTS</div>
+
+          <h1>Badge</h1>
+
+          <p>
+            Compact badge component for displaying statuses, categories, notification counts, and
+            visual indicators.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Configurable</span>
+            <span>Accessible</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Interact with the badge using the configuration controls.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box badge-preview">
+            <ui-badge
+              [label]="badgeLabel()"
+              [variant]="badgeVariant()"
+              [size]="badgeSize()"
+              [shape]="badgeShape()"
+              [count]="badgeCount()"
+              [maxCount]="badgeMaxCount()"
+              [dot]="badgeDot()"
+              [showZero]="badgeShowZero()"
+            />
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Customize the badge properties.</p>
+            </div>
+
+            <button
+              class="reset-button"
+              (click)="
+                badgeLabel.set('Active');
+                badgeVariant.set('success');
+                badgeSize.set('md');
+                badgeShape.set('pill');
+                badgeCount.set(null);
+                badgeMaxCount.set(99);
+                badgeDot.set(false);
+                badgeShowZero.set(false)
+              "
+            >
+              ↺ Reset
+            </button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="badgeLabel">Label</label>
+              <input
+                id="badgeLabel"
+                type="text"
+                [value]="badgeLabel()"
+                (input)="badgeLabel.set($any($event.target).value)"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="badgeVariant">Variant</label>
+              <select
+                id="badgeVariant"
+                [value]="badgeVariant()"
+                (change)="badgeVariant.set($any($event.target).value)"
+              >
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="danger">Danger</option>
+                <option value="info">Info</option>
+                <option value="neutral">Neutral</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="badgeSize">Size</label>
+              <select
+                id="badgeSize"
+                [value]="badgeSize()"
+                (change)="badgeSize.set($any($event.target).value)"
+              >
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="badgeShape">Shape</label>
+              <select
+                id="badgeShape"
+                [value]="badgeShape()"
+                (change)="badgeShape.set($any($event.target).value)"
+              >
+                <option value="rounded">Rounded</option>
+                <option value="pill">Pill</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="badgeCount">Count</label>
+              <input
+                id="badgeCount"
+                type="number"
+                min="0"
+                [value]="badgeCount() ?? ''"
+                placeholder="Leave empty for label"
+                (input)="
+                  badgeCount.set(
+                    $any($event.target).value === '' ? null : Number($any($event.target).value)
+                  )
+                "
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="badgeMaxCount">Maximum count</label>
+              <input
+                id="badgeMaxCount"
+                type="number"
+                min="0"
+                [value]="badgeMaxCount()"
+                (input)="badgeMaxCount.set(Math.max(0, Number($any($event.target).value) || 0))"
+              />
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="badgeDot()"
+                (change)="badgeDot.set($any($event.target).checked)"
+              />
+              Dot indicator
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="badgeShowZero()"
+                (change)="badgeShowZero.set($any($event.target).checked)"
+              />
+              Show zero count
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common badge use cases.</p>
+            </div>
+          </div>
+
+          <div class="preview-box badge-examples">
+            <div class="badge-example">
+              <ui-badge label="Active" variant="success" />
+              <span>Status</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge label="Pending" variant="warning" />
+              <span>Pending approval</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge label="Rejected" variant="danger" />
+              <span>Error status</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge [count]="8" variant="primary" />
+              <span>Notification count</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge [count]="120" [maxCount]="99" variant="danger" />
+              <span>Maximum count</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge [dot]="true" variant="success" />
+              <span>Dot indicator</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyBadgeCode()">
+              {{ badgeCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ badgeUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    @if (activeComponent() === 'accordion') {
+      <section class="page-content">
+        <!-- Page Heading -->
+        <div class="page-heading">
+          <div class="eyebrow">LAYOUT COMPONENTS</div>
+
+          <h1>Accordion</h1>
+
+          <p>
+            Expandable content panels supporting single and multiple expansion modes, disabled
+            items, and custom Angular templates.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Configurable</span>
+            <span>Custom Templates</span>
+            <span>Accessible</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>
+                Expand the panels to explore string content and custom Angular template content.
+              </p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="accordion-preview">
+            <ui-accordion
+              [items]="accordionItems()"
+              [mode]="accordionMode()"
+              [bordered]="accordionBordered()"
+              [showIcons]="accordionShowIcons()"
+              (expandedChange)="onAccordionExpandedChange($event)"
+            >
+              <!-- Custom Profile Template -->
+              <ng-template uiAccordionPanel="profile" let-item>
+                <div class="accordion-custom-content">
+                  <h3>Profile Information</h3>
+
+                  <p>
+                    This content is rendered from a projected Angular template. Panel ID:
+                    {{ item.id }}
+                  </p>
+
+                  <label class="accordion-input-label" for="accordion-profile-name">
+                    Your name
+                  </label>
+
+                  <input
+                    id="accordion-profile-name"
+                    type="text"
+                    [value]="accordionProfileName()"
+                    (input)="accordionProfileName.set($any($event.target).value)"
+                    placeholder="Enter your name"
+                  />
+
+                  <button
+                    type="button"
+                    class="accordion-action-button"
+                    (click)="saveAccordionProfile()"
+                  >
+                    Save Profile
+                  </button>
+
+                  @if (accordionActionMessage()) {
+                    <p class="click-message">
+                      {{ accordionActionMessage() }}
+                    </p>
+                  }
+                </div>
+              </ng-template>
+
+              <!-- Custom Settings Template -->
+              <ng-template uiAccordionPanel="settings">
+                <div class="accordion-custom-content">
+                  <h3>Application Settings</h3>
+                  <p>
+                    This panel demonstrates custom projected content. You can place forms, buttons,
+                    or other Angular components here.
+                  </p>
+
+                  <label class="accordion-inline-option">
+                    <input type="checkbox" checked />
+                    Enable email notifications
+                  </label>
+
+                  <label class="accordion-inline-option">
+                    <input type="checkbox" />
+                    Enable desktop notifications
+                  </label>
+                </div>
+              </ng-template>
+            </ui-accordion>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change accordion properties and see the preview update.</p>
+            </div>
+
+            <button
+              class="reset-button"
+              (click)="
+                accordionMode.set('single');
+                accordionBordered.set(true);
+                accordionShowIcons.set(true);
+                accordionDisableSettings.set(false);
+                accordionProfileName.set('Vishal Kumar');
+                accordionActionMessage.set('')
+              "
+            >
+              ↺ Reset
+            </button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="accordion-mode">Expansion Mode</label>
+
+              <select
+                id="accordion-mode"
+                [value]="accordionMode()"
+                (change)="accordionMode.set($any($event.target).value)"
+              >
+                <option value="single">Single</option>
+                <option value="multiple">Multiple</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="accordionBordered()"
+                (change)="accordionBordered.set($any($event.target).checked)"
+              />
+              Bordered
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="accordionShowIcons()"
+                (change)="accordionShowIcons.set($any($event.target).checked)"
+              />
+              Show expand icons
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="accordionDisableSettings()"
+                (change)="accordionDisableSettings.set($any($event.target).checked)"
+              />
+              Disable Settings panel
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Content Examples</h2>
+              <p>Two supported approaches to supplying panel content.</p>
+            </div>
+          </div>
+
+          <div class="accordion-example-grid">
+            <div class="accordion-example-card">
+              <h3>String Content</h3>
+              <p>Pass a content string directly through the items array.</p>
+              <code>content: 'Your content here'</code>
+            </div>
+
+            <div class="accordion-example-card">
+              <h3>Custom Template</h3>
+              <p>Project an Angular template and associate it with a panel ID.</p>
+              <code>uiAccordionPanel="profile"</code>
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Generated Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyAccordionCode()">
+              {{ accordionCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ accordionUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- SELECT DOCUMENTATION -->
+    @if (activeComponent() === 'select') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">FORM COMPONENTS</div>
+
+          <h1>Select</h1>
+
+          <p>
+            A searchable single-select component with clearable selection, disabled options and
+            Angular Forms integration.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Searchable</span>
+            <span>ControlValueAccessor</span>
+            <span>Angular Forms</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Interact with the Select component.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box select-preview">
+            <div class="select-preview-control">
+              <ui-select
+                id="playground-department"
+                [label]="selectLabel()"
+                [options]="selectOptions"
+                [placeholder]="selectPlaceholder()"
+                [searchable]="selectSearchable()"
+                [clearable]="selectClearable()"
+                [disabled]="selectDisabled()"
+                [required]="selectRequired()"
+                [noResultsText]="selectNoResultsText()"
+                [ngModel]="selectedSelectValue()"
+                (ngModelChange)="selectedSelectValue.set($event)"
+              />
+
+              <p class="click-message">
+                Selected value:
+                <strong>{{ selectedSelectValue() ?? 'None' }}</strong>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change Select properties and see the preview update.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetSelectConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="select-label">Label</label>
+              <input
+                id="select-label"
+                type="text"
+                [value]="selectLabel()"
+                (input)="selectLabel.set($any($event.target).value)"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="select-placeholder">Placeholder</label>
+              <input
+                id="select-placeholder"
+                type="text"
+                [value]="selectPlaceholder()"
+                (input)="selectPlaceholder.set($any($event.target).value)"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="select-no-results">No results message</label>
+              <input
+                id="select-no-results"
+                type="text"
+                [value]="selectNoResultsText()"
+                (input)="selectNoResultsText.set($any($event.target).value)"
+              />
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="selectSearchable()"
+                (change)="selectSearchable.set($any($event.target).checked)"
+              />
+              Searchable
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="selectClearable()"
+                (change)="selectClearable.set($any($event.target).checked)"
+              />
+              Clearable
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="selectDisabled()"
+                (change)="selectDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="selectRequired()"
+                (change)="selectRequired.set($any($event.target).checked)"
+              />
+              Required
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Different Select configurations.</p>
+            </div>
+          </div>
+
+          <div class="select-examples">
+            <div class="select-example">
+              <strong>Default Select</strong>
+              <ui-select
+                id="example-default"
+                label="Department"
+                [options]="selectOptions"
+                placeholder="Select department"
+              />
+            </div>
+
+            <div class="select-example">
+              <strong>Searchable Select</strong>
+              <ui-select
+                id="example-searchable"
+                label="Search department"
+                [options]="selectOptions"
+                [searchable]="true"
+                placeholder="Search departments"
+              />
+            </div>
+
+            <div class="select-example">
+              <strong>Clearable Select</strong>
+              <ui-select
+                id="example-clearable"
+                label="Select department"
+                [options]="selectOptions"
+                [clearable]="true"
+                [ngModel]="'finance'"
+              />
+            </div>
+
+            <div class="select-example">
+              <strong>Disabled Select</strong>
+              <ui-select
+                id="example-disabled"
+                label="Disabled department"
+                [options]="selectOptions"
+                [disabled]="true"
+                placeholder="Selection disabled"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copySelectCode()">
+              {{ selectCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ selectUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
       </section>
     }
   </main>

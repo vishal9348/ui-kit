@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
 
 import { UiCheckboxComponent } from '../../../lib/components/checkbox/ui-checkbox.component';
 

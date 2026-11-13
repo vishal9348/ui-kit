@@ -1,0 +1,362 @@
+:host {
+    display: inline-block;
+    width: 100%;
+    font-family: inherit;
+}
+
+.ui-date-picker {
+    position: relative;
+    width: 100%;
+    color: var(--ui-text, #1f2937);
+}
+
+.ui-date-picker__label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--ui-text, #1f2937);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ui-date-picker__required {
+    margin-left: 3px;
+    color: #dc2626;
+}
+
+.ui-date-picker__control {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 42px;
+    overflow: hidden;
+    border: 1px solid var(--ui-border, #d1d5db);
+    border-radius: 8px;
+    background: var(--ui-surface, #fff);
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.ui-date-picker__control:focus-within,
+.ui-date-picker__control--open {
+    border-color: var(--ui-primary, #2563eb);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-primary, #2563eb) 14%, transparent);
+}
+
+.ui-date-picker__control--error {
+    border-color: #dc2626;
+}
+
+.ui-date-picker__control--disabled {
+    background: var(--ui-disabled-bg, #f3f4f6);
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.ui-date-picker__input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 12px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.ui-date-picker__input::placeholder {
+    color: var(--ui-muted, #9ca3af);
+}
+
+.ui-date-picker__input:disabled {
+    cursor: not-allowed;
+}
+
+.ui-date-picker__trigger,
+.ui-date-picker__clear {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    background: transparent;
+    color: var(--ui-muted, #6b7280);
+    cursor: pointer;
+}
+
+.ui-date-picker__trigger:hover,
+.ui-date-picker__clear:hover {
+    color: var(--ui-primary, #2563eb);
+}
+
+.ui-date-picker__trigger:disabled {
+    cursor: not-allowed;
+}
+
+.ui-date-picker__trigger svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.ui-date-picker__error {
+    margin: 5px 0 0;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.ui-date-picker--sm .ui-date-picker__control {
+    min-height: 34px;
+}
+
+.ui-date-picker--sm .ui-date-picker__input {
+    height: 32px;
+    font-size: 12px;
+}
+
+.ui-date-picker--sm .ui-date-picker__trigger,
+.ui-date-picker--sm .ui-date-picker__clear {
+    width: 32px;
+    height: 32px;
+}
+
+.ui-date-picker--lg .ui-date-picker__control {
+    min-height: 50px;
+}
+
+.ui-date-picker--lg .ui-date-picker__input {
+    height: 48px;
+    font-size: 15px;
+}
+
+.ui-date-picker--lg .ui-date-picker__trigger,
+.ui-date-picker--lg .ui-date-picker__clear {
+    width: 44px;
+    height: 44px;
+}
+
+/* Calendar panel */
+
+.ui-calendar {
+    box-sizing: border-box;
+    width: 296px;
+    padding: 14px;
+    border: 1px solid var(--ui-border, #e5e7eb);
+    border-radius: 12px;
+    background: var(--ui-surface, #fff);
+    color: var(--ui-text, #1f2937);
+    box-shadow:
+        0 10px 25px rgb(0 0 0 / 10%),
+        0 2px 6px rgb(0 0 0 / 5%);
+    z-index: 1000;
+}
+
+.ui-calendar__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.ui-calendar__month {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ui-calendar__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ui-text, #1f2937);
+    font-size: 23px;
+    cursor: pointer;
+}
+
+.ui-calendar__nav:hover:not(:disabled) {
+    background: var(--ui-hover, #f3f4f6);
+}
+
+.ui-calendar__nav:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.ui-calendar__weekdays,
+.ui-calendar__days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 3px;
+}
+
+.ui-calendar__weekdays {
+    margin-bottom: 6px;
+}
+
+.ui-calendar__weekdays span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    color: var(--ui-muted, #6b7280);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.ui-calendar__day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 120ms ease, color 120ms ease;
+}
+
+.ui-calendar__day:hover:not(:disabled):not(.ui-calendar__day--selected) {
+    background: var(--ui-hover, #f3f4f6);
+}
+
+.ui-calendar__day--outside {
+    color: var(--ui-muted, #9ca3af);
+    opacity: 0.55;
+}
+
+.ui-calendar__day--today {
+    outline: 1px solid var(--ui-primary, #2563eb);
+    outline-offset: -2px;
+}
+
+.ui-calendar__day--selected,
+.ui-calendar__day--range-start,
+.ui-calendar__day--range-end {
+    background: var(--ui-primary, #2563eb);
+    color: #fff;
+    font-weight: 700;
+}
+
+.ui-calendar__day--in-range:not(.ui-calendar__day--range-start):not(.ui-calendar__day--range-end) {
+    border-radius: 0;
+    background: color-mix(in srgb, var(--ui-primary, #2563eb) 14%, transparent);
+    color: var(--ui-text, #1f2937);
+}
+
+.ui-calendar__day--range-start {
+    border-radius: 7px 0 0 7px;
+}
+
+.ui-calendar__day--range-end {
+    border-radius: 0 7px 7px 0;
+}
+
+.ui-calendar__day--range-start.ui-calendar__day--range-end {
+    border-radius: 7px;
+}
+
+.ui-calendar__day--focused {
+    outline: 2px solid var(--ui-focus, #111827);
+    outline-offset: 1px;
+}
+
+.ui-calendar__day:disabled {
+    color: var(--ui-muted, #9ca3af);
+    opacity: 0.35;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.ui-calendar__day--empty {
+    pointer-events: none;
+}
+
+.ui-calendar__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 38px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--ui-border, #e5e7eb);
+}
+
+.ui-calendar__today,
+.ui-calendar__done {
+    padding: 6px 10px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ui-primary, #2563eb);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ui-calendar__today:hover {
+    background: var(--ui-hover, #f3f4f6);
+}
+
+.ui-calendar__done {
+    background: var(--ui-primary, #2563eb);
+    color: #fff;
+}
+
+.ui-calendar__done:hover {
+    filter: brightness(0.92);
+}
+
+.ui-calendar__hint {
+    color: var(--ui-muted, #6b7280);
+    font-size: 11px;
+}
+
+@media (max-width: 360px) {
+    .ui-calendar {
+        width: min(296px, calc(100vw - 24px));
+        padding: 10px;
+    }
+}
+
+.ui-calendar__header-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ui-calendar__year-select {
+    border: 1px solid var(--ui-border, #d1d5db);
+    border-radius: 6px;
+    padding: 5px 8px;
+    background: var(--ui-surface, #fff);
+    color: var(--ui-text, #111827);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+.ui-calendar__year-select:focus-visible {
+    outline: 2px solid var(--ui-primary, #2563eb);
+    outline-offset: 2px;
+}

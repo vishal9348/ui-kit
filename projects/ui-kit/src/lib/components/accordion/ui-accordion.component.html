@@ -1,0 +1,73 @@
+<div
+  class="ui-accordion"
+  [class.ui-accordion-bordered]="bordered()"
+>
+  @for (item of items(); track item.id) {
+    <section
+      class="ui-accordion-item"
+      [class.ui-accordion-item-expanded]="isExpanded(item.id)"
+      [class.ui-accordion-item-disabled]="item.disabled"
+    >
+      <h3 class="ui-accordion-heading">
+        <button
+          type="button"
+          class="ui-accordion-trigger"
+          [id]="getHeaderId(item.id)"
+          [attr.aria-expanded]="isExpanded(item.id)"
+          [attr.aria-controls]="getPanelId(item.id)"
+          [attr.aria-disabled]="item.disabled ? 'true' : null"
+          [disabled]="item.disabled"
+          (click)="toggle(item)"
+        >
+          <span class="ui-accordion-title">
+            {{ item.title }}
+          </span>
+
+          @if (showIcons()) {
+            <span
+              class="ui-accordion-icon"
+              [class.ui-accordion-icon-expanded]="isExpanded(item.id)"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </span>
+          }
+        </button>
+      </h3>
+
+      <div
+        class="ui-accordion-panel"
+        [class.ui-accordion-panel-expanded]="isExpanded(item.id)"
+        [id]="getPanelId(item.id)"
+        role="region"
+        [attr.aria-labelledby]="getHeaderId(item.id)"
+        [attr.aria-hidden]="!isExpanded(item.id)"
+        [attr.inert]="!isExpanded(item.id) ? '' : null"
+      >
+        <div class="ui-accordion-panel-inner">
+          <div class="ui-accordion-content">
+
+            @if (getPanelTemplate(item); as template) {
+              <ng-container
+                [ngTemplateOutlet]="template"
+                [ngTemplateOutletContext]="getTemplateContext(item)"
+              />
+            } @else {
+              {{ item.content }}
+            }
+
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+</div>

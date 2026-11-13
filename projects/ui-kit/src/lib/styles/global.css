@@ -1,0 +1,15 @@
+@import '@angular/cdk/overlay-prebuilt.css';
+
+.cdk-overlay-container {
+    position: fixed;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.cdk-overlay-pane {
+    pointer-events: auto;
+}
+
+.ui-tooltip-overlay-pane {
+    pointer-events: auto;
+}

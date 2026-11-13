@@ -1,7 +1,5 @@
 import { Component, inject } from '@angular/core';
-import type { Meta, StoryObj } from '@storybook/angular';
-import { applicationConfig } from '@storybook/angular';
-
+import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular-vite';
 import { UiToastContainerComponent } from '../../../lib/components/toast/ui-toast-container.component';
 import { UiToastService } from '../../../lib/components/toast/ui-toast.service';
 

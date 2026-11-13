@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 import {
   UiButtonComponent,
@@ -19,9 +20,20 @@ import {
   UiTextareaComponent,
   UiSwitchComponent,
   UiDataTableComponent,
+  UiDatePickerComponent,
+  UiTabsComponent,
+  UiTabContentDirective,
+  UiTooltipDirective,
+  UiEllipsisComponent,
+  UiAvatarComponent,
+  UiBadgeComponent,
+  UiAccordionComponent,
+  UiAccordionPanelDirective,
+  UiSelectComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 import type {
   UiRadioOption,
@@ -34,6 +46,19 @@ import type {
   UiTableRowClick,
   UiTableColumnChange,
   UiTableFilterChange,
+  UiTab,
+  UiTabsVariant,
+  UiTabsOrientation,
+  UiTabsSize,
+  UiAvatarSize,
+  UiAvatarShape,
+  UiAvatarStatus,
+  UiBadgeVariant,
+  UiBadgeSize,
+  UiBadgeShape,
+  UiAccordionItem,
+  UiAccordionMode,
+  UiSelectOption,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -65,8 +90,18 @@ interface Employee extends Record<string, unknown> {
     UiInputComponent,
     UiTextareaComponent,
     UiSwitchComponent,
-    UiDataTableComponent
-],
+    UiDataTableComponent,
+    UiDatePickerComponent,
+    DatePipe,
+    UiTabsComponent,
+    UiTabContentDirective,
+    UiTooltipDirective,
+    UiEllipsisComponent,
+    UiAvatarComponent,
+    UiBadgeComponent,
+    UiAccordionComponent,
+    UiSelectComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -92,6 +127,14 @@ export class App {
     | 'textarea'
     | 'switch'
     | 'data-table'
+    | 'date-picker'
+    | 'tabs'
+    | 'tooltip'
+    | 'ellipsis'
+    | 'avatar'
+    | 'badge'
+    | 'accordion'
+    | 'select'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -162,7 +205,15 @@ export class App {
       | 'input'
       | 'textarea'
       | 'switch'
-      | 'data-table',
+      | 'data-table'
+      | 'date-picker'
+      | 'tabs'
+      | 'tooltip'
+      | 'ellipsis'
+      | 'avatar'
+      | 'badge'
+      | 'accordion'
+      | 'select',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1070,4 +1121,539 @@ notificationsEnabled = true;`;
 />
 `,
   );
+
+  // date picker
+
+  readonly dateOfBirth = signal<Date | null>(null);
+
+  readonly travelDates = signal<{
+    start: Date | null;
+    end: Date | null;
+  }>({
+    start: null,
+    end: null,
+  });
+
+  readonly minDate = new Date(1950, 0, 1);
+  readonly maxDate = new Date();
+
+  readonly selectedDate = signal<Date | null>(null);
+
+  readonly datePickerMinDate = new Date(1950, 0, 1);
+
+  readonly datePickerMaxDate = new Date(2035, 11, 31);
+
+  readonly datePickerCopyLabel = signal('Copy code');
+
+  readonly datePickerUsageCode = computed(
+    () => `
+<ui-date-picker
+  label="Date of Birth"
+  placeholder="Select date"
+  [minDate]="minDate"
+  [maxDate]="maxDate"
+  dateFormat="dd/MM/yyyy"
+  [clearable]="true"
+  [(ngModel)]="selectedDate"
+/>
+
+// Component TypeScript
+
+selectedDate = signal<Date | null>(null);
+
+minDate = new Date(1950, 0, 1);
+maxDate = new Date(2035, 11, 31);
+`,
+  );
+
+  async copyDatePickerCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.datePickerUsageCode());
+      this.datePickerCopyLabel.set('Copied!');
+    } catch {
+      this.datePickerCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // Date Picker examples
+
+  readonly datePickerDisabled = signal(false);
+  readonly datePickerReadonly = signal(false);
+
+  readonly datePickerSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  readonly datePickerDisabledDates: Date[] = [
+    new Date(2026, 10, 15),
+    new Date(2026, 10, 20),
+    new Date(2026, 10, 25),
+  ];
+
+  readonly datePickerRangeMin = new Date(2026, 0, 1);
+  readonly datePickerRangeMax = new Date(2027, 11, 31);
+
+  // ======================================
+  // TABS
+  // ======================================
+
+  readonly tabsVariant = signal<UiTabsVariant>('underline');
+
+  readonly tabsOrientation = signal<UiTabsOrientation>('horizontal');
+
+  readonly tabsSize = signal<UiTabsSize>('md');
+
+  readonly selectedTab = signal<string | null>('overview');
+
+  readonly tabs: UiTab[] = [
+    {
+      id: 'overview',
+      label: 'Overview',
+      icon: '⌂',
+      description: 'General information',
+    },
+    {
+      id: 'profile',
+      label: 'Profile',
+      icon: '👤',
+      description: 'Personal details',
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙',
+      description: 'Application preferences',
+    },
+    {
+      id: 'billing',
+      label: 'Billing',
+      disabled: true,
+    },
+  ];
+
+  readonly tabsUsageCode = computed(() => {
+    return `<ui-tabs
+  [tabs]="tabs"
+  variant="${this.tabsVariant()}"
+  orientation="${this.tabsOrientation()}"
+  size="${this.tabsSize()}"
+  [(activeTab)]="selectedTab"
+>
+  <ng-template uiTabContent="overview">
+    <h3>Overview</h3>
+    <p>Overview content goes here.</p>
+  </ng-template>
+
+  <ng-template uiTabContent="profile">
+    <h3>Profile</h3>
+    <p>Profile content goes here.</p>
+  </ng-template>
+
+  <ng-template uiTabContent="settings">
+    <h3>Settings</h3>
+    <p>Settings content goes here.</p>
+  </ng-template>
+</ui-tabs>
+
+// Component TypeScript
+selectedTab = signal<string | null>('overview');`;
+  });
+
+  // ======================================
+  // TOOLTIP
+  // ======================================
+
+  tooltipPosition = signal<'top' | 'bottom' | 'left' | 'right'>('top');
+
+  tooltipTrigger = signal<'hover' | 'click'>('hover');
+
+  tooltipDelay = signal(300);
+
+  tooltipMaxWidth = signal(240);
+
+  tooltipDisabled = signal(false);
+
+  tooltipText = signal('This is a helpful tooltip message.');
+
+  readonly tooltipUsageCode = computed(() => {
+    const position = this.tooltipPosition();
+    const trigger = this.tooltipTrigger();
+    const delay = this.tooltipDelay();
+    const maxWidth = this.tooltipMaxWidth();
+    const disabled = this.tooltipDisabled();
+
+    return `<button
+  uiTooltip="${this.tooltipText()}"
+  uiTooltipPosition="${position}"
+  uiTooltipTrigger="${trigger}"
+  [uiTooltipDelay]="${delay}"
+  [uiTooltipMaxWidth]="${maxWidth}"
+  [uiTooltipDisabled]="${disabled}"
+>
+  Hover or click me
+</button>`;
+  });
+
+  resetTooltipConfiguration(): void {
+    this.tooltipPosition.set('top');
+    this.tooltipTrigger.set('hover');
+    this.tooltipDelay.set(300);
+    this.tooltipMaxWidth.set(240);
+    this.tooltipDisabled.set(false);
+    this.tooltipText.set('This is a helpful tooltip message.');
+  }
+
+  // copyLabel = signal('Copy code');
+
+  async copyTooltipCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.tooltipUsageCode());
+      this.copyLabel.set('Copied!');
+    } catch (error) {
+      console.error('Failed to copy tooltip code:', error);
+      this.copyLabel.set('Copy failed');
+    }
+  }
+
+  // ellipsis
+
+  ellipsisText = signal(
+    'This is a long employee description that demonstrates how text truncation works in the UI library.',
+  );
+
+  ellipsisMaxWidth = signal(220);
+
+  ellipsisLines = signal(1);
+
+  ellipsisTooltip = signal(true);
+
+  ellipsisPosition = signal<'top' | 'bottom' | 'left' | 'right'>('top');
+
+  readonly ellipsisUsageCode = computed(() => {
+    const text = this.ellipsisText().replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+
+    return `<ui-ellipsis
+  text='${text}'
+  [maxWidth]="${this.ellipsisMaxWidth()}"
+  [lines]="${this.ellipsisLines()}"
+  [showTooltip]="${this.ellipsisTooltip()}"
+  tooltipPosition="${this.ellipsisPosition()}"
+/>`;
+  });
+
+  resetEllipsisConfiguration(): void {
+    this.ellipsisText.set(
+      'This is a long employee description that demonstrates how text truncation works in the UI library.',
+    );
+    this.ellipsisMaxWidth.set(220);
+    this.ellipsisLines.set(1);
+    this.ellipsisTooltip.set(true);
+    this.ellipsisPosition.set('top');
+  }
+
+  async copyEllipsisCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.ellipsisUsageCode());
+      this.copyLabel.set('Copied!');
+    } catch {
+      this.copyLabel.set('Copy failed');
+    }
+  }
+
+  // ======================================
+  // AVATAR
+  // ======================================
+
+  avatarName = signal('Vishal Kumar');
+  avatarAlt = signal('');
+  avatarSrc = signal('');
+  avatarSize = signal<UiAvatarSize | number>('xl');
+  avatarShape = signal<UiAvatarShape>('circle');
+  avatarStatus = signal<UiAvatarStatus | null>('online');
+  avatarShowStatus = signal(true);
+
+  readonly avatarUsageCode = computed(() => {
+    const name = this.avatarName();
+    const alt = this.avatarAlt();
+    const src = this.avatarSrc();
+    const size = this.avatarSize();
+    const shape = this.avatarShape();
+    const status = this.avatarStatus();
+    const showStatus = this.avatarShowStatus();
+
+    const sizeValue = typeof size === 'number' ? size : `'${size}'`;
+
+    return `<ui-avatar
+  name="${name}"
+  ${alt ? `alt="${alt}"` : ''}
+  ${src ? `src="${src}"` : ''}
+  [size]="${sizeValue}"
+  shape="${shape}"
+  ${status ? `status="${status}"` : ''}
+  [showStatus]="${showStatus}"
+/>`;
+  });
+
+  avatarCopyLabel = signal('Copy code');
+
+  async copyAvatarCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.avatarUsageCode());
+      this.avatarCopyLabel.set('Copied!');
+    } catch {
+      this.avatarCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // BADGE
+  // ======================================
+
+  badgeLabel = signal('Active');
+
+  badgeVariant = signal<UiBadgeVariant>('success');
+
+  badgeSize = signal<UiBadgeSize>('md');
+
+  badgeShape = signal<UiBadgeShape>('pill');
+
+  badgeCount = signal<number | null>(null);
+
+  badgeMaxCount = signal(99);
+
+  badgeDot = signal(false);
+
+  badgeShowZero = signal(false);
+
+  readonly badgeUsageCode = computed(() => {
+    const label = this.badgeLabel();
+    const variant = this.badgeVariant();
+    const size = this.badgeSize();
+    const shape = this.badgeShape();
+    const count = this.badgeCount();
+    const maxCount = this.badgeMaxCount();
+    const dot = this.badgeDot();
+    const showZero = this.badgeShowZero();
+
+    const attributes = [
+      count !== null ? `[count]="${count}"` : `label="${label}"`,
+      `variant="${variant}"`,
+      `size="${size}"`,
+      `shape="${shape}"`,
+    ];
+
+    if (count !== null) {
+      attributes.push(`[maxCount]="${maxCount}"`);
+      attributes.push(`[showZero]="${showZero}"`);
+    }
+
+    if (dot) {
+      attributes.push('dot');
+    }
+
+    return `<ui-badge
+  ${attributes.join('\n  ')}
+/>`;
+  });
+
+  badgeCopyLabel = signal('Copy code');
+
+  async copyBadgeCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.badgeUsageCode());
+      this.badgeCopyLabel.set('Copied!');
+    } catch {
+      this.badgeCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // ACCORDION
+  // ======================================
+
+  accordionMode = signal<UiAccordionMode>('single');
+
+  accordionBordered = signal(true);
+
+  accordionShowIcons = signal(true);
+
+  accordionDisableSettings = signal(false);
+
+  accordionProfileName = signal('Vishal Kumar');
+
+  accordionActionMessage = signal('');
+
+  readonly accordionItems = computed<UiAccordionItem[]>(() => [
+    {
+      id: 'overview',
+      title: 'Overview',
+      content:
+        'This panel uses simple string-based content. It is suitable for displaying descriptions, help text, and other static information.',
+      expanded: true,
+    },
+    {
+      id: 'profile',
+      title: 'Profile Information',
+    },
+    {
+      id: 'settings',
+      title: 'Application Settings',
+      disabled: this.accordionDisableSettings(),
+    },
+  ]);
+
+  readonly accordionUsageCode = computed(() => {
+    const mode = this.accordionMode();
+    const bordered = this.accordionBordered();
+    const showIcons = this.accordionShowIcons();
+
+    return `<ui-accordion
+  [items]="accordionItems"
+  mode="${mode}"
+  [bordered]="${bordered}"
+  [showIcons]="${showIcons}"
+  (expandedChange)="onAccordionExpandedChange($event)"
+>
+  <ng-template uiAccordionPanel="profile" let-item>
+    <h3>Profile Information</h3>
+    <input
+      type="text"
+      [(ngModel)]="profileName"
+      placeholder="Enter your name"
+    />
+    <button type="button" (click)="saveProfile()">
+      Save Profile
+    </button>
+  </ng-template>
+
+  <ng-template uiAccordionPanel="settings">
+    <h3>Application Settings</h3>
+    <p>Configure your application preferences here.</p>
+  </ng-template>
+</ui-accordion>
+
+// Component TypeScript
+accordionItems: UiAccordionItem[] = [
+  {
+    id: 'overview',
+    title: 'Overview',
+    content: 'This is regular string content.',
+  },
+  {
+    id: 'profile',
+    title: 'Profile Information',
+  },
+  {
+    id: 'settings',
+    title: 'Application Settings',
+  },
+];
+
+profileName = 'Vishal Kumar';
+
+saveProfile(): void {
+  console.log('Profile saved:', this.profileName);
+}
+
+onAccordionExpandedChange(ids: string[]): void {
+  console.log('Expanded panels:', ids);
+}`;
+  });
+
+  accordionCopyLabel = signal('Copy code');
+
+  onAccordionExpandedChange(ids: string[]): void {
+    console.log('Expanded accordion panels:', ids);
+  }
+
+  saveAccordionProfile(): void {
+    this.accordionActionMessage.set(`Profile saved for ${this.accordionProfileName()}`);
+  }
+
+  async copyAccordionCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.accordionUsageCode());
+      this.accordionCopyLabel.set('Copied!');
+    } catch {
+      this.accordionCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  readonly Number = Number;
+  readonly Math = Math;
+
+  // ======================================
+  // SELECT
+  // ======================================
+
+  readonly selectOptions: UiSelectOption[] = [
+    { label: 'Engineering', value: 'engineering' },
+    { label: 'Finance', value: 'finance' },
+    { label: 'Human Resources', value: 'hr' },
+    { label: 'Marketing', value: 'marketing' },
+    { label: 'Operations', value: 'operations' },
+    { label: 'Archived', value: 'archived', disabled: true },
+  ];
+
+  selectLabel = signal('Department');
+  selectPlaceholder = signal('Select department');
+  selectSearchable = signal(true);
+  selectClearable = signal(true);
+  selectDisabled = signal(false);
+  selectRequired = signal(false);
+  selectNoResultsText = signal('No departments found');
+
+  selectedSelectValue = signal<string | number | null>('engineering');
+
+  readonly selectUsageCode = computed(() => {
+    const label = this.selectLabel();
+    const placeholder = this.selectPlaceholder();
+    const searchable = this.selectSearchable();
+    const clearable = this.selectClearable();
+    const disabled = this.selectDisabled();
+    const required = this.selectRequired();
+    const noResultsText = this.selectNoResultsText();
+
+    return `<ui-select
+  id="department"
+  label="${label}"
+  [options]="selectOptions"
+  placeholder="${placeholder}"
+  [searchable]="${searchable}"
+  [clearable]="${clearable}"
+  [disabled]="${disabled}"
+  [required]="${required}"
+  noResultsText="${noResultsText}"
+  [(ngModel)]="selectedDepartment"
+/>
+
+// Component TypeScript
+selectOptions: UiSelectOption[] = [
+  { label: 'Engineering', value: 'engineering' },
+  { label: 'Finance', value: 'finance' },
+  { label: 'Human Resources', value: 'hr' },
+];
+
+selectedDepartment = 'engineering';`;
+  });
+
+  selectCopyLabel = signal('Copy code');
+
+  resetSelectConfiguration(): void {
+    this.selectLabel.set('Department');
+    this.selectPlaceholder.set('Select department');
+    this.selectSearchable.set(true);
+    this.selectClearable.set(true);
+    this.selectDisabled.set(false);
+    this.selectRequired.set(false);
+    this.selectNoResultsText.set('No departments found');
+    this.selectedSelectValue.set('engineering');
+  }
+
+  async copySelectCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.selectUsageCode());
+      this.selectCopyLabel.set('Copied!');
+    } catch {
+      this.selectCopyLabel.set('Copy unavailable');
+    }
+  }
 }

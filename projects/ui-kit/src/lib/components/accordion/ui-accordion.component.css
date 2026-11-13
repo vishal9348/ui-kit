@@ -1,0 +1,142 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.ui-accordion {
+    width: 100%;
+    color: #1f2937;
+}
+
+.ui-accordion-bordered {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ui-accordion-item {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ui-accordion-item:last-child {
+    border-bottom: none;
+}
+
+.ui-accordion-heading {
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.ui-accordion-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    background: #ffffff;
+    color: inherit;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.ui-accordion-trigger:hover:not(:disabled) {
+    background: #f9fafb;
+}
+
+.ui-accordion-trigger:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+}
+
+.ui-accordion-title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.ui-accordion-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    transition: transform 200ms ease;
+}
+
+.ui-accordion-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.ui-accordion-icon-expanded {
+    transform: rotate(180deg);
+}
+
+/* Expand and collapse animation */
+
+.ui-accordion-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+        grid-template-rows 200ms ease,
+        visibility 200ms ease;
+}
+
+.ui-accordion-panel-expanded {
+    grid-template-rows: 1fr;
+    visibility: visible;
+}
+
+.ui-accordion-panel-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ui-accordion-content {
+    padding: 0 16px 16px;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+/* Disabled state */
+
+.ui-accordion-item-disabled .ui-accordion-trigger {
+    color: #9ca3af;
+    cursor: not-allowed;
+    background: #fafafa;
+}
+
+.ui-accordion-item-disabled .ui-accordion-icon {
+    opacity: 0.5;
+}
+
+/* Unbordered variant */
+
+.ui-accordion:not(.ui-accordion-bordered) .ui-accordion-item {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ui-accordion:not(.ui-accordion-bordered) .ui-accordion-item:last-child {
+    border-bottom: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ui-accordion-panel,
+    .ui-accordion-icon,
+    .ui-accordion-trigger {
+        transition: none;
+    }
+}

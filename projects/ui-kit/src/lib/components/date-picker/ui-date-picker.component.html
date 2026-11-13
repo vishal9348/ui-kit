@@ -1,0 +1,190 @@
+
+<div class="ui-date-picker" [class]="'ui-date-picker ui-date-picker--' + size()">
+  @if (label()) {
+    <label class="ui-date-picker__label">
+      {{ label() }}
+      @if (required()) {
+        <span class="ui-date-picker__required" aria-hidden="true">*</span>
+      }
+    </label>
+  }
+
+  <div
+    class="ui-date-picker__control"
+    [class.ui-date-picker__control--open]="isOpen()"
+    [class.ui-date-picker__control--disabled]="isEffectivelyDisabled()"
+    [class.ui-date-picker__control--error]="error()"
+    cdkOverlayOrigin
+    #origin="cdkOverlayOrigin"
+  >
+    <input
+      #inputElement
+      type="text"
+      class="ui-date-picker__input"
+      [value]="displayValue()"
+      [placeholder]="placeholder()"
+      [disabled]="isEffectivelyDisabled()"
+      [readOnly]="true"
+      [attr.aria-label]="label() || placeholder()"
+      [attr.aria-required]="required()"
+      [attr.aria-expanded]="isOpen()"
+      aria-haspopup="dialog"
+      (click)="toggleCalendar()"
+      (keydown.enter)="toggleCalendar()"
+      (keydown.space)="toggleCalendar(); $event.preventDefault()"
+      (keydown.escape)="closeCalendar()"
+    />
+
+    @if (clearable() && displayValue() && !isEffectivelyDisabled() && !readonly()) {
+      <button
+        type="button"
+        class="ui-date-picker__clear"
+        aria-label="Clear selected date"
+        (click)="clearSelection($event)"
+      >
+        &times;
+      </button>
+    }
+
+    <button
+      type="button"
+      class="ui-date-picker__trigger"
+      [disabled]="isEffectivelyDisabled() || readonly()"
+      aria-label="Open calendar"
+      (click)="toggleCalendar()"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+        <path d="M16 3v4M8 3v4M3 10h18"></path>
+      </svg>
+    </button>
+  </div>
+
+  @if (error()) {
+    <p class="ui-date-picker__error" role="alert">{{ error() }}</p>
+  }
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="isOpen()"
+    [cdkConnectedOverlayPositions]="overlayPositions"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
+    (backdropClick)="closeCalendar()"
+    (overlayKeydown)="onCalendarKeydown($event)"
+  >
+    <section
+      class="ui-calendar"
+      role="dialog"
+      aria-label="Choose date"
+      [attr.aria-modal]="false"
+    >
+      <header class="ui-calendar__header">
+  <button
+    type="button"
+    class="ui-calendar__nav"
+    aria-label="Previous month"
+    [disabled]="!canGoPrevious()"
+    (click)="goToPreviousMonth()"
+  >
+    &#8249;
+  </button>
+
+  <div class="ui-calendar__header-selection">
+    <span class="ui-calendar__month">{{ monthLabel() }}</span>
+
+    <select
+      class="ui-calendar__year-select"
+      aria-label="Select year"
+      [value]="visibleMonth().getFullYear()"
+      (change)="selectYear(+$any($event.target).value)"
+    >
+      @for (year of yearOptions(); track year) {
+        <option [value]="year">{{ year }}</option>
+      }
+    </select>
+  </div>
+
+  <button
+    type="button"
+    class="ui-calendar__nav"
+    aria-label="Next month"
+    [disabled]="!canGoNext()"
+    (click)="goToNextMonth()"
+  >
+    &#8250;
+  </button>
+</header>
+
+      <div class="ui-calendar__weekdays" aria-hidden="true">
+        @for (weekday of weekdays(); track weekday) {
+          <span>{{ weekday }}</span>
+        }
+      </div>
+
+      <div
+        class="ui-calendar__days"
+        role="grid"
+        aria-label="Calendar dates"
+        (keydown)="onCalendarKeydown($event)"
+      >
+        @for (day of calendarDays(); track day.date.getTime()) {
+          @if (showOutsideDays() || day.isCurrentMonth) {
+            <button
+              type="button"
+              class="ui-calendar__day"
+              [class.ui-calendar__day--outside]="!day.isCurrentMonth"
+              [class.ui-calendar__day--today]="day.isToday"
+              [class.ui-calendar__day--selected]="day.isSelected"
+              [class.ui-calendar__day--in-range]="day.isInRange"
+              [class.ui-calendar__day--range-start]="day.isRangeStart"
+              [class.ui-calendar__day--range-end]="day.isRangeEnd"
+              [class.ui-calendar__day--focused]="isFocused(day.date)"
+              [disabled]="day.isDisabled"
+              [attr.aria-label]="day.date.toDateString()"
+              [attr.aria-pressed]="day.isSelected"
+              [attr.tabindex]="isFocused(day.date) ? 0 : -1"
+              (focus)="focusedDate.set(day.date)"
+              (click)="selectDate(day.date)"
+            >
+              {{ day.day }}
+            </button>
+          } @else {
+            <span class="ui-calendar__day ui-calendar__day--empty"></span>
+          }
+        }
+      </div>
+
+      <footer class="ui-calendar__footer">
+        @if (showToday()) {
+          <button
+            type="button"
+            class="ui-calendar__today"
+            (click)="selectToday()"
+          >
+            Today
+          </button>
+        }
+
+        @if (selectionMode() === 'range') {
+          <span class="ui-calendar__hint">
+            @if (activeRangeStart()) {
+              Select an end date
+            } @else {
+              Select a start date
+            }
+          </span>
+        }
+
+        <button
+          type="button"
+          class="ui-calendar__done"
+          (click)="closeCalendar()"
+        >
+          Done
+        </button>
+      </footer>
+    </section>
+  </ng-template>
+</div>

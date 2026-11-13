@@ -1,0 +1,24 @@
+:host {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.ui-ellipsis {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default;
+}
+
+.ui-ellipsis-multiline {
+    display: -webkit-box;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--ui-ellipsis-lines, 2);
+    line-clamp: var(--ui-ellipsis-lines, 2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
