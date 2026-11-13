@@ -97,3 +97,6 @@ export * from './lib/components/ellipsis/ui-ellipsis.component';
 
 export * from './lib/components/avatar/ui-avatar.component';
 export * from './lib/components/avatar/ui-avatar.types';
+
+export * from './lib/components/badge/ui-badge.component';
+export * from './lib/components/badge/ui-badge.types';

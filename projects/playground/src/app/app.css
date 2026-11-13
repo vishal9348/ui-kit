@@ -662,3 +662,25 @@
   color: var(--ui-muted, #64748b);
   font-size: 12px;
 }
+
+.badge-preview {
+  min-height: 150px;
+}
+
+.badge-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 32px;
+}
+
+.badge-example {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary, #6b7280);
+  font-size: 13px;
+}

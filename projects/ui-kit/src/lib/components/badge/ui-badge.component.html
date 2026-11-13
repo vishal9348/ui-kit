@@ -1,0 +1,28 @@
+@if (visible()) {
+  <span
+    class="ui-badge"
+    [class.ui-badge-primary]="variant() === 'primary'"
+    [class.ui-badge-secondary]="variant() === 'secondary'"
+    [class.ui-badge-success]="variant() === 'success'"
+    [class.ui-badge-warning]="variant() === 'warning'"
+    [class.ui-badge-danger]="variant() === 'danger'"
+    [class.ui-badge-info]="variant() === 'info'"
+    [class.ui-badge-neutral]="variant() === 'neutral'"
+    [class.ui-badge-sm]="size() === 'sm'"
+    [class.ui-badge-md]="size() === 'md'"
+    [class.ui-badge-lg]="size() === 'lg'"
+    [class.ui-badge-rounded]="shape() === 'rounded'"
+    [class.ui-badge-pill]="shape() === 'pill'"
+    [class.ui-badge-dot]="dot()"
+    role="status"
+    [attr.aria-label]="accessibleLabel()"
+  >
+    @if (dot()) {
+      <span class="ui-badge-dot-indicator" aria-hidden="true"></span>
+    } @else if (count() !== null) {
+      {{ displayCount() }}
+    } @else {
+      {{ label() }}
+    }
+  </span>
+}

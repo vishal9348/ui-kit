@@ -222,6 +222,15 @@
           Avatar
           <span class="nav-status">Ready</span>
         </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'badge'"
+          (click)="setActiveComponent('badge')"
+        >
+          <span class="nav-icon">●</span>
+          Badge
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -2896,6 +2905,246 @@
             </div>
 
             <pre><code>{{ avatarUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    @if (activeComponent() === 'badge') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">DISPLAY COMPONENTS</div>
+
+          <h1>Badge</h1>
+
+          <p>
+            Compact badge component for displaying statuses, categories, notification counts, and
+            visual indicators.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Configurable</span>
+            <span>Accessible</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Interact with the badge using the configuration controls.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box badge-preview">
+            <ui-badge
+              [label]="badgeLabel()"
+              [variant]="badgeVariant()"
+              [size]="badgeSize()"
+              [shape]="badgeShape()"
+              [count]="badgeCount()"
+              [maxCount]="badgeMaxCount()"
+              [dot]="badgeDot()"
+              [showZero]="badgeShowZero()"
+            />
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Customize the badge properties.</p>
+            </div>
+
+            <button
+              class="reset-button"
+              (click)="
+                badgeLabel.set('Active');
+                badgeVariant.set('success');
+                badgeSize.set('md');
+                badgeShape.set('pill');
+                badgeCount.set(null);
+                badgeMaxCount.set(99);
+                badgeDot.set(false);
+                badgeShowZero.set(false)
+              "
+            >
+              ↺ Reset
+            </button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="badgeLabel">Label</label>
+              <input
+                id="badgeLabel"
+                type="text"
+                [value]="badgeLabel()"
+                (input)="badgeLabel.set($any($event.target).value)"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="badgeVariant">Variant</label>
+              <select
+                id="badgeVariant"
+                [value]="badgeVariant()"
+                (change)="badgeVariant.set($any($event.target).value)"
+              >
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="danger">Danger</option>
+                <option value="info">Info</option>
+                <option value="neutral">Neutral</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="badgeSize">Size</label>
+              <select
+                id="badgeSize"
+                [value]="badgeSize()"
+                (change)="badgeSize.set($any($event.target).value)"
+              >
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="badgeShape">Shape</label>
+              <select
+                id="badgeShape"
+                [value]="badgeShape()"
+                (change)="badgeShape.set($any($event.target).value)"
+              >
+                <option value="rounded">Rounded</option>
+                <option value="pill">Pill</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="badgeCount">Count</label>
+              <input
+                id="badgeCount"
+                type="number"
+                min="0"
+                [value]="badgeCount() ?? ''"
+                placeholder="Leave empty for label"
+                (input)="
+                  badgeCount.set(
+                    $any($event.target).value === '' ? null : Number($any($event.target).value)
+                  )
+                "
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="badgeMaxCount">Maximum count</label>
+              <input
+                id="badgeMaxCount"
+                type="number"
+                min="0"
+                [value]="badgeMaxCount()"
+                (input)="badgeMaxCount.set(Math.max(0, Number($any($event.target).value) || 0))"
+              />
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="badgeDot()"
+                (change)="badgeDot.set($any($event.target).checked)"
+              />
+              Dot indicator
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="badgeShowZero()"
+                (change)="badgeShowZero.set($any($event.target).checked)"
+              />
+              Show zero count
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common badge use cases.</p>
+            </div>
+          </div>
+
+          <div class="preview-box badge-examples">
+            <div class="badge-example">
+              <ui-badge label="Active" variant="success" />
+              <span>Status</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge label="Pending" variant="warning" />
+              <span>Pending approval</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge label="Rejected" variant="danger" />
+              <span>Error status</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge [count]="8" variant="primary" />
+              <span>Notification count</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge [count]="120" [maxCount]="99" variant="danger" />
+              <span>Maximum count</span>
+            </div>
+
+            <div class="badge-example">
+              <ui-badge dot variant="success" />
+              <span>Dot indicator</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyBadgeCode()">
+              {{ badgeCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ badgeUsageCode() }}</code></pre>
           </div>
         </section>
 

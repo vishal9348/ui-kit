@@ -26,6 +26,7 @@ import {
   UiTooltipDirective,
   UiEllipsisComponent,
   UiAvatarComponent,
+  UiBadgeComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -49,6 +50,9 @@ import type {
   UiAvatarSize,
   UiAvatarShape,
   UiAvatarStatus,
+  UiBadgeVariant,
+  UiBadgeSize,
+  UiBadgeShape,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -88,6 +92,7 @@ interface Employee extends Record<string, unknown> {
     UiTooltipDirective,
     UiEllipsisComponent,
     UiAvatarComponent,
+    UiBadgeComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -119,6 +124,7 @@ export class App {
     | 'tooltip'
     | 'ellipsis'
     | 'avatar'
+    | 'badge'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -194,7 +200,8 @@ export class App {
       | 'tabs'
       | 'tooltip'
       | 'ellipsis'
-      | 'avatar',
+      | 'avatar'
+      | 'badge',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1381,6 +1388,68 @@ selectedTab = signal<string | null>('overview');`;
       this.avatarCopyLabel.set('Copied!');
     } catch {
       this.avatarCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // BADGE
+  // ======================================
+
+  badgeLabel = signal('Active');
+
+  badgeVariant = signal<UiBadgeVariant>('success');
+
+  badgeSize = signal<UiBadgeSize>('md');
+
+  badgeShape = signal<UiBadgeShape>('pill');
+
+  badgeCount = signal<number | null>(null);
+
+  badgeMaxCount = signal(99);
+
+  badgeDot = signal(false);
+
+  badgeShowZero = signal(false);
+
+  readonly badgeUsageCode = computed(() => {
+    const label = this.badgeLabel();
+    const variant = this.badgeVariant();
+    const size = this.badgeSize();
+    const shape = this.badgeShape();
+    const count = this.badgeCount();
+    const maxCount = this.badgeMaxCount();
+    const dot = this.badgeDot();
+    const showZero = this.badgeShowZero();
+
+    const attributes = [
+      count !== null ? `[count]="${count}"` : `label="${label}"`,
+      `variant="${variant}"`,
+      `size="${size}"`,
+      `shape="${shape}"`,
+    ];
+
+    if (count !== null) {
+      attributes.push(`[maxCount]="${maxCount}"`);
+      attributes.push(`[showZero]="${showZero}"`);
+    }
+
+    if (dot) {
+      attributes.push('dot');
+    }
+
+    return `<ui-badge
+  ${attributes.join('\n  ')}
+/>`;
+  });
+
+  badgeCopyLabel = signal('Copy code');
+
+  async copyBadgeCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.badgeUsageCode());
+      this.badgeCopyLabel.set('Copied!');
+    } catch {
+      this.badgeCopyLabel.set('Copy unavailable');
     }
   }
 }

@@ -1,0 +1,105 @@
+:host {
+    display: inline-flex;
+    vertical-align: middle;
+    max-width: 100%;
+}
+
+.ui-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: fit-content;
+    max-width: 100%;
+    font-family: inherit;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* Sizes */
+
+.ui-badge-sm {
+    min-height: 20px;
+    padding: 3px 7px;
+    font-size: 11px;
+}
+
+.ui-badge-md {
+    min-height: 24px;
+    padding: 4px 9px;
+    font-size: 12px;
+}
+
+.ui-badge-lg {
+    min-height: 28px;
+    padding: 5px 11px;
+    font-size: 13px;
+}
+
+/* Shapes */
+
+.ui-badge-rounded {
+    border-radius: 6px;
+}
+
+.ui-badge-pill {
+    border-radius: 999px;
+}
+
+/* Variants */
+
+.ui-badge-primary {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+.ui-badge-secondary {
+    color: #475569;
+    background: #e2e8f0;
+}
+
+.ui-badge-success {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.ui-badge-warning {
+    color: #a16207;
+    background: #fef3c7;
+}
+
+.ui-badge-danger {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.ui-badge-info {
+    color: #0369a1;
+    background: #e0f2fe;
+}
+
+.ui-badge-neutral {
+    color: #52525b;
+    background: #f4f4f5;
+}
+
+/* Dot indicator */
+
+.ui-badge-dot {
+    width: 9px;
+    height: 9px;
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    border-radius: 50%;
+}
+
+.ui-badge-dot-indicator {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: currentColor;
+}
