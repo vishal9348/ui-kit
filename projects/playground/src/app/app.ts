@@ -24,6 +24,7 @@ import {
   UiTabsComponent,
   UiTabContentDirective,
   UiTooltipDirective,
+  UiEllipsisComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -81,6 +82,7 @@ interface Employee extends Record<string, unknown> {
     UiTabsComponent,
     UiTabContentDirective,
     UiTooltipDirective,
+    UiEllipsisComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -110,6 +112,7 @@ export class App {
     | 'date-picker'
     | 'tabs'
     | 'tooltip'
+    | 'ellipsis'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -183,7 +186,8 @@ export class App {
       | 'data-table'
       | 'date-picker'
       | 'tabs'
-      | 'tooltip',
+      | 'tooltip'
+      | 'ellipsis',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1279,6 +1283,51 @@ selectedTab = signal<string | null>('overview');`;
       this.copyLabel.set('Copied!');
     } catch (error) {
       console.error('Failed to copy tooltip code:', error);
+      this.copyLabel.set('Copy failed');
+    }
+  }
+
+  // ellipsis
+
+  ellipsisText = signal(
+    'This is a long employee description that demonstrates how text truncation works in the UI library.',
+  );
+
+  ellipsisMaxWidth = signal(220);
+
+  ellipsisLines = signal(1);
+
+  ellipsisTooltip = signal(true);
+
+  ellipsisPosition = signal<'top' | 'bottom' | 'left' | 'right'>('top');
+
+  readonly ellipsisUsageCode = computed(() => {
+    const text = this.ellipsisText().replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+
+    return `<ui-ellipsis
+  text='${text}'
+  [maxWidth]="${this.ellipsisMaxWidth()}"
+  [lines]="${this.ellipsisLines()}"
+  [showTooltip]="${this.ellipsisTooltip()}"
+  tooltipPosition="${this.ellipsisPosition()}"
+/>`;
+  });
+
+  resetEllipsisConfiguration(): void {
+    this.ellipsisText.set(
+      'This is a long employee description that demonstrates how text truncation works in the UI library.',
+    );
+    this.ellipsisMaxWidth.set(220);
+    this.ellipsisLines.set(1);
+    this.ellipsisTooltip.set(true);
+    this.ellipsisPosition.set('top');
+  }
+
+  async copyEllipsisCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.ellipsisUsageCode());
+      this.copyLabel.set('Copied!');
+    } catch {
       this.copyLabel.set('Copy failed');
     }
   }

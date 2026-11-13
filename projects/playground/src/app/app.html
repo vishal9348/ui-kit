@@ -203,6 +203,16 @@
           Tooltip
           <span class="nav-status">Ready</span>
         </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'ellipsis'"
+          (click)="setActiveComponent('ellipsis')"
+        >
+          <span class="nav-icon">ⓘ</span>
+          Ellipsis
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -242,7 +252,9 @@
                               ? 'Data Table'
                               : activeComponent() === 'tooltip'
                                 ? 'Tooltip'
-                                : 'Button'
+                                : activeComponent() === 'ellipsis'
+                                  ? 'Ellipsis'
+                                  : 'Button'
           }}
         </strong>
       </div>
@@ -2413,6 +2425,239 @@
             </div>
 
             <pre><code>{{ tooltipUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- ellipses -->
+
+    @if (activeComponent() === 'ellipsis') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">UTILITY COMPONENTS</div>
+          <h1>Ellipsis</h1>
+          <p>
+            Truncate long text content with single-line or multiline ellipsis. Optionally display
+            the complete content in a tooltip.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone Component</span>
+            <span>Responsive</span>
+            <span>Tooltip Integration</span>
+            <span>Configurable</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Explore single-line and multiline text truncation.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="ellipsis-preview">
+            <div class="ellipsis-preview-item">
+              <strong>Single line</strong>
+              <ui-ellipsis
+                text="This is a very long employee description that will be truncated when it exceeds the available width."
+                [maxWidth]="220"
+              />
+            </div>
+
+            <div class="ellipsis-preview-item">
+              <strong>Two lines</strong>
+              <ui-ellipsis
+                text="This is a longer description demonstrating multiline truncation. The remaining content is hidden after two lines."
+                [maxWidth]="260"
+                [lines]="2"
+              />
+            </div>
+
+            <div class="ellipsis-preview-item">
+              <strong>Short content</strong>
+              <ui-ellipsis text="This is short text." [maxWidth]="220" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change the properties and see the result immediately.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetEllipsisConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="ellipsis-config-layout">
+            <div class="ellipsis-controls">
+              <div class="config-field">
+                <label for="ellipsis-text">Text Content</label>
+                <textarea
+                  id="ellipsis-text"
+                  rows="4"
+                  [value]="ellipsisText()"
+                  (input)="ellipsisText.set($any($event.target).value)"
+                ></textarea>
+              </div>
+
+              <div class="config-field">
+                <label for="ellipsis-width"> Maximum Width: {{ ellipsisMaxWidth() }} px </label>
+                <input
+                  id="ellipsis-width"
+                  type="range"
+                  min="100"
+                  max="500"
+                  step="20"
+                  [value]="ellipsisMaxWidth()"
+                  (input)="ellipsisMaxWidth.set(+$any($event.target).value)"
+                />
+              </div>
+
+              <div class="config-field">
+                <label for="ellipsis-lines">Visible Lines</label>
+                <select
+                  id="ellipsis-lines"
+                  [value]="ellipsisLines()"
+                  (change)="ellipsisLines.set(+$any($event.target).value)"
+                >
+                  <option [value]="1">1 line</option>
+                  <option [value]="2">2 lines</option>
+                  <option [value]="3">3 lines</option>
+                  <option [value]="4">4 lines</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="ellipsis-position">Tooltip Position</label>
+                <select
+                  id="ellipsis-position"
+                  [value]="ellipsisPosition()"
+                  (change)="ellipsisPosition.set($any($event.target).value)"
+                >
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </div>
+
+              <div class="config-options">
+                <label class="config-checkbox">
+                  <input
+                    type="checkbox"
+                    [checked]="ellipsisTooltip()"
+                    (change)="ellipsisTooltip.set($any($event.target).checked)"
+                  />
+                  Enable Tooltip
+                </label>
+              </div>
+            </div>
+
+            <div class="ellipsis-live-preview">
+              <span class="preview-label">LIVE PREVIEW</span>
+
+              <ui-ellipsis
+                [text]="ellipsisText()"
+                [maxWidth]="ellipsisMaxWidth()"
+                [lines]="ellipsisLines()"
+                [showTooltip]="ellipsisTooltip()"
+                [tooltipPosition]="ellipsisPosition()"
+              />
+
+              <p class="tooltip-preview-hint">
+                Hover or focus the text when it is truncated to view its full content.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common Ellipsis usage patterns.</p>
+            </div>
+          </div>
+
+          <div class="tooltip-examples">
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Single Line</strong>
+                <p>Truncate content to one line.</p>
+              </div>
+
+              <ui-ellipsis
+                text="This is an example of single-line text truncation."
+                [maxWidth]="180"
+              />
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Multiline</strong>
+                <p>Display content over two lines.</p>
+              </div>
+
+              <ui-ellipsis
+                text="This is a longer description that will be truncated after two lines when the available height is exceeded."
+                [maxWidth]="200"
+                [lines]="2"
+              />
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Without Tooltip</strong>
+                <p>Truncate without showing the complete text.</p>
+              </div>
+
+              <ui-ellipsis
+                text="This is truncated without a tooltip."
+                [maxWidth]="150"
+                [showTooltip]="false"
+              />
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Custom Width</strong>
+                <p>Control the available text width.</p>
+              </div>
+
+              <ui-ellipsis text="Custom width example with longer content." [maxWidth]="280" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the selected configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyEllipsisCode()">Copy code</button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ ellipsisUsageCode() }}</code></pre>
           </div>
         </section>
 

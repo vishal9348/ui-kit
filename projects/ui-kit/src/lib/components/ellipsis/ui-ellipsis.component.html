@@ -1,0 +1,13 @@
+
+<span
+  #textElement
+  class="ui-ellipsis"
+  [class.ui-ellipsis-multiline]="lines() > 1"
+  [style.max-width]="maxWidthStyle()"
+  [style.--ui-ellipsis-lines]="lines()"
+  [uiTooltip]="tooltipContent()"
+  [uiTooltipPosition]="tooltipPosition()"
+  [attr.tabindex]="tooltipContent() ? 0 : null"
+>
+  {{ text() }}
+</span>

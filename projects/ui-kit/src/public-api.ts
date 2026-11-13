@@ -92,3 +92,5 @@ export * from './lib/components/tabs/ui-tab-content.directive';
 export * from './lib/components/tooltip/ui-tooltip.types';
 export * from './lib/components/tooltip/ui-tooltip-panel.component';
 export * from './lib/components/tooltip/ui-tooltip.directive';
+
+export * from './lib/components/ellipsis/ui-ellipsis.component';
