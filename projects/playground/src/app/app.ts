@@ -25,6 +25,7 @@ import {
   UiTabContentDirective,
   UiTooltipDirective,
   UiEllipsisComponent,
+  UiAvatarComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -45,6 +46,9 @@ import type {
   UiTabsVariant,
   UiTabsOrientation,
   UiTabsSize,
+  UiAvatarSize,
+  UiAvatarShape,
+  UiAvatarStatus,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -83,6 +87,7 @@ interface Employee extends Record<string, unknown> {
     UiTabContentDirective,
     UiTooltipDirective,
     UiEllipsisComponent,
+    UiAvatarComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -113,6 +118,7 @@ export class App {
     | 'tabs'
     | 'tooltip'
     | 'ellipsis'
+    | 'avatar'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -187,7 +193,8 @@ export class App {
       | 'date-picker'
       | 'tabs'
       | 'tooltip'
-      | 'ellipsis',
+      | 'ellipsis'
+      | 'avatar',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1329,6 +1336,51 @@ selectedTab = signal<string | null>('overview');`;
       this.copyLabel.set('Copied!');
     } catch {
       this.copyLabel.set('Copy failed');
+    }
+  }
+
+  // ======================================
+  // AVATAR
+  // ======================================
+
+  avatarName = signal('Vishal Kumar');
+  avatarAlt = signal('');
+  avatarSrc = signal('');
+  avatarSize = signal<UiAvatarSize | number>('xl');
+  avatarShape = signal<UiAvatarShape>('circle');
+  avatarStatus = signal<UiAvatarStatus | null>('online');
+  avatarShowStatus = signal(true);
+
+  readonly avatarUsageCode = computed(() => {
+    const name = this.avatarName();
+    const alt = this.avatarAlt();
+    const src = this.avatarSrc();
+    const size = this.avatarSize();
+    const shape = this.avatarShape();
+    const status = this.avatarStatus();
+    const showStatus = this.avatarShowStatus();
+
+    const sizeValue = typeof size === 'number' ? size : `'${size}'`;
+
+    return `<ui-avatar
+  name="${name}"
+  ${alt ? `alt="${alt}"` : ''}
+  ${src ? `src="${src}"` : ''}
+  [size]="${sizeValue}"
+  shape="${shape}"
+  ${status ? `status="${status}"` : ''}
+  [showStatus]="${showStatus}"
+/>`;
+  });
+
+  avatarCopyLabel = signal('Copy code');
+
+  async copyAvatarCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.avatarUsageCode());
+      this.avatarCopyLabel.set('Copied!');
+    } catch {
+      this.avatarCopyLabel.set('Copy unavailable');
     }
   }
 }

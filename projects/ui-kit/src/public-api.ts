@@ -94,3 +94,6 @@ export * from './lib/components/tooltip/ui-tooltip-panel.component';
 export * from './lib/components/tooltip/ui-tooltip.directive';
 
 export * from './lib/components/ellipsis/ui-ellipsis.component';
+
+export * from './lib/components/avatar/ui-avatar.component';
+export * from './lib/components/avatar/ui-avatar.types';

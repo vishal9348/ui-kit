@@ -213,6 +213,15 @@
           Ellipsis
           <span class="nav-status">Ready</span>
         </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'avatar'"
+          (click)="setActiveComponent('avatar')"
+        >
+          <span class="nav-icon">◉</span>
+          Avatar
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -254,7 +263,9 @@
                                 ? 'Tooltip'
                                 : activeComponent() === 'ellipsis'
                                   ? 'Ellipsis'
-                                  : 'Button'
+                                  : activeComponent() === 'avatar'
+                                    ? 'Avatar'
+                                    : 'Button'
           }}
         </strong>
       </div>
@@ -2658,6 +2669,233 @@
             </div>
 
             <pre><code>{{ ellipsisUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- Avatar -->
+    @if (activeComponent() === 'avatar') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">DISPLAY COMPONENTS</div>
+          <h1>Avatar</h1>
+          <p>
+            Display a user's profile image, initials, or placeholder. Supports configurable sizes,
+            shapes, and online status indicators.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Configurable</span>
+            <span>Fallback Support</span>
+            <span>Accessible</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>See how the avatar changes with your configuration.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box avatar-preview">
+            <ui-avatar
+              [name]="avatarName()"
+              [alt]="avatarAlt()"
+              [src]="avatarSrc() || null"
+              [size]="avatarSize()"
+              [shape]="avatarShape()"
+              [status]="avatarStatus()"
+              [showStatus]="avatarShowStatus()"
+            />
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change the avatar properties interactively.</p>
+            </div>
+
+            <button
+              class="reset-button"
+              (click)="
+                avatarName.set('Vishal Kumar');
+                avatarAlt.set('');
+                avatarSrc.set('');
+                avatarSize.set('xl');
+                avatarShape.set('circle');
+                avatarStatus.set('online');
+                avatarShowStatus.set(true)
+              "
+            >
+              ↺ Reset
+            </button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="avatarName">Name</label>
+              <input
+                id="avatarName"
+                type="text"
+                [value]="avatarName()"
+                (input)="avatarName.set($any($event.target).value)"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="avatarAlt">Alt text</label>
+              <input
+                id="avatarAlt"
+                type="text"
+                [value]="avatarAlt()"
+                (input)="avatarAlt.set($any($event.target).value)"
+                placeholder="Optional accessible label"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="avatarSrc">Image URL</label>
+              <input
+                id="avatarSrc"
+                type="url"
+                [value]="avatarSrc()"
+                (input)="avatarSrc.set($any($event.target).value)"
+                placeholder="https://example.com/avatar.jpg"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="avatarSize">Size</label>
+              <select
+                id="avatarSize"
+                [value]="avatarSize()"
+                (change)="
+                  avatarSize.set(
+                    $any($event.target).value === 'custom' ? 80 : $any($event.target).value
+                  )
+                "
+              >
+                <option value="xs">Extra Small</option>
+                <option value="sm">Small</option>
+                <option value="md">Medium</option>
+                <option value="lg">Large</option>
+                <option value="xl">Extra Large</option>
+                <option value="custom">Custom (80px)</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="avatarShape">Shape</label>
+              <select
+                id="avatarShape"
+                [value]="avatarShape()"
+                (change)="avatarShape.set($any($event.target).value)"
+              >
+                <option value="circle">Circle</option>
+                <option value="square">Square</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="avatarStatus">Status</label>
+              <select
+                id="avatarStatus"
+                [value]="avatarStatus() ?? 'none'"
+                (change)="
+                  avatarStatus.set(
+                    $any($event.target).value === 'none' ? null : $any($event.target).value
+                  )
+                "
+              >
+                <option value="none">No status</option>
+                <option value="online">Online</option>
+                <option value="offline">Offline</option>
+                <option value="away">Away</option>
+                <option value="busy">Busy</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="avatarShowStatus()"
+                (change)="avatarShowStatus.set($any($event.target).checked)"
+              />
+              Show status indicator
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common Avatar variations.</p>
+            </div>
+          </div>
+
+          <div class="preview-box avatar-examples">
+            <div class="avatar-example">
+              <ui-avatar name="John Doe" size="xl" />
+              <span>Initials</span>
+            </div>
+
+            <div class="avatar-example">
+              <ui-avatar name="Jane Smith" size="xl" status="online" />
+              <span>Online</span>
+            </div>
+
+            <div class="avatar-example">
+              <ui-avatar name="Alex Morgan" size="xl" status="away" />
+              <span>Away</span>
+            </div>
+
+            <div class="avatar-example">
+              <ui-avatar name="David Lee" size="xl" shape="square" />
+              <span>Square</span>
+            </div>
+
+            <div class="avatar-example">
+              <ui-avatar size="xl" />
+              <span>Placeholder</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyAvatarCode()">
+              {{ avatarCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ avatarUsageCode() }}</code></pre>
           </div>
         </section>
 

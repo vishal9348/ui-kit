@@ -1,0 +1,54 @@
+<div
+  class="ui-avatar"
+  [class.ui-avatar-circle]="shape() === 'circle'"
+  [class.ui-avatar-square]="shape() === 'square'"
+  [style.width]="sizeStyle()"
+  [style.height]="sizeStyle()"
+  role="img"
+  [attr.aria-label]="accessibleLabel()"
+>
+  @if (src() && !imageFailed()) {
+    <img
+      class="ui-avatar-image"
+      [src]="src()!"
+      [alt]="alt() || name()"
+      (error)="onImageError()"
+    />
+  } @else {
+    @if (initials()) {
+      <span class="ui-avatar-initials" aria-hidden="true">
+        {{ initials() }}
+      </span>
+    } @else {
+      <span class="ui-avatar-placeholder" aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z"
+            fill="currentColor"
+          />
+          <path
+            d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+    }
+  }
+
+  @if (showStatus() && status()) {
+    <span
+      class="ui-avatar-status"
+      [class.avatar-status-online]="status() === 'online'"
+      [class.avatar-status-offline]="status() === 'offline'"
+      [class.avatar-status-away]="status() === 'away'"
+      [class.avatar-status-busy]="status() === 'busy'"
+      aria-hidden="true"
+    ></span>
+  }
+</div>
