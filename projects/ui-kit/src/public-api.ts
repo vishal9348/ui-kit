@@ -107,3 +107,6 @@ export * from './lib/components/accordion/ui-accordion-panel.directive';
 
 export * from './lib/components/select/ui-select.component';
 export * from './lib/components/select/ui-select.types';
+
+export * from './lib/components/file-upload/ui-file-upload.component';
+export * from './lib/components/file-upload/ui-file-upload.types';

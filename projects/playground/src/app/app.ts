@@ -30,6 +30,7 @@ import {
   UiAccordionComponent,
   UiAccordionPanelDirective,
   UiSelectComponent,
+  UiFileUploadComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -59,6 +60,7 @@ import type {
   UiAccordionItem,
   UiAccordionMode,
   UiSelectOption,
+  UiFileRejected,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -101,6 +103,7 @@ interface Employee extends Record<string, unknown> {
     UiBadgeComponent,
     UiAccordionComponent,
     UiSelectComponent,
+    UiFileUploadComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -135,6 +138,7 @@ export class App {
     | 'badge'
     | 'accordion'
     | 'select'
+    | 'file-upload'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -213,7 +217,8 @@ export class App {
       | 'avatar'
       | 'badge'
       | 'accordion'
-      | 'select',
+      | 'select'
+      | 'file-upload',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1654,6 +1659,80 @@ selectedDepartment = 'engineering';`;
       this.selectCopyLabel.set('Copied!');
     } catch {
       this.selectCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // FILE UPLOAD
+  // ======================================
+
+  fileUploadMultiple = signal(true);
+  fileUploadAccept = signal('.pdf,.png,.jpg,.jpeg');
+  fileUploadMaxFiles = signal(5);
+  fileUploadMaxFileSize = signal(5 * 1024 * 1024);
+  fileUploadDisabled = signal(false);
+  fileUploadRequired = signal(false);
+  fileUploadShowFileList = signal(true);
+
+  selectedUploadFiles = signal<File[]>([]);
+  fileUploadRejectedMessages = signal<string[]>([]);
+
+  readonly fileUploadUsageCode = computed(() => {
+    const multiple = this.fileUploadMultiple();
+    const accept = this.fileUploadAccept();
+    const maxFiles = this.fileUploadMaxFiles();
+    const maxFileSize = this.fileUploadMaxFileSize();
+    const disabled = this.fileUploadDisabled();
+    const required = this.fileUploadRequired();
+    const showFileList = this.fileUploadShowFileList();
+
+    return `<ui-file-upload
+  id="documents"
+  label="Upload documents"
+  hint="PDF, PNG and JPG files"
+  accept="${accept}"
+  [multiple]="${multiple}"
+  [maxFiles]="${maxFiles}"
+  [maxFileSize]="${maxFileSize}"
+  [disabled]="${disabled}"
+  [required]="${required}"
+  [showFileList]="${showFileList}"
+  [(ngModel)]="selectedFiles"
+  (fileRejected)="handleRejectedFile($event)"
+/>
+
+// Component TypeScript
+selectedFiles: File[] = [];
+
+handleRejectedFile(event: UiFileRejected): void {
+  console.error(event.message);
+}`;
+  });
+
+  fileUploadCopyLabel = signal('Copy code');
+
+  handleFileUploadRejected(event: UiFileRejected): void {
+    this.fileUploadRejectedMessages.update((messages) => [...messages, event.message]);
+  }
+
+  resetFileUploadConfiguration(): void {
+    this.fileUploadMultiple.set(true);
+    this.fileUploadAccept.set('.pdf,.png,.jpg,.jpeg');
+    this.fileUploadMaxFiles.set(5);
+    this.fileUploadMaxFileSize.set(5 * 1024 * 1024);
+    this.fileUploadDisabled.set(false);
+    this.fileUploadRequired.set(false);
+    this.fileUploadShowFileList.set(true);
+    this.selectedUploadFiles.set([]);
+    this.fileUploadRejectedMessages.set([]);
+  }
+
+  async copyFileUploadCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.fileUploadUsageCode());
+      this.fileUploadCopyLabel.set('Copied!');
+    } catch {
+      this.fileUploadCopyLabel.set('Copy unavailable');
     }
   }
 }

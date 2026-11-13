@@ -1,0 +1,154 @@
+
+<div
+  class="ui-file-upload"
+  [class.ui-file-upload-disabled]="isDisabled()"
+>
+  @if (label()) {
+    <label class="ui-file-upload-label" [for]="id()">
+      {{ label() }}
+
+      @if (required()) {
+        <span class="ui-file-upload-required" aria-hidden="true">*</span>
+      }
+    </label>
+  }
+
+  <input
+    #fileInput
+    class="ui-file-upload-input"
+    type="file"
+    [id]="id()"
+    [accept]="accept()"
+    [multiple]="multiple()"
+    [disabled]="isDisabled()"
+    [attr.aria-required]="required()"
+    (change)="onFileInputChange($event)"
+  />
+
+  <div
+    class="ui-file-upload-dropzone"
+    [class.ui-file-upload-dragging]="isDragging()"
+    [class.ui-file-upload-disabled-dropzone]="isDisabled()"
+    role="group"
+    [attr.aria-label]="label()"
+    (click)="openFilePicker()"
+    (keydown.enter)="openFilePicker()"
+    (keydown.space)="openFilePicker(); $event.preventDefault()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    tabindex="0"
+    [attr.aria-disabled]="isDisabled()"
+  >
+    <div class="ui-file-upload-icon" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 16V4" />
+        <path d="m7 9 5-5 5 5" />
+        <path d="M20 16.5v2A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5v-2" />
+      </svg>
+    </div>
+
+    <p class="ui-file-upload-title">
+      Drag and drop your files here
+    </p>
+
+    <p class="ui-file-upload-hint">
+      {{ hint() }}
+    </p>
+
+    <button
+      type="button"
+      class="ui-file-upload-browse"
+      [disabled]="isDisabled()"
+      (click)="openFilePicker(); $event.stopPropagation()"
+    >
+      Browse files
+    </button>
+
+    @if (accept() || maxFileSize() !== null || maxFiles() !== null) {
+      <div class="ui-file-upload-restrictions">
+        @if (accept()) {
+          <span>Accepted: {{ accept() }}</span>
+        }
+
+        @if (maxFileSize() !== null) {
+          <span>Maximum size: {{ formatFileSize(maxFileSize()!) }}</span>
+        }
+
+        @if (maxFiles() !== null) {
+          <span>Maximum files: {{ maxFiles() }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  @if (validationErrors().length > 0) {
+    <div class="ui-file-upload-errors" role="alert">
+      @for (error of validationErrors(); track $index) {
+        <p>{{ error }}</p>
+      }
+    </div>
+  }
+
+  @if (showFileList() && hasFiles()) {
+    <div class="ui-file-upload-list">
+      <div class="ui-file-upload-list-header">
+        <span>Selected files ({{ selectedFiles().length }})</span>
+
+        <button
+          type="button"
+          class="ui-file-upload-clear"
+          [disabled]="isDisabled()"
+          (click)="clearFiles()"
+        >
+          Remove all
+        </button>
+      </div>
+
+      @for (file of selectedFiles(); track file.name + file.lastModified; let i = $index) {
+        <div class="ui-file-upload-file">
+          <div class="ui-file-upload-file-icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M8 13h8M8 17h8" />
+            </svg>
+          </div>
+
+          <div class="ui-file-upload-file-info">
+            <span class="ui-file-upload-file-name" [title]="file.name">
+              {{ file.name }}
+            </span>
+            <span class="ui-file-upload-file-size">
+              {{ formatFileSize(file.size) }}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="ui-file-upload-remove"
+            [disabled]="isDisabled()"
+            [attr.aria-label]="'Remove ' + file.name"
+            (click)="removeFile(i)"
+          >
+            &times;
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -249,6 +249,15 @@
           Select
           <span class="nav-status">Ready</span>
         </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'file-upload'"
+          (click)="setActiveComponent('file-upload')"
+        >
+          <span class="nav-icon">⇧</span>
+          File Upload
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -296,7 +305,9 @@
                                       ? 'Accordion'
                                       : activeComponent() === 'select'
                                         ? 'Select'
-                                        : 'Button'
+                                        : activeComponent() === 'file-upload'
+                                          ? 'File Upload'
+                                          : 'Button'
           }}
         </strong>
       </div>
@@ -3610,6 +3621,254 @@
             </div>
 
             <pre><code>{{ selectUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    @if (activeComponent() === 'file-upload') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">FORM COMPONENTS</div>
+
+          <h1>File Upload</h1>
+
+          <p>
+            A reusable file upload component with drag-and-drop, file validation, multiple selection
+            and Angular Forms support.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Drag & Drop</span>
+            <span>File Validation</span>
+            <span>Angular Forms</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Select files or drag them into the upload area.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box file-upload-preview">
+            <div class="file-upload-preview-control">
+              <ui-file-upload
+                id="playground-file-upload"
+                label="Upload documents"
+                hint="Drag and drop your files here, or browse"
+                [accept]="fileUploadAccept()"
+                [multiple]="fileUploadMultiple()"
+                [maxFiles]="fileUploadMaxFiles()"
+                [maxFileSize]="fileUploadMaxFileSize()"
+                [disabled]="fileUploadDisabled()"
+                [required]="fileUploadRequired()"
+                [showFileList]="fileUploadShowFileList()"
+                [ngModel]="selectedUploadFiles()"
+                (ngModelChange)="selectedUploadFiles.set($event)"
+                (fileRejected)="handleFileUploadRejected($event)"
+              />
+
+              <p class="click-message">Selected files: {{ selectedUploadFiles().length }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Validation messages -->
+        @if (fileUploadRejectedMessages().length > 0) {
+          <section class="demo-section">
+            <div class="file-upload-rejection-list">
+              <div class="section-header">
+                <div>
+                  <h2>Rejected files</h2>
+                  <p>These files did not pass the configured validation.</p>
+                </div>
+
+                <button class="reset-button" (click)="fileUploadRejectedMessages.set([])">
+                  Clear messages
+                </button>
+              </div>
+
+              @for (message of fileUploadRejectedMessages(); track $index) {
+                <p class="file-upload-rejection-message">
+                  {{ message }}
+                </p>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change validation and selection options.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetFileUploadConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="file-upload-accept">Accepted file types</label>
+              <select
+                id="file-upload-accept"
+                [value]="fileUploadAccept()"
+                (change)="fileUploadAccept.set($any($event.target).value)"
+              >
+                <option value=".pdf,.png,.jpg,.jpeg">PDF, PNG, JPG</option>
+                <option value="image/*">All images</option>
+                <option value=".pdf,application/pdf">PDF only</option>
+                <option value=".doc,.docx">Word documents</option>
+                <option value="">All file types</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="file-upload-max-files">Maximum files</label>
+              <select
+                id="file-upload-max-files"
+                [value]="fileUploadMaxFiles()"
+                (change)="fileUploadMaxFiles.set(+$any($event.target).value)"
+              >
+                <option [value]="1">1 file</option>
+                <option [value]="3">3 files</option>
+                <option [value]="5">5 files</option>
+                <option [value]="10">10 files</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="file-upload-max-size">Maximum file size</label>
+              <select
+                id="file-upload-max-size"
+                [value]="fileUploadMaxFileSize()"
+                (change)="fileUploadMaxFileSize.set(+$any($event.target).value)"
+              >
+                <option [value]="1048576">1 MB</option>
+                <option [value]="5242880">5 MB</option>
+                <option [value]="10485760">10 MB</option>
+                <option [value]="20971520">20 MB</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="fileUploadMultiple()"
+                (change)="fileUploadMultiple.set($any($event.target).checked)"
+              />
+              Multiple files
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="fileUploadDisabled()"
+                (change)="fileUploadDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="fileUploadRequired()"
+                (change)="fileUploadRequired.set($any($event.target).checked)"
+              />
+              Required
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="fileUploadShowFileList()"
+                (change)="fileUploadShowFileList.set($any($event.target).checked)"
+              />
+              Show file list
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common file upload configurations.</p>
+            </div>
+          </div>
+
+          <div class="file-upload-examples">
+            <div class="file-upload-example">
+              <strong>Single PDF</strong>
+
+              <ui-file-upload
+                id="example-pdf-upload"
+                label="Upload PDF"
+                accept=".pdf,application/pdf"
+                [maxFileSize]="10485760"
+                hint="PDF only, maximum 10 MB"
+              />
+            </div>
+
+            <div class="file-upload-example">
+              <strong>Image Upload</strong>
+
+              <ui-file-upload
+                id="example-image-upload"
+                label="Upload images"
+                accept="image/*"
+                [multiple]="true"
+                [maxFiles]="5"
+                [maxFileSize]="5242880"
+                hint="Images only, maximum 5 MB each"
+              />
+            </div>
+
+            <div class="file-upload-example">
+              <strong>Disabled Upload</strong>
+
+              <ui-file-upload
+                id="example-disabled-upload"
+                label="Upload disabled"
+                [disabled]="true"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyFileUploadCode()">
+              {{ fileUploadCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ fileUploadUsageCode() }}</code></pre>
           </div>
         </section>
 
