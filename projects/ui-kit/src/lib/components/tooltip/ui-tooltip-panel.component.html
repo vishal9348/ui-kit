@@ -1,0 +1,15 @@
+
+<div
+  [ngClass]="['ui-tooltip-panel', customClass()]"
+  [style.max-width.px]="maxWidth()"
+  [id]="tooltipId()"
+  role="tooltip"
+  (mouseenter)="pointerEntered.emit()"
+  (mouseleave)="pointerLeft.emit()"
+>
+  @if (templateContent(); as template) {
+    <ng-container [ngTemplateOutlet]="template" />
+  } @else {
+    {{ textContent() }}
+  }
+</div>

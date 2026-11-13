@@ -23,9 +23,11 @@ import {
   UiDatePickerComponent,
   UiTabsComponent,
   UiTabContentDirective,
+  UiTooltipDirective,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 import type {
   UiRadioOption,
@@ -78,6 +80,7 @@ interface Employee extends Record<string, unknown> {
     DatePipe,
     UiTabsComponent,
     UiTabContentDirective,
+    UiTooltipDirective,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -106,6 +109,7 @@ export class App {
     | 'data-table'
     | 'date-picker'
     | 'tabs'
+    | 'tooltip'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -178,7 +182,8 @@ export class App {
       | 'switch'
       | 'data-table'
       | 'date-picker'
-      | 'tabs',
+      | 'tabs'
+      | 'tooltip',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1221,4 +1226,60 @@ maxDate = new Date(2035, 11, 31);
 // Component TypeScript
 selectedTab = signal<string | null>('overview');`;
   });
+
+  // ======================================
+  // TOOLTIP
+  // ======================================
+
+  tooltipPosition = signal<'top' | 'bottom' | 'left' | 'right'>('top');
+
+  tooltipTrigger = signal<'hover' | 'click'>('hover');
+
+  tooltipDelay = signal(300);
+
+  tooltipMaxWidth = signal(240);
+
+  tooltipDisabled = signal(false);
+
+  tooltipText = signal('This is a helpful tooltip message.');
+
+  readonly tooltipUsageCode = computed(() => {
+    const position = this.tooltipPosition();
+    const trigger = this.tooltipTrigger();
+    const delay = this.tooltipDelay();
+    const maxWidth = this.tooltipMaxWidth();
+    const disabled = this.tooltipDisabled();
+
+    return `<button
+  uiTooltip="${this.tooltipText()}"
+  uiTooltipPosition="${position}"
+  uiTooltipTrigger="${trigger}"
+  [uiTooltipDelay]="${delay}"
+  [uiTooltipMaxWidth]="${maxWidth}"
+  [uiTooltipDisabled]="${disabled}"
+>
+  Hover or click me
+</button>`;
+  });
+
+  resetTooltipConfiguration(): void {
+    this.tooltipPosition.set('top');
+    this.tooltipTrigger.set('hover');
+    this.tooltipDelay.set(300);
+    this.tooltipMaxWidth.set(240);
+    this.tooltipDisabled.set(false);
+    this.tooltipText.set('This is a helpful tooltip message.');
+  }
+
+  // copyLabel = signal('Copy code');
+
+  async copyTooltipCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.tooltipUsageCode());
+      this.copyLabel.set('Copied!');
+    } catch (error) {
+      console.error('Failed to copy tooltip code:', error);
+      this.copyLabel.set('Copy failed');
+    }
+  }
 }

@@ -1,0 +1,46 @@
+:host {
+    display: block;
+    pointer-events: auto;
+}
+
+.ui-tooltip-panel {
+    box-sizing: border-box;
+    width: max-content;
+    max-width: 240px;
+    padding: 7px 11px;
+    border-radius: 6px;
+
+    background: var(--ui-tooltip-bg, #1f2937);
+    color: var(--ui-tooltip-color, #ffffff);
+
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+
+    overflow-wrap: break-word;
+    white-space: normal;
+
+    box-shadow:
+        0 4px 8px rgb(0 0 0 / 12%),
+        0 1px 3px rgb(0 0 0 / 8%);
+
+    animation: ui-tooltip-enter 120ms ease-out;
+}
+
+@keyframes ui-tooltip-enter {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ui-tooltip-panel {
+        animation: none;
+    }
+}

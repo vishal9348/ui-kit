@@ -194,6 +194,15 @@
           Tabs
           <span class="nav-status">Ready</span>
         </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'tooltip'"
+          (click)="setActiveComponent('tooltip')"
+        >
+          <span class="nav-icon">ⓘ</span>
+          Tooltip
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -231,7 +240,9 @@
                             ? 'Breadcrumb'
                             : activeComponent() === 'data-table'
                               ? 'Data Table'
-                              : 'Button'
+                              : activeComponent() === 'tooltip'
+                                ? 'Tooltip'
+                                : 'Button'
           }}
         </strong>
       </div>
@@ -2100,6 +2111,308 @@
             </div>
 
             <pre><code>{{ tabsUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- ================================================= -->
+    <!-- TOOLTIP DOCUMENTATION -->
+    <!-- ================================================= -->
+
+    @if (activeComponent() === 'tooltip') {
+      <section class="page-content">
+        <!-- Page Heading -->
+        <div class="page-heading">
+          <div class="eyebrow">UTILITY COMPONENTS</div>
+
+          <h1>Tooltip</h1>
+
+          <p>
+            Display contextual information when users hover over, focus on, or click an element.
+            Supports flexible positioning, configurable delays and custom content.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone Directive</span>
+            <span>CDK Overlay</span>
+            <span>Accessible</span>
+            <span>Configurable</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Explore the available tooltip positions.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box tooltip-preview">
+            <button
+              class="tooltip-demo-button"
+              uiTooltip="Tooltip displayed above the element"
+              uiTooltipPosition="top"
+            >
+              Top
+            </button>
+
+            <button
+              class="tooltip-demo-button"
+              uiTooltip="Tooltip displayed below the element"
+              uiTooltipPosition="bottom"
+            >
+              Bottom
+            </button>
+
+            <button
+              class="tooltip-demo-button"
+              uiTooltip="Tooltip displayed on the left"
+              uiTooltipPosition="left"
+            >
+              Left
+            </button>
+
+            <button
+              class="tooltip-demo-button"
+              uiTooltip="Tooltip displayed on the right"
+              uiTooltipPosition="right"
+            >
+              Right
+            </button>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Modify the tooltip properties and see the preview update.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetTooltipConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="tooltip-config-layout">
+            <!-- Controls -->
+            <div class="tooltip-controls">
+              <div class="config-field">
+                <label for="tooltip-position">Position</label>
+
+                <select
+                  id="tooltip-position"
+                  [value]="tooltipPosition()"
+                  (change)="tooltipPosition.set($any($event.target).value)"
+                >
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="tooltip-trigger">Trigger</label>
+
+                <select
+                  id="tooltip-trigger"
+                  [value]="tooltipTrigger()"
+                  (change)="tooltipTrigger.set($any($event.target).value)"
+                >
+                  <option value="hover">Hover / Focus</option>
+                  <option value="click">Click</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="tooltip-delay"> Show Delay: {{ tooltipDelay() }} ms </label>
+
+                <input
+                  id="tooltip-delay"
+                  type="range"
+                  min="0"
+                  max="1500"
+                  step="100"
+                  [value]="tooltipDelay()"
+                  (input)="tooltipDelay.set(+$any($event.target).value)"
+                />
+              </div>
+
+              <div class="config-field">
+                <label for="tooltip-width"> Maximum Width: {{ tooltipMaxWidth() }} px </label>
+
+                <input
+                  id="tooltip-width"
+                  type="range"
+                  min="120"
+                  max="400"
+                  step="20"
+                  [value]="tooltipMaxWidth()"
+                  (input)="tooltipMaxWidth.set(+$any($event.target).value)"
+                />
+              </div>
+
+              <div class="config-field">
+                <label for="tooltip-text">Tooltip Content</label>
+
+                <input
+                  id="tooltip-text"
+                  type="text"
+                  [value]="tooltipText()"
+                  (input)="tooltipText.set($any($event.target).value)"
+                  placeholder="Enter tooltip content"
+                />
+              </div>
+
+              <div class="config-options">
+                <label class="config-checkbox">
+                  <input
+                    type="checkbox"
+                    [checked]="tooltipDisabled()"
+                    (change)="tooltipDisabled.set($any($event.target).checked)"
+                  />
+                  Disable Tooltip
+                </label>
+              </div>
+            </div>
+
+            <!-- Live Preview -->
+            <div class="tooltip-live-preview">
+              <span class="preview-label">LIVE PREVIEW</span>
+
+              <button
+                class="tooltip-demo-button tooltip-primary-button"
+                [uiTooltip]="tooltipText()"
+                [uiTooltipPosition]="tooltipPosition()"
+                [uiTooltipTrigger]="tooltipTrigger()"
+                [uiTooltipDelay]="tooltipDelay()"
+                [uiTooltipMaxWidth]="tooltipMaxWidth()"
+                [uiTooltipDisabled]="tooltipDisabled()"
+              >
+                {{ tooltipTrigger() === 'click' ? 'Click me' : 'Hover me' }}
+              </button>
+
+              <p class="tooltip-preview-hint">
+                {{
+                  tooltipTrigger() === 'click'
+                    ? 'Click the button to toggle the tooltip.'
+                    : 'Hover over or focus the button to display the tooltip.'
+                }}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Additional Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common tooltip usage patterns.</p>
+            </div>
+          </div>
+
+          <div class="tooltip-examples">
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Default Tooltip</strong>
+                <p>Simple hover interaction.</p>
+              </div>
+
+              <button class="tooltip-demo-button" uiTooltip="This is a default tooltip.">
+                Hover me
+              </button>
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Delayed Tooltip</strong>
+                <p>Tooltip appears after 800 milliseconds.</p>
+              </div>
+
+              <button
+                class="tooltip-demo-button"
+                uiTooltip="This tooltip has an 800ms delay."
+                [uiTooltipDelay]="800"
+              >
+                Hover me
+              </button>
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Click Tooltip</strong>
+                <p>Click to open and click outside to close.</p>
+              </div>
+
+              <button
+                class="tooltip-demo-button"
+                uiTooltip="Click outside or press Escape to close."
+                uiTooltipTrigger="click"
+              >
+                Click me
+              </button>
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Disabled Tooltip</strong>
+                <p>Tooltip will not be displayed.</p>
+              </div>
+
+              <button
+                class="tooltip-demo-button"
+                uiTooltip="You should not see this."
+                [uiTooltipDisabled]="true"
+              >
+                Disabled
+              </button>
+            </div>
+
+            <div class="tooltip-example-row">
+              <div>
+                <strong>Long Content</strong>
+                <p>Tooltip text wraps based on its maximum width.</p>
+              </div>
+
+              <button
+                class="tooltip-demo-button"
+                uiTooltip="This is a longer tooltip message that demonstrates how the tooltip content wraps across multiple lines."
+                [uiTooltipMaxWidth]="280"
+              >
+                Hover for details
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Generated Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the selected configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyTooltipCode()">
+              {{ copyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ tooltipUsageCode() }}</code></pre>
           </div>
         </section>
 
