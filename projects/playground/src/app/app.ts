@@ -27,6 +27,8 @@ import {
   UiEllipsisComponent,
   UiAvatarComponent,
   UiBadgeComponent,
+  UiAccordionComponent,
+  UiAccordionPanelDirective,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -53,6 +55,8 @@ import type {
   UiBadgeVariant,
   UiBadgeSize,
   UiBadgeShape,
+  UiAccordionItem,
+  UiAccordionMode,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -93,7 +97,8 @@ interface Employee extends Record<string, unknown> {
     UiEllipsisComponent,
     UiAvatarComponent,
     UiBadgeComponent,
-  ],
+    UiAccordionComponent
+],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -125,6 +130,7 @@ export class App {
     | 'ellipsis'
     | 'avatar'
     | 'badge'
+    | 'accordion'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -201,7 +207,8 @@ export class App {
       | 'tooltip'
       | 'ellipsis'
       | 'avatar'
-      | 'badge',
+      | 'badge'
+      | 'accordion',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1452,4 +1459,119 @@ selectedTab = signal<string | null>('overview');`;
       this.badgeCopyLabel.set('Copy unavailable');
     }
   }
+
+  // ======================================
+  // ACCORDION
+  // ======================================
+
+  accordionMode = signal<UiAccordionMode>('single');
+
+  accordionBordered = signal(true);
+
+  accordionShowIcons = signal(true);
+
+  accordionDisableSettings = signal(false);
+
+  accordionProfileName = signal('Vishal Kumar');
+
+  accordionActionMessage = signal('');
+
+  readonly accordionItems = computed<UiAccordionItem[]>(() => [
+    {
+      id: 'overview',
+      title: 'Overview',
+      content:
+        'This panel uses simple string-based content. It is suitable for displaying descriptions, help text, and other static information.',
+      expanded: true,
+    },
+    {
+      id: 'profile',
+      title: 'Profile Information',
+    },
+    {
+      id: 'settings',
+      title: 'Application Settings',
+      disabled: this.accordionDisableSettings(),
+    },
+  ]);
+
+  readonly accordionUsageCode = computed(() => {
+    const mode = this.accordionMode();
+    const bordered = this.accordionBordered();
+    const showIcons = this.accordionShowIcons();
+
+    return `<ui-accordion
+  [items]="accordionItems"
+  mode="${mode}"
+  [bordered]="${bordered}"
+  [showIcons]="${showIcons}"
+  (expandedChange)="onAccordionExpandedChange($event)"
+>
+  <ng-template uiAccordionPanel="profile" let-item>
+    <h3>Profile Information</h3>
+    <input
+      type="text"
+      [(ngModel)]="profileName"
+      placeholder="Enter your name"
+    />
+    <button type="button" (click)="saveProfile()">
+      Save Profile
+    </button>
+  </ng-template>
+
+  <ng-template uiAccordionPanel="settings">
+    <h3>Application Settings</h3>
+    <p>Configure your application preferences here.</p>
+  </ng-template>
+</ui-accordion>
+
+// Component TypeScript
+accordionItems: UiAccordionItem[] = [
+  {
+    id: 'overview',
+    title: 'Overview',
+    content: 'This is regular string content.',
+  },
+  {
+    id: 'profile',
+    title: 'Profile Information',
+  },
+  {
+    id: 'settings',
+    title: 'Application Settings',
+  },
+];
+
+profileName = 'Vishal Kumar';
+
+saveProfile(): void {
+  console.log('Profile saved:', this.profileName);
+}
+
+onAccordionExpandedChange(ids: string[]): void {
+  console.log('Expanded panels:', ids);
+}`;
+  });
+
+  accordionCopyLabel = signal('Copy code');
+
+  onAccordionExpandedChange(ids: string[]): void {
+    console.log('Expanded accordion panels:', ids);
+  }
+
+  saveAccordionProfile(): void {
+    this.accordionActionMessage.set(`Profile saved for ${this.accordionProfileName()}`);
+  }
+
+  async copyAccordionCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.accordionUsageCode());
+      this.accordionCopyLabel.set('Copied!');
+    } catch {
+      this.accordionCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  readonly Number = Number;
+  readonly Math = Math;
 }
