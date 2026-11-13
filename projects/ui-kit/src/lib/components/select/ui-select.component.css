@@ -1,0 +1,221 @@
+:host {
+    display: block;
+    width: 100%;
+    font-family: inherit;
+}
+
+.ui-select {
+    width: 100%;
+    color: var(--ui-select-text, #111827);
+}
+
+.ui-select-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--ui-select-label, #374151);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ui-select-required {
+    margin-left: 3px;
+    color: #dc2626;
+}
+
+.ui-select-control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--ui-select-border, #d1d5db);
+    border-radius: 6px;
+    background: var(--ui-select-background, #fff);
+}
+
+.ui-select-control:focus-within {
+    border-color: var(--ui-select-focus, #2563eb);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-select-focus, #2563eb) 15%, transparent);
+}
+
+.ui-select-open .ui-select-control {
+    border-color: var(--ui-select-focus, #2563eb);
+}
+
+.ui-select-trigger {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    padding-left: 12px;
+}
+
+.ui-select-trigger:disabled {
+    cursor: not-allowed;
+}
+
+.ui-select-value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ui-select-placeholder {
+    color: var(--ui-select-placeholder, #9ca3af);
+}
+
+.ui-select-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.ui-select-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    margin-right: 5px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #6b7280;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.ui-select-clear:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.ui-select-chevron {
+    width: 16px;
+    height: 16px;
+    color: #6b7280;
+    flex: 0 0 16px;
+    display: block;
+    position: static;
+    margin: 0;
+    transform: none;
+    transition: transform 150ms ease;
+}
+
+.ui-select-chevron-open {
+    transform: rotate(180deg);
+}
+
+.ui-select-panel {
+    position: absolute;
+    z-index: 1000;
+    top: calc(100% + 5px);
+    right: 0;
+    left: 0;
+    overflow: hidden;
+    border: 1px solid var(--ui-select-border, #d1d5db);
+    border-radius: 6px;
+    background: var(--ui-select-panel-background, #ffffff);
+    box-shadow: 0 8px 20px rgb(0 0 0 / 10%);
+}
+
+.ui-select-search {
+    padding: 8px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ui-select-search-input {
+    width: 100%;
+    min-height: 34px;
+    padding: 6px 9px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    outline: none;
+    background: #ffffff;
+    color: #111827;
+    font: inherit;
+    font-size: 13px;
+}
+
+.ui-select-search-input:focus {
+    border-color: var(--ui-select-focus, #2563eb);
+}
+
+.ui-select-options {
+    overflow-y: auto;
+    max-height: 240px;
+    padding: 4px;
+}
+
+.ui-select-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 36px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: #374151;
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ui-select-option:hover,
+.ui-select-option-active {
+    background: #f3f4f6;
+}
+
+.ui-select-option-selected {
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 500;
+}
+
+.ui-select-option-selected:hover,
+.ui-select-option-selected.ui-select-option-active {
+    background: #dbeafe;
+}
+
+.ui-select-option:disabled,
+.ui-select-option-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.ui-select-check {
+    margin-left: 12px;
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.ui-select-empty {
+    padding: 16px 10px;
+    color: #9ca3af;
+    font-size: 13px;
+    text-align: center;
+}
+
+.ui-select-disabled .ui-select-control {
+    background: var(--ui-select-disabled-background, #f3f4f6);
+    opacity: 0.7;
+}
+
+.ui-select-disabled .ui-select-trigger {
+    cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ui-select-control,
+    .ui-select-chevron {
+        transition: none;
+    }
+}

@@ -29,6 +29,7 @@ import {
   UiBadgeComponent,
   UiAccordionComponent,
   UiAccordionPanelDirective,
+  UiSelectComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -57,6 +58,7 @@ import type {
   UiBadgeShape,
   UiAccordionItem,
   UiAccordionMode,
+  UiSelectOption,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -97,8 +99,9 @@ interface Employee extends Record<string, unknown> {
     UiEllipsisComponent,
     UiAvatarComponent,
     UiBadgeComponent,
-    UiAccordionComponent
-],
+    UiAccordionComponent,
+    UiSelectComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -131,6 +134,7 @@ export class App {
     | 'avatar'
     | 'badge'
     | 'accordion'
+    | 'select'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -208,7 +212,8 @@ export class App {
       | 'ellipsis'
       | 'avatar'
       | 'badge'
-      | 'accordion',
+      | 'accordion'
+      | 'select',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1574,4 +1579,81 @@ onAccordionExpandedChange(ids: string[]): void {
 
   readonly Number = Number;
   readonly Math = Math;
+
+  // ======================================
+  // SELECT
+  // ======================================
+
+  readonly selectOptions: UiSelectOption[] = [
+    { label: 'Engineering', value: 'engineering' },
+    { label: 'Finance', value: 'finance' },
+    { label: 'Human Resources', value: 'hr' },
+    { label: 'Marketing', value: 'marketing' },
+    { label: 'Operations', value: 'operations' },
+    { label: 'Archived', value: 'archived', disabled: true },
+  ];
+
+  selectLabel = signal('Department');
+  selectPlaceholder = signal('Select department');
+  selectSearchable = signal(true);
+  selectClearable = signal(true);
+  selectDisabled = signal(false);
+  selectRequired = signal(false);
+  selectNoResultsText = signal('No departments found');
+
+  selectedSelectValue = signal<string | number | null>('engineering');
+
+  readonly selectUsageCode = computed(() => {
+    const label = this.selectLabel();
+    const placeholder = this.selectPlaceholder();
+    const searchable = this.selectSearchable();
+    const clearable = this.selectClearable();
+    const disabled = this.selectDisabled();
+    const required = this.selectRequired();
+    const noResultsText = this.selectNoResultsText();
+
+    return `<ui-select
+  id="department"
+  label="${label}"
+  [options]="selectOptions"
+  placeholder="${placeholder}"
+  [searchable]="${searchable}"
+  [clearable]="${clearable}"
+  [disabled]="${disabled}"
+  [required]="${required}"
+  noResultsText="${noResultsText}"
+  [(ngModel)]="selectedDepartment"
+/>
+
+// Component TypeScript
+selectOptions: UiSelectOption[] = [
+  { label: 'Engineering', value: 'engineering' },
+  { label: 'Finance', value: 'finance' },
+  { label: 'Human Resources', value: 'hr' },
+];
+
+selectedDepartment = 'engineering';`;
+  });
+
+  selectCopyLabel = signal('Copy code');
+
+  resetSelectConfiguration(): void {
+    this.selectLabel.set('Department');
+    this.selectPlaceholder.set('Select department');
+    this.selectSearchable.set(true);
+    this.selectClearable.set(true);
+    this.selectDisabled.set(false);
+    this.selectRequired.set(false);
+    this.selectNoResultsText.set('No departments found');
+    this.selectedSelectValue.set('engineering');
+  }
+
+  async copySelectCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.selectUsageCode());
+      this.selectCopyLabel.set('Copied!');
+    } catch {
+      this.selectCopyLabel.set('Copy unavailable');
+    }
+  }
 }

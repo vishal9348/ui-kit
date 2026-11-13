@@ -240,6 +240,15 @@
           Accordion
           <span class="nav-status">Ready</span>
         </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'select'"
+          (click)="setActiveComponent('select')"
+        >
+          <span class="nav-icon">▾</span>
+          Select
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -285,7 +294,9 @@
                                     ? 'Avatar'
                                     : activeComponent() === 'accordion'
                                       ? 'Accordion'
-                                      : 'Button'
+                                      : activeComponent() === 'select'
+                                        ? 'Select'
+                                        : 'Button'
           }}
         </strong>
       </div>
@@ -3379,6 +3390,226 @@
             </div>
 
             <pre><code>{{ accordionUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- SELECT DOCUMENTATION -->
+    @if (activeComponent() === 'select') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">FORM COMPONENTS</div>
+
+          <h1>Select</h1>
+
+          <p>
+            A searchable single-select component with clearable selection, disabled options and
+            Angular Forms integration.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Searchable</span>
+            <span>ControlValueAccessor</span>
+            <span>Angular Forms</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Interact with the Select component.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box select-preview">
+            <div class="select-preview-control">
+              <ui-select
+                id="playground-department"
+                [label]="selectLabel()"
+                [options]="selectOptions"
+                [placeholder]="selectPlaceholder()"
+                [searchable]="selectSearchable()"
+                [clearable]="selectClearable()"
+                [disabled]="selectDisabled()"
+                [required]="selectRequired()"
+                [noResultsText]="selectNoResultsText()"
+                [ngModel]="selectedSelectValue()"
+                (ngModelChange)="selectedSelectValue.set($event)"
+              />
+
+              <p class="click-message">
+                Selected value:
+                <strong>{{ selectedSelectValue() ?? 'None' }}</strong>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change Select properties and see the preview update.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetSelectConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="select-label">Label</label>
+              <input
+                id="select-label"
+                type="text"
+                [value]="selectLabel()"
+                (input)="selectLabel.set($any($event.target).value)"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="select-placeholder">Placeholder</label>
+              <input
+                id="select-placeholder"
+                type="text"
+                [value]="selectPlaceholder()"
+                (input)="selectPlaceholder.set($any($event.target).value)"
+              />
+            </div>
+
+            <div class="config-field">
+              <label for="select-no-results">No results message</label>
+              <input
+                id="select-no-results"
+                type="text"
+                [value]="selectNoResultsText()"
+                (input)="selectNoResultsText.set($any($event.target).value)"
+              />
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="selectSearchable()"
+                (change)="selectSearchable.set($any($event.target).checked)"
+              />
+              Searchable
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="selectClearable()"
+                (change)="selectClearable.set($any($event.target).checked)"
+              />
+              Clearable
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="selectDisabled()"
+                (change)="selectDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="selectRequired()"
+                (change)="selectRequired.set($any($event.target).checked)"
+              />
+              Required
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Different Select configurations.</p>
+            </div>
+          </div>
+
+          <div class="select-examples">
+            <div class="select-example">
+              <strong>Default Select</strong>
+              <ui-select
+                id="example-default"
+                label="Department"
+                [options]="selectOptions"
+                placeholder="Select department"
+              />
+            </div>
+
+            <div class="select-example">
+              <strong>Searchable Select</strong>
+              <ui-select
+                id="example-searchable"
+                label="Search department"
+                [options]="selectOptions"
+                [searchable]="true"
+                placeholder="Search departments"
+              />
+            </div>
+
+            <div class="select-example">
+              <strong>Clearable Select</strong>
+              <ui-select
+                id="example-clearable"
+                label="Select department"
+                [options]="selectOptions"
+                [clearable]="true"
+                [ngModel]="'finance'"
+              />
+            </div>
+
+            <div class="select-example">
+              <strong>Disabled Select</strong>
+              <ui-select
+                id="example-disabled"
+                label="Disabled department"
+                [options]="selectOptions"
+                [disabled]="true"
+                placeholder="Selection disabled"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copySelectCode()">
+              {{ selectCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ selectUsageCode() }}</code></pre>
           </div>
         </section>
 

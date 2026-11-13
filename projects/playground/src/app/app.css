@@ -811,3 +811,51 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ======================================
+   SELECT PLAYGROUND
+====================================== */
+
+.select-preview {
+  min-height: 190px;
+  align-items: flex-start;
+}
+
+.select-preview-control {
+  width: 100%;
+  max-width: 380px;
+}
+
+.select-preview-control .click-message {
+  margin-top: 14px;
+  color: var(--text-secondary, #6b7280);
+  font-size: 13px;
+}
+
+.select-examples {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.select-example {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 10px;
+  background: var(--surface, #ffffff);
+}
+
+.select-example>strong {
+  color: var(--text-primary, #111827);
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
+  .select-examples {
+    grid-template-columns: 1fr;
+  }
+}

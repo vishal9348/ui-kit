@@ -1,0 +1,118 @@
+
+<div
+  class="ui-select"
+  [class.ui-select-open]="isOpen()"
+  [class.ui-select-disabled]="isDisabled()"
+>
+  @if (label()) {
+    <label class="ui-select-label" [for]="id()">
+      {{ label() }}
+      @if (required()) {
+        <span class="ui-select-required" aria-hidden="true">*</span>
+      }
+    </label>
+  }
+
+  <div class="ui-select-control">
+    <button
+      type="button"
+      class="ui-select-trigger"
+      [id]="id()"
+      role="combobox"
+      aria-haspopup="listbox"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="id() + '-listbox'"
+      [attr.aria-label]="label() || placeholder()"
+      [attr.aria-required]="required()"
+      [disabled]="isDisabled()"
+      (click)="toggle()"
+      (keydown)="onKeydown($event)"
+    >
+      <span
+        class="ui-select-value"
+        [class.ui-select-placeholder]="!selectedOption()"
+      >
+        {{ displayText() }}
+      </span>
+
+      <svg
+        class="ui-select-chevron"
+        [class.ui-select-chevron-open]="isOpen()"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path d="m6 9 6 6 6-6" />
+      </svg>
+    </button>
+
+    @if (clearable() && selectedOption() && !isDisabled()) {
+      <button
+        type="button"
+        class="ui-select-clear"
+        aria-label="Clear selection"
+        (click)="clear($event)"
+      >
+        &times;
+      </button>
+    }
+
+    @if (isOpen()) {
+      <div class="ui-select-panel">
+        @if (searchable()) {
+          <div class="ui-select-search">
+            <input
+              type="text"
+              class="ui-select-search-input"
+              placeholder="Search options..."
+              [value]="searchTerm()"
+              (input)="onSearch($any($event.target).value)"
+              (keydown)="onKeydown($event)"
+              aria-label="Search options"
+            />
+          </div>
+        }
+
+        <div
+          class="ui-select-options"
+          role="listbox"
+          [id]="id() + '-listbox'"
+          [attr.aria-label]="label() || 'Options'"
+        >
+          @for (
+            option of filteredOptions();
+            track option.value;
+            let i = $index
+          ) {
+            <button
+              type="button"
+              class="ui-select-option"
+              [class.ui-select-option-selected]="isSelected(option)"
+              [class.ui-select-option-active]="activeIndex() === i"
+              [class.ui-select-option-disabled]="option.disabled"
+              role="option"
+              [attr.aria-selected]="isSelected(option)"
+              [disabled]="option.disabled"
+              (click)="selectOption(option)"
+              (mouseenter)="activeIndex.set(i)"
+            >
+              <span>{{ option.label }}</span>
+
+              @if (isSelected(option)) {
+                <span class="ui-select-check" aria-hidden="true">
+                  ✓
+                </span>
+              }
+            </button>
+          } @empty {
+            <div class="ui-select-empty">
+              {{ noResultsText() }}
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

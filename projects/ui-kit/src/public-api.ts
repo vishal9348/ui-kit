@@ -104,3 +104,6 @@ export * from './lib/components/badge/ui-badge.types';
 export * from './lib/components/accordion/ui-accordion.component';
 export * from './lib/components/accordion/ui-accordion.types';
 export * from './lib/components/accordion/ui-accordion-panel.directive';
+
+export * from './lib/components/select/ui-select.component';
+export * from './lib/components/select/ui-select.types';
