@@ -33,6 +33,7 @@ import {
   UiFileUploadComponent,
   UiStepperComponent,
   UiStepperContentDirective,
+  UiTreeViewComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -65,6 +66,8 @@ import type {
   UiFileRejected,
   UiStepperStep,
   UiStepperOrientation,
+  UiTreeNode,
+  UiTreeSelectionMode,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -110,6 +113,7 @@ interface Employee extends Record<string, unknown> {
     UiFileUploadComponent,
     UiStepperComponent,
     UiStepperContentDirective,
+    UiTreeViewComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -146,6 +150,7 @@ export class App {
     | 'select'
     | 'file-upload'
     | 'stepper'
+    | 'tree-view'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -226,7 +231,8 @@ export class App {
       | 'accordion'
       | 'select'
       | 'file-upload'
-      | 'stepper',
+      | 'stepper'
+      | 'tree-view',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1841,6 +1847,177 @@ onStepperCompleted(): void {
       this.stepperCopyLabel.set('Copied!');
     } catch {
       this.stepperCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // TREE VIEW
+  // ======================================
+
+  readonly treeNodes: UiTreeNode[] = [
+    {
+      id: 'company',
+      label: 'Acme Corporation',
+      children: [
+        {
+          id: 'engineering',
+          label: 'Engineering',
+          children: [
+            { id: 'frontend', label: 'Frontend Team' },
+            { id: 'backend', label: 'Backend Team' },
+            { id: 'platform', label: 'Platform Team' },
+          ],
+        },
+        {
+          id: 'product',
+          label: 'Product',
+          children: [
+            { id: 'design', label: 'Product Design' },
+            { id: 'research', label: 'User Research' },
+          ],
+        },
+        {
+          id: 'operations',
+          label: 'Operations',
+          children: [
+            { id: 'finance', label: 'Finance' },
+            { id: 'hr', label: 'Human Resources' },
+            { id: 'legal', label: 'Legal', disabled: true },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'resources',
+      label: 'Shared Resources',
+      children: [
+        { id: 'policies', label: 'Company Policies' },
+        { id: 'templates', label: 'Document Templates' },
+      ],
+    },
+  ];
+
+  readonly treeExampleNodes: UiTreeNode[] = [
+    {
+      id: 'engineering',
+      label: 'Engineering',
+      children: [
+        { id: 'frontend', label: 'Frontend' },
+        { id: 'backend', label: 'Backend' },
+        { id: 'qa', label: 'Quality Assurance' },
+      ],
+    },
+    {
+      id: 'design',
+      label: 'Design',
+      children: [
+        { id: 'ux', label: 'UX Design' },
+        { id: 'ui', label: 'UI Design' },
+      ],
+    },
+  ];
+
+  treeSelectionMode = signal<UiTreeSelectionMode>('single');
+  treeSelectedIds = signal<string[]>([]);
+  treeCheckedIds = signal<string[]>([]);
+  treeExpandedIds = signal<string[]>(['company']);
+
+  treeSelectable = signal(true);
+  treeCheckboxes = signal(false);
+  treeSearchable = signal(true);
+  treeShowExpandAll = signal(true);
+  treeDisabled = signal(false);
+
+  treeExpandedPreset = signal<'root' | 'all' | 'none'>('root');
+
+  treeLastEvent = signal('');
+
+  treeExampleSingleSelected = signal<string[]>(['frontend']);
+  treeExampleChecked = signal<string[]>(['frontend']);
+
+  treeViewCopyLabel = signal('Copy code');
+
+  readonly treeViewUsageCode = computed(() => {
+    const selectionMode = this.treeSelectionMode();
+    const checkboxes = this.treeCheckboxes();
+    const searchable = this.treeSearchable();
+    const selectable = this.treeSelectable();
+    const showExpandAll = this.treeShowExpandAll();
+    const disabled = this.treeDisabled();
+
+    return `<ui-tree-view
+  [nodes]="treeNodes"
+  selectionMode="${selectionMode}"
+  [selectedIds]="selectedIds()"
+  [checkedIds]="checkedIds()"
+  [expandedIds]="expandedIds()"
+  [checkboxes]="${checkboxes}"
+  [searchable]="${searchable}"
+  [selectable]="${selectable}"
+  [showExpandAll]="${showExpandAll}"
+  [disabled]="${disabled}"
+  (selectedIdsChange)="selectedIds.set($event)"
+  (checkedIdsChange)="checkedIds.set($event)"
+  (expandedIdsChange)="expandedIds.set($event)"
+/>
+
+// Component TypeScript
+treeNodes: UiTreeNode[] = [...];
+selectedIds = signal<string[]>([]);
+checkedIds = signal<string[]>([]);
+expandedIds = signal<string[]>(['company']);`;
+  });
+
+  setTreeExpandedPreset(value: 'root' | 'all' | 'none'): void {
+    this.treeExpandedPreset.set(value);
+
+    if (value === 'none') {
+      this.treeExpandedIds.set([]);
+      return;
+    }
+
+    if (value === 'root') {
+      this.treeExpandedIds.set(['company']);
+      return;
+    }
+
+    const ids: string[] = [];
+
+    const visit = (nodes: UiTreeNode[]): void => {
+      for (const node of nodes) {
+        if (node.children?.length) {
+          ids.push(node.id);
+          visit(node.children);
+        }
+      }
+    };
+
+    visit(this.treeNodes);
+    this.treeExpandedIds.set(ids);
+  }
+
+  resetTreeViewConfiguration(): void {
+    this.treeSelectionMode.set('single');
+    this.treeSelectedIds.set([]);
+    this.treeCheckedIds.set([]);
+    this.treeExpandedIds.set(['company']);
+
+    this.treeSelectable.set(true);
+    this.treeCheckboxes.set(false);
+    this.treeSearchable.set(true);
+    this.treeShowExpandAll.set(true);
+    this.treeDisabled.set(false);
+
+    this.treeExpandedPreset.set('root');
+    this.treeLastEvent.set('');
+  }
+
+  async copyTreeViewCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.treeViewUsageCode());
+      this.treeViewCopyLabel.set('Copied!');
+    } catch {
+      this.treeViewCopyLabel.set('Copy unavailable');
     }
   }
 }
