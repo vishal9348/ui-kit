@@ -110,3 +110,7 @@ export * from './lib/components/select/ui-select.types';
 
 export * from './lib/components/file-upload/ui-file-upload.component';
 export * from './lib/components/file-upload/ui-file-upload.types';
+
+export * from './lib/components/stepper/ui-stepper.component';
+export * from './lib/components/stepper/ui-stepper.types';
+export * from './lib/components/stepper/ui-stepper-content.directive';

@@ -31,6 +31,8 @@ import {
   UiAccordionPanelDirective,
   UiSelectComponent,
   UiFileUploadComponent,
+  UiStepperComponent,
+  UiStepperContentDirective,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -61,6 +63,8 @@ import type {
   UiAccordionMode,
   UiSelectOption,
   UiFileRejected,
+  UiStepperStep,
+  UiStepperOrientation,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -104,6 +108,8 @@ interface Employee extends Record<string, unknown> {
     UiAccordionComponent,
     UiSelectComponent,
     UiFileUploadComponent,
+    UiStepperComponent,
+    UiStepperContentDirective,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -139,6 +145,7 @@ export class App {
     | 'accordion'
     | 'select'
     | 'file-upload'
+    | 'stepper'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -218,7 +225,8 @@ export class App {
       | 'badge'
       | 'accordion'
       | 'select'
-      | 'file-upload',
+      | 'file-upload'
+      | 'stepper',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1733,6 +1741,106 @@ handleRejectedFile(event: UiFileRejected): void {
       this.fileUploadCopyLabel.set('Copied!');
     } catch {
       this.fileUploadCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // STEPPER
+  // ======================================
+
+  stepperOrientation = signal<UiStepperOrientation>('horizontal');
+  stepperActiveStep = signal(0);
+  stepperLinear = signal(true);
+  stepperClickable = signal(true);
+  stepperShowStepNumbers = signal(true);
+  stepperShowNavigation = signal(true);
+  stepperCanProceed = signal(true);
+
+  readonly stepperSteps = signal<UiStepperStep[]>([
+    {
+      id: 'account',
+      label: 'Account',
+      description: 'Create your account',
+    },
+    {
+      id: 'profile',
+      label: 'Profile',
+      description: 'Enter your details',
+    },
+    {
+      id: 'review',
+      label: 'Review',
+      description: 'Confirm your information',
+    },
+  ]);
+
+  stepperCompleted = signal(false);
+  stepperCopyLabel = signal('Copy code');
+
+  readonly stepperUsageCode = computed(() => {
+    const orientation = this.stepperOrientation();
+    const linear = this.stepperLinear();
+    const clickable = this.stepperClickable();
+    const showStepNumbers = this.stepperShowStepNumbers();
+    const showNavigation = this.stepperShowNavigation();
+
+    return `<ui-stepper
+  [steps]="steps()"
+  [activeStep]="activeStep()"
+  orientation="${orientation}"
+  [linear]="${linear}"
+  [clickable]="${clickable}"
+  [showStepNumbers]="${showStepNumbers}"
+  [showNavigation]="${showNavigation}"
+  (stepChange)="activeStep.set($event)"
+  (completed)="onStepperCompleted()"
+>
+  <ng-template uiStepperContent="account">
+    <h3>Account details</h3>
+    <p>Enter your account information.</p>
+  </ng-template>
+
+  <ng-template uiStepperContent="profile">
+    <h3>Profile information</h3>
+    <p>Complete your profile details.</p>
+  </ng-template>
+
+  <ng-template uiStepperContent="review">
+    <h3>Review details</h3>
+    <p>Review your information before completing.</p>
+  </ng-template>
+</ui-stepper>
+
+// Component TypeScript
+steps = signal<UiStepperStep[]>([...]);
+activeStep = signal(0);
+
+onStepperCompleted(): void {
+  console.log('Stepper completed');
+}`;
+  });
+
+  resetStepperConfiguration(): void {
+    this.stepperOrientation.set('horizontal');
+    this.stepperActiveStep.set(0);
+    this.stepperLinear.set(true);
+    this.stepperClickable.set(true);
+    this.stepperShowStepNumbers.set(true);
+    this.stepperShowNavigation.set(true);
+    this.stepperCanProceed.set(true);
+    this.stepperCompleted.set(false);
+  }
+
+  handleStepperCompleted(): void {
+    this.stepperCompleted.set(true);
+  }
+
+  async copyStepperCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.stepperUsageCode());
+      this.stepperCopyLabel.set('Copied!');
+    } catch {
+      this.stepperCopyLabel.set('Copy unavailable');
     }
   }
 }

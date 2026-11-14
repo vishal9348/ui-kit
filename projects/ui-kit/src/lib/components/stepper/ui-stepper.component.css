@@ -1,0 +1,358 @@
+:host {
+    display: block;
+    width: 100%;
+    font-family: inherit;
+}
+
+.ui-stepper {
+    width: 100%;
+    color: var(--ui-stepper-text, #111827);
+}
+
+.ui-stepper-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* ========================================
+   HEADER
+======================================== */
+
+.ui-stepper-header {
+    display: flex;
+    width: 100%;
+}
+
+.ui-stepper-header-item {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-width: 0;
+}
+
+.ui-stepper-step-button {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 8px 10px 18px 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ui-stepper-step-button:focus-visible {
+    outline: 2px solid var(--ui-stepper-primary, #2563eb);
+    outline-offset: 3px;
+    border-radius: 5px;
+}
+
+.ui-stepper-step-button:disabled {
+    cursor: not-allowed;
+}
+
+/* ========================================
+   INDICATOR
+======================================== */
+
+.ui-stepper-indicator {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--ui-stepper-border, #d1d5db);
+    border-radius: 50%;
+    background: var(--ui-stepper-background, #ffffff);
+    color: var(--ui-stepper-muted, #6b7280);
+    font-size: 13px;
+    font-weight: 600;
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+}
+
+.ui-stepper-indicator svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* ========================================
+   STEP TEXT
+======================================== */
+
+.ui-stepper-step-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 3px;
+}
+
+.ui-stepper-step-label {
+    color: var(--ui-stepper-muted, #6b7280);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.ui-stepper-step-description {
+    color: var(--ui-stepper-description, #9ca3af);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.ui-stepper-optional {
+    margin-left: 5px;
+    color: var(--ui-stepper-description, #9ca3af);
+    font-size: 10px;
+    font-weight: 400;
+}
+
+/* ========================================
+   STATES
+======================================== */
+
+.ui-stepper-header-active .ui-stepper-indicator {
+    border-color: var(--ui-stepper-primary, #2563eb);
+    background: var(--ui-stepper-primary, #2563eb);
+    color: #ffffff;
+}
+
+.ui-stepper-header-active .ui-stepper-step-label {
+    color: var(--ui-stepper-primary, #2563eb);
+}
+
+.ui-stepper-header-completed .ui-stepper-indicator {
+    border-color: var(--ui-stepper-success, #16a34a);
+    background: var(--ui-stepper-success, #16a34a);
+    color: #ffffff;
+}
+
+.ui-stepper-header-completed .ui-stepper-step-label {
+    color: var(--ui-stepper-text, #374151);
+}
+
+.ui-stepper-header-error .ui-stepper-indicator {
+    border-color: var(--ui-stepper-danger, #dc2626);
+    background: var(--ui-stepper-danger, #dc2626);
+    color: #ffffff;
+}
+
+.ui-stepper-header-error .ui-stepper-step-label {
+    color: var(--ui-stepper-danger, #dc2626);
+}
+
+.ui-stepper-header-disabled .ui-stepper-step-button {
+    opacity: 0.5;
+}
+
+/* ========================================
+   CONNECTOR - HORIZONTAL
+======================================== */
+
+.ui-stepper-horizontal .ui-stepper-connector {
+    position: absolute;
+    top: 23px;
+    right: 12px;
+    left: 42px;
+    height: 2px;
+    background: var(--ui-stepper-border, #e5e7eb);
+    transform: translateX(10px);
+}
+
+.ui-stepper-connector-completed {
+    background: var(--ui-stepper-success, #16a34a);
+}
+
+/* ========================================
+   MAIN CONTENT
+======================================== */
+
+.ui-stepper-main {
+    min-width: 0;
+    width: 100%;
+}
+
+.ui-stepper-content {
+    margin-top: 18px;
+    padding: 22px;
+    border: 1px solid var(--ui-stepper-border, #e5e7eb);
+    border-radius: 8px;
+    background: var(--ui-stepper-background, #ffffff);
+}
+
+.ui-stepper-content-inner {
+    min-width: 0;
+}
+
+.ui-stepper-default-content {
+    margin: 0;
+    color: var(--ui-stepper-muted, #6b7280);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ========================================
+   NAVIGATION
+======================================== */
+
+.ui-stepper-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.ui-stepper-previous,
+.ui-stepper-next {
+    min-height: 38px;
+    padding: 8px 16px;
+    border: 1px solid var(--ui-stepper-border, #d1d5db);
+    border-radius: 6px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease;
+}
+
+.ui-stepper-previous {
+    background: var(--ui-stepper-background, #ffffff);
+    color: var(--ui-stepper-text, #374151);
+}
+
+.ui-stepper-next {
+    border-color: var(--ui-stepper-primary, #2563eb);
+    background: var(--ui-stepper-primary, #2563eb);
+    color: #ffffff;
+}
+
+.ui-stepper-previous:hover:not(:disabled) {
+    background: var(--ui-stepper-hover, #f3f4f6);
+}
+
+.ui-stepper-next:hover:not(:disabled) {
+    filter: brightness(0.94);
+}
+
+.ui-stepper-navigation button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   VERTICAL LAYOUT
+======================================== */
+
+.ui-stepper-vertical .ui-stepper-layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-items: start;
+    gap: 32px;
+}
+
+.ui-stepper-vertical .ui-stepper-header {
+    flex-direction: column;
+    width: 100%;
+}
+
+.ui-stepper-vertical .ui-stepper-header-item {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 65px;
+}
+
+.ui-stepper-vertical .ui-stepper-step-button {
+    padding: 6px 8px 12px 0;
+}
+
+.ui-stepper-vertical .ui-stepper-connector {
+    position: absolute;
+    top: 39px;
+    bottom: 0;
+    left: 15px;
+    width: 2px;
+    height: auto;
+    transform: none;
+}
+
+.ui-stepper-vertical .ui-stepper-main {
+    min-width: 0;
+    width: 100%;
+}
+
+.ui-stepper-vertical .ui-stepper-content {
+    margin-top: 0;
+}
+
+.ui-stepper-vertical .ui-stepper-navigation {
+    margin-top: 18px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+    .ui-stepper-vertical .ui-stepper-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+
+    .ui-stepper-vertical .ui-stepper-header {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .ui-stepper-horizontal .ui-stepper-header {
+        flex-direction: column;
+    }
+
+    .ui-stepper-horizontal .ui-stepper-header-item {
+        flex: none;
+        min-height: 55px;
+    }
+
+    .ui-stepper-horizontal .ui-stepper-step-button {
+        padding-bottom: 12px;
+    }
+
+    .ui-stepper-horizontal .ui-stepper-connector {
+        top: 38px;
+        bottom: 0;
+        left: 15px;
+        width: 2px;
+        height: auto;
+        transform: none;
+    }
+
+    .ui-stepper-content {
+        padding: 16px;
+    }
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ui-stepper-indicator,
+    .ui-stepper-previous,
+    .ui-stepper-next {
+        transition: none;
+    }
+}
