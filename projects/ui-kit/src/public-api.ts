@@ -107,3 +107,16 @@ export * from './lib/components/accordion/ui-accordion-panel.directive';
 
 export * from './lib/components/select/ui-select.component';
 export * from './lib/components/select/ui-select.types';
+
+export * from './lib/components/file-upload/ui-file-upload.component';
+export * from './lib/components/file-upload/ui-file-upload.types';
+
+export * from './lib/components/stepper/ui-stepper.component';
+export * from './lib/components/stepper/ui-stepper.types';
+export * from './lib/components/stepper/ui-stepper-content.directive';
+
+export * from './lib/components/tree-view/ui-tree-view.component';
+export * from './lib/components/tree-view/ui-tree-view.types';
+
+export * from './lib/components/chip/ui-chip.component';
+export * from './lib/components/chip/ui-chip.types';

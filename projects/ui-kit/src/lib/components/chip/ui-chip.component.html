@@ -1,0 +1,63 @@
+<span
+  class="ui-chip"
+  [class.ui-chip--filled]="variant() === 'filled'"
+  [class.ui-chip--outlined]="variant() === 'outlined'"
+  [class.ui-chip--soft]="variant() === 'soft'"
+  [class.ui-chip--primary]="color() === 'primary'"
+  [class.ui-chip--success]="color() === 'success'"
+  [class.ui-chip--warning]="color() === 'warning'"
+  [class.ui-chip--danger]="color() === 'danger'"
+  [class.ui-chip--neutral]="color() === 'neutral'"
+  [class.ui-chip--sm]="size() === 'sm'"
+  [class.ui-chip--md]="size() === 'md'"
+  [class.ui-chip--lg]="size() === 'lg'"
+  [class.ui-chip--selected]="selected()"
+  [class.ui-chip--disabled]="disabled()"
+>
+  @if (selected()) {
+    <span class="ui-chip__selected-icon" aria-hidden="true">
+      <svg viewBox="0 0 16 16" fill="none">
+        <path
+          d="M3.5 8.2 6.5 11.2 12.5 4.8"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+  }
+
+  <ng-content select="[uiChipLeading]" />
+
+  <button
+    type="button"
+    class="ui-chip__content"
+    [disabled]="disabled() || !selectable()"
+    [attr.aria-pressed]="selectable() ? selected() : null"
+    (click)="onSelect()"
+  >
+    <ng-content />
+  </button>
+
+  <ng-content select="[uiChipTrailing]" />
+
+  @if (removable()) {
+    <button
+      type="button"
+      class="ui-chip__remove"
+      [disabled]="disabled()"
+      aria-label="Remove chip"
+      (click)="onRemove()"
+    >
+      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path
+          d="m4 4 8 8M12 4l-8 8"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+  }
+</span>

@@ -30,6 +30,11 @@ import {
   UiAccordionComponent,
   UiAccordionPanelDirective,
   UiSelectComponent,
+  UiFileUploadComponent,
+  UiStepperComponent,
+  UiStepperContentDirective,
+  UiTreeViewComponent,
+  UiChipComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -59,6 +64,11 @@ import type {
   UiAccordionItem,
   UiAccordionMode,
   UiSelectOption,
+  UiFileRejected,
+  UiStepperStep,
+  UiStepperOrientation,
+  UiTreeNode,
+  UiTreeSelectionMode,
 } from 'ui-kit';
 
 type PlaygroundTheme = 'light' | 'dark';
@@ -101,6 +111,11 @@ interface Employee extends Record<string, unknown> {
     UiBadgeComponent,
     UiAccordionComponent,
     UiSelectComponent,
+    UiFileUploadComponent,
+    UiStepperComponent,
+    UiStepperContentDirective,
+    UiTreeViewComponent,
+    UiChipComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -135,6 +150,10 @@ export class App {
     | 'badge'
     | 'accordion'
     | 'select'
+    | 'file-upload'
+    | 'stepper'
+    | 'tree-view'
+    | 'chip'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -213,7 +232,11 @@ export class App {
       | 'avatar'
       | 'badge'
       | 'accordion'
-      | 'select',
+      | 'select'
+      | 'file-upload'
+      | 'stepper'
+      | 'tree-view'
+      | 'chip',
   ): void {
     this.activeComponent.set(component);
   }
@@ -1654,6 +1677,452 @@ selectedDepartment = 'engineering';`;
       this.selectCopyLabel.set('Copied!');
     } catch {
       this.selectCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // FILE UPLOAD
+  // ======================================
+
+  fileUploadMultiple = signal(true);
+  fileUploadAccept = signal('.pdf,.png,.jpg,.jpeg');
+  fileUploadMaxFiles = signal(5);
+  fileUploadMaxFileSize = signal(5 * 1024 * 1024);
+  fileUploadDisabled = signal(false);
+  fileUploadRequired = signal(false);
+  fileUploadShowFileList = signal(true);
+
+  selectedUploadFiles = signal<File[]>([]);
+  fileUploadRejectedMessages = signal<string[]>([]);
+
+  readonly fileUploadUsageCode = computed(() => {
+    const multiple = this.fileUploadMultiple();
+    const accept = this.fileUploadAccept();
+    const maxFiles = this.fileUploadMaxFiles();
+    const maxFileSize = this.fileUploadMaxFileSize();
+    const disabled = this.fileUploadDisabled();
+    const required = this.fileUploadRequired();
+    const showFileList = this.fileUploadShowFileList();
+
+    return `<ui-file-upload
+  id="documents"
+  label="Upload documents"
+  hint="PDF, PNG and JPG files"
+  accept="${accept}"
+  [multiple]="${multiple}"
+  [maxFiles]="${maxFiles}"
+  [maxFileSize]="${maxFileSize}"
+  [disabled]="${disabled}"
+  [required]="${required}"
+  [showFileList]="${showFileList}"
+  [(ngModel)]="selectedFiles"
+  (fileRejected)="handleRejectedFile($event)"
+/>
+
+// Component TypeScript
+selectedFiles: File[] = [];
+
+handleRejectedFile(event: UiFileRejected): void {
+  console.error(event.message);
+}`;
+  });
+
+  fileUploadCopyLabel = signal('Copy code');
+
+  handleFileUploadRejected(event: UiFileRejected): void {
+    this.fileUploadRejectedMessages.update((messages) => [...messages, event.message]);
+  }
+
+  resetFileUploadConfiguration(): void {
+    this.fileUploadMultiple.set(true);
+    this.fileUploadAccept.set('.pdf,.png,.jpg,.jpeg');
+    this.fileUploadMaxFiles.set(5);
+    this.fileUploadMaxFileSize.set(5 * 1024 * 1024);
+    this.fileUploadDisabled.set(false);
+    this.fileUploadRequired.set(false);
+    this.fileUploadShowFileList.set(true);
+    this.selectedUploadFiles.set([]);
+    this.fileUploadRejectedMessages.set([]);
+  }
+
+  async copyFileUploadCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.fileUploadUsageCode());
+      this.fileUploadCopyLabel.set('Copied!');
+    } catch {
+      this.fileUploadCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // STEPPER
+  // ======================================
+
+  stepperOrientation = signal<UiStepperOrientation>('horizontal');
+  stepperActiveStep = signal(0);
+  stepperLinear = signal(true);
+  stepperClickable = signal(true);
+  stepperShowStepNumbers = signal(true);
+  stepperShowNavigation = signal(true);
+  stepperCanProceed = signal(true);
+
+  readonly stepperSteps = signal<UiStepperStep[]>([
+    {
+      id: 'account',
+      label: 'Account',
+      description: 'Create your account',
+    },
+    {
+      id: 'profile',
+      label: 'Profile',
+      description: 'Enter your details',
+    },
+    {
+      id: 'review',
+      label: 'Review',
+      description: 'Confirm your information',
+    },
+  ]);
+
+  stepperCompleted = signal(false);
+  stepperCopyLabel = signal('Copy code');
+
+  readonly stepperUsageCode = computed(() => {
+    const orientation = this.stepperOrientation();
+    const linear = this.stepperLinear();
+    const clickable = this.stepperClickable();
+    const showStepNumbers = this.stepperShowStepNumbers();
+    const showNavigation = this.stepperShowNavigation();
+
+    return `<ui-stepper
+  [steps]="steps()"
+  [activeStep]="activeStep()"
+  orientation="${orientation}"
+  [linear]="${linear}"
+  [clickable]="${clickable}"
+  [showStepNumbers]="${showStepNumbers}"
+  [showNavigation]="${showNavigation}"
+  (stepChange)="activeStep.set($event)"
+  (completed)="onStepperCompleted()"
+>
+  <ng-template uiStepperContent="account">
+    <h3>Account details</h3>
+    <p>Enter your account information.</p>
+  </ng-template>
+
+  <ng-template uiStepperContent="profile">
+    <h3>Profile information</h3>
+    <p>Complete your profile details.</p>
+  </ng-template>
+
+  <ng-template uiStepperContent="review">
+    <h3>Review details</h3>
+    <p>Review your information before completing.</p>
+  </ng-template>
+</ui-stepper>
+
+// Component TypeScript
+steps = signal<UiStepperStep[]>([...]);
+activeStep = signal(0);
+
+onStepperCompleted(): void {
+  console.log('Stepper completed');
+}`;
+  });
+
+  resetStepperConfiguration(): void {
+    this.stepperOrientation.set('horizontal');
+    this.stepperActiveStep.set(0);
+    this.stepperLinear.set(true);
+    this.stepperClickable.set(true);
+    this.stepperShowStepNumbers.set(true);
+    this.stepperShowNavigation.set(true);
+    this.stepperCanProceed.set(true);
+    this.stepperCompleted.set(false);
+  }
+
+  handleStepperCompleted(): void {
+    this.stepperCompleted.set(true);
+  }
+
+  async copyStepperCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.stepperUsageCode());
+      this.stepperCopyLabel.set('Copied!');
+    } catch {
+      this.stepperCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // TREE VIEW
+  // ======================================
+
+  readonly treeNodes: UiTreeNode[] = [
+    {
+      id: 'company',
+      label: 'Acme Corporation',
+      children: [
+        {
+          id: 'engineering',
+          label: 'Engineering',
+          children: [
+            { id: 'frontend', label: 'Frontend Team' },
+            { id: 'backend', label: 'Backend Team' },
+            { id: 'platform', label: 'Platform Team' },
+          ],
+        },
+        {
+          id: 'product',
+          label: 'Product',
+          children: [
+            { id: 'design', label: 'Product Design' },
+            { id: 'research', label: 'User Research' },
+          ],
+        },
+        {
+          id: 'operations',
+          label: 'Operations',
+          children: [
+            { id: 'finance', label: 'Finance' },
+            { id: 'hr', label: 'Human Resources' },
+            { id: 'legal', label: 'Legal', disabled: true },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'resources',
+      label: 'Shared Resources',
+      children: [
+        { id: 'policies', label: 'Company Policies' },
+        { id: 'templates', label: 'Document Templates' },
+      ],
+    },
+  ];
+
+  readonly treeExampleNodes: UiTreeNode[] = [
+    {
+      id: 'engineering',
+      label: 'Engineering',
+      children: [
+        { id: 'frontend', label: 'Frontend' },
+        { id: 'backend', label: 'Backend' },
+        { id: 'qa', label: 'Quality Assurance' },
+      ],
+    },
+    {
+      id: 'design',
+      label: 'Design',
+      children: [
+        { id: 'ux', label: 'UX Design' },
+        { id: 'ui', label: 'UI Design' },
+      ],
+    },
+  ];
+
+  treeSelectionMode = signal<UiTreeSelectionMode>('single');
+  treeSelectedIds = signal<string[]>([]);
+  treeCheckedIds = signal<string[]>([]);
+  treeExpandedIds = signal<string[]>(['company']);
+
+  treeSelectable = signal(true);
+  treeCheckboxes = signal(false);
+  treeSearchable = signal(true);
+  treeShowExpandAll = signal(true);
+  treeDisabled = signal(false);
+
+  treeExpandedPreset = signal<'root' | 'all' | 'none'>('root');
+
+  treeLastEvent = signal('');
+
+  treeExampleSingleSelected = signal<string[]>(['frontend']);
+  treeExampleChecked = signal<string[]>(['frontend']);
+
+  treeViewCopyLabel = signal('Copy code');
+
+  readonly treeViewUsageCode = computed(() => {
+    const selectionMode = this.treeSelectionMode();
+    const checkboxes = this.treeCheckboxes();
+    const searchable = this.treeSearchable();
+    const selectable = this.treeSelectable();
+    const showExpandAll = this.treeShowExpandAll();
+    const disabled = this.treeDisabled();
+
+    return `<ui-tree-view
+  [nodes]="treeNodes"
+  selectionMode="${selectionMode}"
+  [selectedIds]="selectedIds()"
+  [checkedIds]="checkedIds()"
+  [expandedIds]="expandedIds()"
+  [checkboxes]="${checkboxes}"
+  [searchable]="${searchable}"
+  [selectable]="${selectable}"
+  [showExpandAll]="${showExpandAll}"
+  [disabled]="${disabled}"
+  (selectedIdsChange)="selectedIds.set($event)"
+  (checkedIdsChange)="checkedIds.set($event)"
+  (expandedIdsChange)="expandedIds.set($event)"
+/>
+
+// Component TypeScript
+treeNodes: UiTreeNode[] = [...];
+selectedIds = signal<string[]>([]);
+checkedIds = signal<string[]>([]);
+expandedIds = signal<string[]>(['company']);`;
+  });
+
+  setTreeExpandedPreset(value: 'root' | 'all' | 'none'): void {
+    this.treeExpandedPreset.set(value);
+
+    if (value === 'none') {
+      this.treeExpandedIds.set([]);
+      return;
+    }
+
+    if (value === 'root') {
+      this.treeExpandedIds.set(['company']);
+      return;
+    }
+
+    const ids: string[] = [];
+
+    const visit = (nodes: UiTreeNode[]): void => {
+      for (const node of nodes) {
+        if (node.children?.length) {
+          ids.push(node.id);
+          visit(node.children);
+        }
+      }
+    };
+
+    visit(this.treeNodes);
+    this.treeExpandedIds.set(ids);
+  }
+
+  resetTreeViewConfiguration(): void {
+    this.treeSelectionMode.set('single');
+    this.treeSelectedIds.set([]);
+    this.treeCheckedIds.set([]);
+    this.treeExpandedIds.set(['company']);
+
+    this.treeSelectable.set(true);
+    this.treeCheckboxes.set(false);
+    this.treeSearchable.set(true);
+    this.treeShowExpandAll.set(true);
+    this.treeDisabled.set(false);
+
+    this.treeExpandedPreset.set('root');
+    this.treeLastEvent.set('');
+  }
+
+  async copyTreeViewCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.treeViewUsageCode());
+      this.treeViewCopyLabel.set('Copied!');
+    } catch {
+      this.treeViewCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // CHIP
+  // ======================================
+
+  readonly chipVariant = signal<'filled' | 'outlined' | 'soft'>('soft');
+
+  readonly chipColor = signal<'primary' | 'success' | 'warning' | 'danger' | 'neutral'>('primary');
+
+  readonly chipSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  readonly chipSelectable = signal(true);
+  readonly chipRemovable = signal(true);
+  readonly chipDisabled = signal(false);
+  readonly chipSelected = signal(false);
+
+  readonly chipCopyLabel = signal('Copy code');
+
+  readonly chipItems = signal([
+    { id: 1, label: 'Angular', selected: false },
+    { id: 2, label: 'Java', selected: true },
+    { id: 3, label: 'Spring Boot', selected: false },
+    { id: 4, label: 'TypeScript', selected: false },
+    { id: 5, label: 'PostgreSQL', selected: false },
+  ]);
+
+  readonly chipSelectionMessage = signal('Select a chip to see its state.');
+  readonly chipRemovalMessage = signal('');
+
+  handleChipSelection(id: number, selected: boolean): void {
+    this.chipItems.update((items) =>
+      items.map((item) => (item.id === id ? { ...item, selected } : item)),
+    );
+
+    const chip = this.chipItems().find((item) => item.id === id);
+
+    if (chip) {
+      this.chipSelectionMessage.set(`${chip.label} ${selected ? 'selected' : 'deselected'}`);
+    }
+  }
+
+  removeChip(id: number): void {
+    const chip = this.chipItems().find((item) => item.id === id);
+
+    if (!chip) {
+      return;
+    }
+
+    this.chipItems.update((items) => items.filter((item) => item.id !== id));
+
+    this.chipRemovalMessage.set(`${chip.label} removed successfully.`);
+  }
+
+  resetChips(): void {
+    this.chipItems.set([
+      { id: 1, label: 'Angular', selected: false },
+      { id: 2, label: 'Java', selected: true },
+      { id: 3, label: 'Spring Boot', selected: false },
+      { id: 4, label: 'TypeScript', selected: false },
+      { id: 5, label: 'PostgreSQL', selected: false },
+    ]);
+
+    this.chipVariant.set('soft');
+    this.chipColor.set('primary');
+    this.chipSize.set('md');
+    this.chipSelectable.set(true);
+    this.chipRemovable.set(true);
+    this.chipDisabled.set(false);
+    this.chipSelected.set(false);
+
+    this.chipSelectionMessage.set('Select a chip to see its state.');
+    this.chipRemovalMessage.set('');
+  }
+
+  readonly chipUsageCode = computed(
+    () => `
+<ui-chip
+  variant="${this.chipVariant()}"
+  color="${this.chipColor()}"
+  size="${this.chipSize()}"
+  [selectable]="${this.chipSelectable()}"
+  [removable]="${this.chipRemovable()}"
+  [disabled]="${this.chipDisabled()}"
+  [(selected)]="selected"
+>
+  Angular
+</ui-chip>
+
+// Component TypeScript
+selected = false;
+`,
+  );
+
+  async copyChipCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.chipUsageCode());
+      this.chipCopyLabel.set('Copied!');
+    } catch {
+      this.chipCopyLabel.set('Copy unavailable');
     }
   }
 }

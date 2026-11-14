@@ -1,0 +1,137 @@
+<div class="ui-tree" [class.ui-tree-disabled]="disabled()" [attr.id]="id()">
+  @if (searchable()) {
+    <div class="ui-tree-search">
+      <input
+        type="search"
+        class="ui-tree-search-input"
+        placeholder="Search..."
+        aria-label="Search tree"
+        [disabled]="disabled()"
+        [value]="searchQuery()"
+        (input)="setSearchQuery($any($event.target).value)"
+      />
+    </div>
+  }
+
+  @if (showExpandAll() && !searchQuery()) {
+    <div class="ui-tree-toolbar">
+      <button
+        type="button"
+        class="ui-tree-toolbar-button"
+        [disabled]="disabled()"
+        (click)="expandAll()"
+      >
+        Expand all
+      </button>
+
+      <button
+        type="button"
+        class="ui-tree-toolbar-button"
+        [disabled]="disabled()"
+        (click)="collapseAll()"
+      >
+        Collapse all
+      </button>
+    </div>
+  }
+
+  <div
+    class="ui-tree-list"
+    role="tree"
+    aria-label="Tree view"
+    [attr.aria-disabled]="disabled()"
+    [attr.aria-multiselectable]="selectionMode() === 'multiple' ? 'true' : null"
+  >
+    @for (item of visibleNodes(); track item.id) {
+      <div
+        class="ui-tree-node"
+        role="treeitem"
+        [attr.id]="id() + '-node-' + item.id"
+        [attr.aria-level]="item.depth + 1"
+        [attr.aria-posinset]="item.posInSet"
+        [attr.aria-setsize]="item.setSize"
+        [attr.aria-expanded]="item.hasChildren ? item.expanded : null"
+        [attr.aria-selected]="selectable() ? item.selected : null"
+        [attr.aria-disabled]="item.node.disabled || disabled()"
+        [attr.tabindex]="
+          focusedId() === item.id || (!focusedId() && visibleNodes()[0]?.id === item.id) ? 0 : -1
+        "
+        class="ui-tree-node-row"
+        [class.ui-tree-node-selected]="item.selected"
+        [class.ui-tree-node-disabled]="item.node.disabled"
+        (click)="toggleSelection(item)"
+        (keydown)="onTreeKeydown($event, item)"
+      >
+        <span class="ui-tree-indent" [style.width.px]="item.depth * 20" aria-hidden="true"></span>
+
+        @if (item.hasChildren) {
+          <button
+            type="button"
+            class="ui-tree-expand"
+            [attr.aria-label]="
+              item.expanded ? 'Collapse ' + item.node.label : 'Expand ' + item.node.label
+            "
+            [disabled]="disabled() || item.node.disabled"
+            (click)="toggleExpand(item); $event.stopPropagation()"
+          >
+            <span [class.ui-tree-rotated]="item.expanded">›</span>
+          </button>
+        } @else {
+          <span class="ui-tree-expand-placeholder"></span>
+        }
+
+        @if (checkboxes()) {
+          <input
+            type="checkbox"
+            class="ui-tree-checkbox"
+            [checked]="item.checked"
+            [indeterminate]="item.indeterminate"
+            [disabled]="disabled() || item.node.disabled"
+            [attr.aria-label]="'Select ' + item.node.label"
+            (click)="$event.stopPropagation()"
+            (change)="toggleCheckbox(item)"
+          />
+        }
+
+        <span class="ui-tree-node-icon" aria-hidden="true">
+          @if (item.node.icon) {
+            {{ item.node.icon }}
+          } @else if (item.hasChildren) {
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M3 6.5A1.5 1.5 0 0 1 4.5 5H10l2 2h7.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5v-11Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+              <path d="M3.5 9h17" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+          } @else {
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M6 3.75h8l4 4v12.5H6V3.75Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M14 3.75v4h4M9 12h6M9 15.5h6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          }
+        </span>
+
+        <span class="ui-tree-node-label">
+          {{ item.node.label }}
+        </span>
+      </div>
+    } @empty {
+      <div class="ui-tree-empty" role="status">
+        {{ searchQuery() ? 'No matching items found.' : 'No items to display.' }}
+      </div>
+    }
+  </div>
+</div>

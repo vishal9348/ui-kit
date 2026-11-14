@@ -249,6 +249,42 @@
           Select
           <span class="nav-status">Ready</span>
         </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'file-upload'"
+          (click)="setActiveComponent('file-upload')"
+        >
+          <span class="nav-icon">⇧</span>
+          File Upload
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'stepper'"
+          (click)="setActiveComponent('stepper')"
+        >
+          <span class="nav-icon">⇥</span>
+          Stepper
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'tree-view'"
+          (click)="setActiveComponent('tree-view')"
+        >
+          <span class="nav-icon">⌘</span>
+          Tree View
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'chip'"
+          (click)="setActiveComponent('chip')"
+        >
+          <span class="nav-icon">◈</span>
+          Chip
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -296,7 +332,15 @@
                                       ? 'Accordion'
                                       : activeComponent() === 'select'
                                         ? 'Select'
-                                        : 'Button'
+                                        : activeComponent() === 'file-upload'
+                                          ? 'File Upload'
+                                          : activeComponent() === 'stepper'
+                                            ? 'Stepper'
+                                            : activeComponent() === 'tree-view'
+                                              ? 'Tree View'
+                                              : activeComponent() === 'chip'
+                                                ? 'Chip'
+                                                : 'Button'
           }}
         </strong>
       </div>
@@ -3610,6 +3654,1024 @@
             </div>
 
             <pre><code>{{ selectUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    @if (activeComponent() === 'file-upload') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">FORM COMPONENTS</div>
+
+          <h1>File Upload</h1>
+
+          <p>
+            A reusable file upload component with drag-and-drop, file validation, multiple selection
+            and Angular Forms support.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Drag & Drop</span>
+            <span>File Validation</span>
+            <span>Angular Forms</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Select files or drag them into the upload area.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box file-upload-preview">
+            <div class="file-upload-preview-control">
+              <ui-file-upload
+                id="playground-file-upload"
+                label="Upload documents"
+                hint="Drag and drop your files here, or browse"
+                [accept]="fileUploadAccept()"
+                [multiple]="fileUploadMultiple()"
+                [maxFiles]="fileUploadMaxFiles()"
+                [maxFileSize]="fileUploadMaxFileSize()"
+                [disabled]="fileUploadDisabled()"
+                [required]="fileUploadRequired()"
+                [showFileList]="fileUploadShowFileList()"
+                [ngModel]="selectedUploadFiles()"
+                (ngModelChange)="selectedUploadFiles.set($event)"
+                (fileRejected)="handleFileUploadRejected($event)"
+              />
+
+              <p class="click-message">Selected files: {{ selectedUploadFiles().length }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Validation messages -->
+        @if (fileUploadRejectedMessages().length > 0) {
+          <section class="demo-section">
+            <div class="file-upload-rejection-list">
+              <div class="section-header">
+                <div>
+                  <h2>Rejected files</h2>
+                  <p>These files did not pass the configured validation.</p>
+                </div>
+
+                <button class="reset-button" (click)="fileUploadRejectedMessages.set([])">
+                  Clear messages
+                </button>
+              </div>
+
+              @for (message of fileUploadRejectedMessages(); track $index) {
+                <p class="file-upload-rejection-message">
+                  {{ message }}
+                </p>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change validation and selection options.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetFileUploadConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="file-upload-accept">Accepted file types</label>
+              <select
+                id="file-upload-accept"
+                [value]="fileUploadAccept()"
+                (change)="fileUploadAccept.set($any($event.target).value)"
+              >
+                <option value=".pdf,.png,.jpg,.jpeg">PDF, PNG, JPG</option>
+                <option value="image/*">All images</option>
+                <option value=".pdf,application/pdf">PDF only</option>
+                <option value=".doc,.docx">Word documents</option>
+                <option value="">All file types</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="file-upload-max-files">Maximum files</label>
+              <select
+                id="file-upload-max-files"
+                [value]="fileUploadMaxFiles()"
+                (change)="fileUploadMaxFiles.set(+$any($event.target).value)"
+              >
+                <option [value]="1">1 file</option>
+                <option [value]="3">3 files</option>
+                <option [value]="5">5 files</option>
+                <option [value]="10">10 files</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="file-upload-max-size">Maximum file size</label>
+              <select
+                id="file-upload-max-size"
+                [value]="fileUploadMaxFileSize()"
+                (change)="fileUploadMaxFileSize.set(+$any($event.target).value)"
+              >
+                <option [value]="1048576">1 MB</option>
+                <option [value]="5242880">5 MB</option>
+                <option [value]="10485760">10 MB</option>
+                <option [value]="20971520">20 MB</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="fileUploadMultiple()"
+                (change)="fileUploadMultiple.set($any($event.target).checked)"
+              />
+              Multiple files
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="fileUploadDisabled()"
+                (change)="fileUploadDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="fileUploadRequired()"
+                (change)="fileUploadRequired.set($any($event.target).checked)"
+              />
+              Required
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="fileUploadShowFileList()"
+                (change)="fileUploadShowFileList.set($any($event.target).checked)"
+              />
+              Show file list
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common file upload configurations.</p>
+            </div>
+          </div>
+
+          <div class="file-upload-examples">
+            <div class="file-upload-example">
+              <strong>Single PDF</strong>
+
+              <ui-file-upload
+                id="example-pdf-upload"
+                label="Upload PDF"
+                accept=".pdf,application/pdf"
+                [maxFileSize]="10485760"
+                hint="PDF only, maximum 10 MB"
+              />
+            </div>
+
+            <div class="file-upload-example">
+              <strong>Image Upload</strong>
+
+              <ui-file-upload
+                id="example-image-upload"
+                label="Upload images"
+                accept="image/*"
+                [multiple]="true"
+                [maxFiles]="5"
+                [maxFileSize]="5242880"
+                hint="Images only, maximum 5 MB each"
+              />
+            </div>
+
+            <div class="file-upload-example">
+              <strong>Disabled Upload</strong>
+
+              <ui-file-upload
+                id="example-disabled-upload"
+                label="Upload disabled"
+                [disabled]="true"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyFileUploadCode()">
+              {{ fileUploadCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ fileUploadUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    @if (activeComponent() === 'stepper') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">NAVIGATION COMPONENTS</div>
+
+          <h1>Stepper</h1>
+
+          <p>
+            Guide users through multi-step workflows with horizontal and vertical layouts, custom
+            content, completion states and configurable navigation.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Horizontal & Vertical</span>
+            <span>Custom Content</span>
+            <span>Configurable</span>
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Navigate through the steps and explore the layout.</p>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box stepper-preview">
+            <div class="stepper-preview-control">
+              <ui-stepper
+                [steps]="stepperSteps()"
+                [activeStep]="stepperActiveStep()"
+                [orientation]="stepperOrientation()"
+                [linear]="stepperLinear()"
+                [clickable]="stepperClickable()"
+                [showStepNumbers]="stepperShowStepNumbers()"
+                [showNavigation]="stepperShowNavigation()"
+                [canProceed]="stepperCanProceed()"
+                (stepChange)="stepperActiveStep.set($event)"
+                (completed)="handleStepperCompleted()"
+              >
+                <ng-template uiStepperContent="account">
+                  <div class="stepper-demo-content">
+                    <h3>Account details</h3>
+                    <p>Enter your account information to get started.</p>
+                    <div class="stepper-demo-field">
+                      <strong>Email address</strong>
+                      <span>user@example.com</span>
+                    </div>
+                  </div>
+                </ng-template>
+
+                <ng-template uiStepperContent="profile">
+                  <div class="stepper-demo-content">
+                    <h3>Profile information</h3>
+                    <p>Complete your personal profile details.</p>
+                    <div class="stepper-demo-field">
+                      <strong>Full name</strong>
+                      <span>John Doe</span>
+                    </div>
+                  </div>
+                </ng-template>
+
+                <ng-template uiStepperContent="review">
+                  <div class="stepper-demo-content">
+                    <h3>Review details</h3>
+                    <p>Review your information before completing.</p>
+                    <div class="stepper-demo-field">
+                      <strong>Application status</strong>
+                      <span>Ready for submission</span>
+                    </div>
+                  </div>
+                </ng-template>
+              </ui-stepper>
+
+              @if (stepperCompleted()) {
+                <div class="stepper-completed-message">
+                  <span>✓</span>
+                  All steps completed successfully.
+                </div>
+              }
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Customize the stepper behavior and appearance.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetStepperConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="stepper-orientation">Orientation</label>
+              <select
+                id="stepper-orientation"
+                [value]="stepperOrientation()"
+                (change)="
+                  stepperOrientation.set($any($event.target).value);
+                  stepperActiveStep.set(0);
+                  stepperCompleted.set(false)
+                "
+              >
+                <option value="horizontal">Horizontal</option>
+                <option value="vertical">Vertical</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="stepper-active">Active step</label>
+              <select
+                id="stepper-active"
+                [value]="stepperActiveStep()"
+                (change)="
+                  stepperActiveStep.set(+$any($event.target).value); stepperCompleted.set(false)
+                "
+              >
+                <option [value]="0">Account</option>
+                <option [value]="1">Profile</option>
+                <option [value]="2">Review</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="stepperLinear()"
+                (change)="stepperLinear.set($any($event.target).checked)"
+              />
+              Linear navigation
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="stepperClickable()"
+                (change)="stepperClickable.set($any($event.target).checked)"
+              />
+              Clickable steps
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="stepperShowStepNumbers()"
+                (change)="stepperShowStepNumbers.set($any($event.target).checked)"
+              />
+              Show step numbers
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="stepperShowNavigation()"
+                (change)="stepperShowNavigation.set($any($event.target).checked)"
+              />
+              Show navigation buttons
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="stepperCanProceed()"
+                (change)="stepperCanProceed.set($any($event.target).checked)"
+              />
+              Allow proceeding
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common stepper use cases.</p>
+            </div>
+          </div>
+
+          <div class="stepper-examples">
+            <div class="stepper-example">
+              <strong>Horizontal Stepper</strong>
+
+              <ui-stepper
+                [steps]="stepperSteps()"
+                [activeStep]="0"
+                orientation="horizontal"
+                [linear]="false"
+                [clickable]="false"
+                [showNavigation]="false"
+              />
+            </div>
+
+            <div class="stepper-example">
+              <strong>Vertical Stepper</strong>
+
+              <ui-stepper
+                [steps]="stepperSteps()"
+                [activeStep]="0"
+                orientation="vertical"
+                [linear]="false"
+                [clickable]="false"
+                [showNavigation]="false"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyStepperCode()">
+              {{ stepperCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ stepperUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- ====================================== -->
+    <!-- TREE VIEW DOCUMENTATION -->
+    <!-- ====================================== -->
+
+    @if (activeComponent() === 'tree-view') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">DATA DISPLAY COMPONENTS</div>
+          <h1>Tree View</h1>
+
+          <p>
+            Display hierarchical data with expandable nodes, single or multiple selection, optional
+            checkbox selection and searchable nested structures.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Nested Data</span>
+            <span>Keyboard Navigation</span>
+            <span>Searchable</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Expand folders, select nodes and try the search field.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-box tree-view-preview">
+            <div class="tree-view-preview-inner">
+              <ui-tree-view
+                id="playground-tree"
+                [nodes]="treeNodes"
+                [selectionMode]="treeSelectionMode()"
+                [selectedIds]="treeSelectedIds()"
+                [checkedIds]="treeCheckedIds()"
+                [expandedIds]="treeExpandedIds()"
+                [selectable]="treeSelectable()"
+                [checkboxes]="treeCheckboxes()"
+                [searchable]="treeSearchable()"
+                [showExpandAll]="treeShowExpandAll()"
+                [disabled]="treeDisabled()"
+                (selectedIdsChange)="treeSelectedIds.set($event)"
+                (checkedIdsChange)="treeCheckedIds.set($event)"
+                (expandedIdsChange)="treeExpandedIds.set($event)"
+                (nodeSelected)="treeLastEvent.set('Selected: ' + $event.node.label)"
+                (nodeChecked)="treeLastEvent.set('Checkbox changed: ' + $event.node.label)"
+                (nodeExpanded)="treeLastEvent.set($event.node.label + ' expanded/collapsed')"
+              />
+            </div>
+          </div>
+
+          <p class="tree-event-message">
+            {{ treeLastEvent() || 'Select, expand or check a node to see its event here.' }}
+          </p>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change the tree behavior and see the preview update immediately.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetTreeViewConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="tree-selection-mode">Selection mode</label>
+
+              <select
+                id="tree-selection-mode"
+                [value]="treeSelectionMode()"
+                (change)="treeSelectionMode.set($any($event.target).value)"
+              >
+                <option value="single">Single</option>
+                <option value="multiple">Multiple</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="tree-expanded-preset">Initial expansion</label>
+
+              <select
+                id="tree-expanded-preset"
+                [value]="treeExpandedPreset()"
+                (change)="setTreeExpandedPreset($any($event.target).value)"
+              >
+                <option value="root">Root folders</option>
+                <option value="all">All folders</option>
+                <option value="none">Collapsed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeCheckboxes()"
+                (change)="treeCheckboxes.set($any($event.target).checked)"
+              />
+              Show checkboxes
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeSearchable()"
+                (change)="treeSearchable.set($any($event.target).checked)"
+              />
+              Searchable
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeSelectable()"
+                (change)="treeSelectable.set($any($event.target).checked)"
+              />
+              Selectable
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeShowExpandAll()"
+                (change)="treeShowExpandAll.set($any($event.target).checked)"
+              />
+              Show expand/collapse all
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeDisabled()"
+                (change)="treeDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+          </div>
+
+          <!-- Selection summary -->
+          <div class="tree-selection-summary">
+            <div>
+              <strong>Selected nodes</strong>
+              <span>
+                {{ treeSelectedIds().length ? treeSelectedIds().join(', ') : 'None' }}
+              </span>
+            </div>
+
+            @if (treeCheckboxes()) {
+              <div>
+                <strong>Checked nodes</strong>
+                <span>
+                  {{ treeCheckedIds().length ? treeCheckedIds().join(', ') : 'None' }}
+                </span>
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common ways to use the Tree View component.</p>
+            </div>
+          </div>
+
+          <div class="tree-view-examples">
+            <div class="tree-view-example">
+              <strong>Single selection</strong>
+
+              <ui-tree-view
+                [nodes]="treeExampleNodes"
+                selectionMode="single"
+                [selectedIds]="treeExampleSingleSelected()"
+                [expandedIds]="['engineering']"
+                (selectedIdsChange)="treeExampleSingleSelected.set($event)"
+              />
+            </div>
+
+            <div class="tree-view-example">
+              <strong>Checkbox selection</strong>
+
+              <ui-tree-view
+                [nodes]="treeExampleNodes"
+                selectionMode="multiple"
+                [checkboxes]="true"
+                [checkedIds]="treeExampleChecked()"
+                [expandedIds]="['engineering']"
+                (checkedIdsChange)="treeExampleChecked.set($event)"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyTreeViewCode()">
+              {{ treeViewCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ treeViewUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- ================================================= -->
+    <!-- CHIP DOCUMENTATION -->
+    <!-- ================================================= -->
+
+    @if (activeComponent() === 'chip') {
+      <section class="page-content chip-page">
+        <div class="page-heading">
+          <div class="eyebrow">DISPLAY COMPONENTS</div>
+
+          <h1>Chip</h1>
+
+          <p>
+            Compact elements for displaying labels, selectable values, categories and removable
+            items. Supports multiple variants, colors, sizes and interactive states.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Selectable</span>
+            <span>Removable</span>
+            <span>Configurable</span>
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Live Preview</h2>
+              <p>Select chips or remove them to see how the component behaves.</p>
+            </div>
+
+            <span class="preview-label">INTERACTIVE</span>
+          </div>
+
+          <div class="preview-box chip-preview">
+            <div class="chip-preview-heading">
+              <strong>Technology Stack</strong>
+
+              <button type="button" class="reset-button" (click)="resetChips()">
+                ↺ Reset chips
+              </button>
+            </div>
+
+            <div class="chip-list">
+              @for (chip of chipItems(); track chip.id) {
+                <ui-chip
+                  [variant]="chipVariant()"
+                  [color]="chipColor()"
+                  [size]="chipSize()"
+                  [selectable]="chipSelectable()"
+                  [removable]="chipRemovable()"
+                  [disabled]="chipDisabled()"
+                  [selected]="chip.selected"
+                  (selectionChange)="handleChipSelection(chip.id, $event)"
+                  (removed)="removeChip(chip.id)"
+                >
+                  {{ chip.label }}
+                </ui-chip>
+              } @empty {
+                <p class="chip-empty-state">
+                  All chips have been removed. Click Reset chips to restore them.
+                </p>
+              }
+            </div>
+
+            <div class="chip-feedback">
+              <p>{{ chipSelectionMessage() }}</p>
+
+              @if (chipRemovalMessage()) {
+                <p class="chip-removal-message">
+                  {{ chipRemovalMessage() }}
+                </p>
+              }
+
+              <p>
+                Remaining chips:
+                <strong>{{ chipItems().length }}</strong>
+              </p>
+
+              <p>
+                Selected chips:
+                <strong>
+                  {{ chipItems().filter((item) => item.selected).length }}
+                </strong>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change the properties and observe the live preview.</p>
+            </div>
+
+            <button type="button" class="reset-button" (click)="resetChips()">↺ Reset</button>
+          </div>
+
+          <div class="chip-config-layout">
+            <div class="config-grid">
+              <div class="config-field">
+                <label for="chip-variant">Variant</label>
+
+                <select
+                  id="chip-variant"
+                  [value]="chipVariant()"
+                  (change)="chipVariant.set($any($event.target).value)"
+                >
+                  <option value="filled">Filled</option>
+                  <option value="outlined">Outlined</option>
+                  <option value="soft">Soft</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="chip-color">Color</label>
+
+                <select
+                  id="chip-color"
+                  [value]="chipColor()"
+                  (change)="chipColor.set($any($event.target).value)"
+                >
+                  <option value="primary">Primary</option>
+                  <option value="success">Success</option>
+                  <option value="warning">Warning</option>
+                  <option value="danger">Danger</option>
+                  <option value="neutral">Neutral</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="chip-size">Size</label>
+
+                <select
+                  id="chip-size"
+                  [value]="chipSize()"
+                  (change)="chipSize.set($any($event.target).value)"
+                >
+                  <option value="sm">Small</option>
+                  <option value="md">Medium</option>
+                  <option value="lg">Large</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="config-options">
+              <label class="config-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="chipSelectable()"
+                  (change)="chipSelectable.set($any($event.target).checked)"
+                />
+                Selectable
+              </label>
+
+              <label class="config-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="chipRemovable()"
+                  (change)="chipRemovable.set($any($event.target).checked)"
+                />
+                Removable
+              </label>
+
+              <label class="config-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="chipDisabled()"
+                  (change)="chipDisabled.set($any($event.target).checked)"
+                />
+                Disabled
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Examples -->
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common Chip component use cases.</p>
+            </div>
+          </div>
+
+          <div class="chip-examples">
+            <div class="chip-example">
+              <div>
+                <strong>Filled Chips</strong>
+                <p>Solid background with contrasting text.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip variant="filled" color="primary">Primary</ui-chip>
+                <ui-chip variant="filled" color="success">Success</ui-chip>
+                <ui-chip variant="filled" color="danger">Danger</ui-chip>
+              </div>
+            </div>
+
+            <div class="chip-example">
+              <div>
+                <strong>Outlined Chips</strong>
+                <p>Bordered appearance with transparent background.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip variant="outlined" color="primary">Angular</ui-chip>
+                <ui-chip variant="outlined" color="success">Java</ui-chip>
+                <ui-chip variant="outlined" color="warning">Database</ui-chip>
+              </div>
+            </div>
+
+            <div class="chip-example">
+              <div>
+                <strong>Selectable Chips</strong>
+                <p>Click to toggle the selected state.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip [selectable]="true" color="primary">Frontend</ui-chip>
+                <ui-chip [selectable]="true" color="success">Backend</ui-chip>
+                <ui-chip [selectable]="true" color="warning">DevOps</ui-chip>
+              </div>
+            </div>
+
+            <div class="chip-example">
+              <div>
+                <strong>Removable Chips</strong>
+                <p>Click the close icon to trigger the remove event.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip [removable]="true" color="primary">Angular</ui-chip>
+                <ui-chip [removable]="true" color="success">React</ui-chip>
+                <ui-chip [removable]="true" color="warning">Vue</ui-chip>
+              </div>
+            </div>
+
+            <div class="chip-example">
+              <div>
+                <strong>Disabled Chips</strong>
+                <p>Disabled chips cannot be selected or removed.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip [disabled]="true">Disabled</ui-chip>
+
+                <ui-chip [disabled]="true" [selectable]="true" [selected]="true">
+                  Selected
+                </ui-chip>
+
+                <ui-chip [disabled]="true" [removable]="true"> Removable </ui-chip>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Generated Usage -->
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation based on the current configuration.</p>
+            </div>
+
+            <button type="button" class="copy-button" (click)="copyChipCode()">
+              {{ chipCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ chipUsageCode() }}</code></pre>
           </div>
         </section>
 
