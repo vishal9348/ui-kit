@@ -126,6 +126,15 @@ export class App {
   readonly version = '0.0.1';
 
   readonly theme = signal<PlaygroundTheme>('light');
+  readonly mobileSidebarOpen = signal(false);
+
+  toggleMobileSidebar(): void {
+    this.mobileSidebarOpen.update((open) => !open);
+  }
+
+  closeMobileSidebar(): void {
+    this.mobileSidebarOpen.set(false);
+  }
 
   // readonly activeComponent = signal('button');
   activeComponent = signal<
@@ -239,6 +248,7 @@ export class App {
       | 'chip',
   ): void {
     this.activeComponent.set(component);
+    this.closeMobileSidebar();
   }
 
   handleButtonClick(): void {

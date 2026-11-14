@@ -1,7 +1,7 @@
 <ui-toast-container />
 <div class="app-shell" [attr.data-ui-theme]="theme()">
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.mobile-open]="mobileSidebarOpen()">
     <div class="brand">
       <div class="brand-icon">U</div>
 
@@ -294,11 +294,29 @@
       Library development environment
     </div>
   </aside>
+  @if (mobileSidebarOpen()) {
+    <button
+      class="mobile-sidebar-backdrop"
+      aria-label="Close navigation menu"
+      (click)="closeMobileSidebar()"
+    ></button>
+  }
 
   <!-- Main Content -->
   <main class="main-area">
     <!-- Header -->
     <header class="topbar">
+      <button
+        class="mobile-menu-button"
+        type="button"
+        (click)="toggleMobileSidebar()"
+        [attr.aria-expanded]="mobileSidebarOpen()"
+        aria-label="Toggle navigation menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <div class="breadcrumb">
         <span>Components</span>
         <span class="breadcrumb-separator">/</span>
