@@ -163,7 +163,9 @@ export class App {
     | 'stepper'
     | 'tree-view'
     | 'chip'
-  >('button');
+    | 'getting-started'
+    | 'installation'
+  >('getting-started');
 
   readonly variant = signal<UiVariant>('primary');
 
@@ -245,7 +247,9 @@ export class App {
       | 'file-upload'
       | 'stepper'
       | 'tree-view'
-      | 'chip',
+      | 'chip'
+      | 'getting-started'
+      | 'installation',
   ): void {
     this.activeComponent.set(component);
     this.closeMobileSidebar();

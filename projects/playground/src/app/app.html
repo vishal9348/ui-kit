@@ -16,12 +16,20 @@
       <div class="nav-section">
         <div class="nav-heading">GETTING STARTED</div>
 
-        <button class="nav-item" disabled>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'getting-started'"
+          (click)="setActiveComponent('getting-started')"
+        >
           <span class="nav-icon">⌂</span>
           Overview
         </button>
 
-        <button class="nav-item" disabled>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'installation'"
+          (click)="setActiveComponent('installation')"
+        >
           <span class="nav-icon">◈</span>
           Installation
         </button>
@@ -322,7 +330,11 @@
         <span class="breadcrumb-separator">/</span>
         <strong>
           {{
-            activeComponent() === 'button'
+            activeComponent() === 'getting-started'
+              ? 'Getting Started'
+              : activeComponent() === 'installation'
+              ? 'Installation'
+              :activeComponent() === 'button'
               ? 'Button'
               : activeComponent() === 'dropdown'
                 ? 'Dropdown'
@@ -375,6 +387,238 @@
         </button>
       </div>
     </header>
+
+    @if (activeComponent() === 'getting-started') {
+  <section class="page-content docs-page">
+
+    <div class="page-heading">
+      <div class="eyebrow">DOCUMENTATION</div>
+      <h1>Getting Started</h1>
+
+      <p>
+        Welcome to Angular UI Kit. A reusable Angular component library
+        built with standalone components, Angular CDK and TypeScript.
+      </p>
+
+      <div class="component-tags">
+        <span>Angular 22</span>
+        <span>Standalone Components</span>
+        <span>TypeScript</span>
+        <span>Angular CDK</span>
+      </div>
+    </div>
+
+    <section class="demo-section">
+      <div class="section-header">
+        <div>
+          <h2>Introduction</h2>
+          <p>Build consistent interfaces with reusable UI components.</p>
+        </div>
+      </div>
+
+      <p class="docs-text">
+        Angular UI Kit provides reusable components that can be imported
+        directly into your standalone Angular components.
+        Each component is designed to be configurable and reusable.
+      </p>
+    </section>
+
+    <section class="demo-section">
+      <div class="section-header">
+        <div>
+          <h2>Requirements</h2>
+          <p>Make sure your development environment meets these requirements.</p>
+        </div>
+      </div>
+
+      <div class="requirements-list">
+        <div class="requirement-item">
+          <strong>Node.js</strong>
+          <span>22+</span>
+        </div>
+
+        <div class="requirement-item">
+          <strong>Angular</strong>
+          <span>22+</span>
+        </div>
+
+        <div class="requirement-item">
+          <strong>Angular CDK</strong>
+          <span>22+</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="demo-section">
+      <div class="section-header">
+        <div>
+          <h2>Quick Start</h2>
+          <p>Install the package and start using components.</p>
+        </div>
+      </div>
+
+      <div class="docs-step">
+        <span class="step-number">01</span>
+        <div>
+          <h3>Install Angular UI Kit</h3>
+          <p>Install the package using npm.</p>
+          <div class="code-container">
+            <pre><code>npm install @vishal_team/angular-ui-kit</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="docs-step">
+        <span class="step-number">02</span>
+        <div>
+          <h3>Import global styles</h3>
+          <p>Add the UI Kit stylesheet to your application's styles.css.</p>
+          <div class="code-container">
+            <pre><code>@import '@vishal_team/angular-ui-kit/styles/global.css';</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="docs-step">
+        <span class="step-number">03</span>
+        <div>
+          <h3>Import a component</h3>
+          <p>Import the standalone component into your Angular component.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="demo-section">
+      <div class="section-header">
+        <div>
+          <h2>Explore Components</h2>
+          <p>Browse the available components in the sidebar.</p>
+        </div>
+      </div>
+
+      <p class="docs-text">
+        Explore Button, Dropdown, Checkbox, Dialog, Data Table,
+        Date Picker, Tabs, Tooltip, Accordion, Select and more.
+      </p>
+
+      <button
+        class="reset-button"
+        (click)="setActiveComponent('button')"
+      >
+        Explore Components →
+      </button>
+    </section>
+
+    <footer class="page-footer">
+      Angular UI Kit · Built for reusable applications
+    </footer>
+
+  </section>
+}
+
+@if (activeComponent() === 'installation') {
+  <section class="page-content docs-page">
+
+    <div class="page-heading">
+      <div class="eyebrow">DOCUMENTATION</div>
+      <h1>Installation</h1>
+
+      <p>
+        Follow these steps to install Angular UI Kit and integrate
+        it into your Angular application.
+      </p>
+    </div>
+
+    <section class="demo-section">
+      <div class="section-header">
+        <div>
+          <h2>Step 1: Install the package</h2>
+          <p>Install Angular UI Kit from the npm registry.</p>
+        </div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>TERMINAL</span>
+          <span>npm</span>
+        </div>
+        <pre><code>npm install @vishal_team/angular-ui-kit</code></pre>
+      </div>
+    </section>
+
+    <section class="demo-section">
+      <div class="section-header">
+        <div>
+          <h2>Step 2: Configure global styles</h2>
+          <p>Open src/styles.css and add the following import.</p>
+        </div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>styles.css</span>
+          <span>CSS</span>
+        </div>
+        <pre><code>@import '@vishal_team/angular-ui-kit/styles/global.css';</code></pre>
+      </div>
+
+      <p class="docs-text">
+        This stylesheet includes Angular CDK overlay styles,
+        UI Kit global styles, default design tokens and theme variables.
+      </p>
+    </section>
+
+    <section class="demo-section">
+      <div class="section-header">
+        <div>
+          <h2>Step 3: Import a component</h2>
+          <p>Import the standalone component into your application.</p>
+        </div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>app.ts</span>
+          <span>TypeScript</span>
+        </div>
+        <pre><code>import {{ '{' }} Component {{ '}' }} from '@angular/core';
+import {{ '{' }} UiButtonComponent {{ '}' }} from '@vishal_team/angular-ui-kit';
+
+@Component({{
+  '{'
+}}
+  selector: 'app-root',
+  standalone: true,
+  imports: [UiButtonComponent],
+  template: \`
+    &lt;ui-button&gt;Click me&lt;/ui-button&gt;
+  \`
+{{
+  '}'
+}})
+export class AppComponent {{ '{' }} {{ '}' }}</code></pre>
+      </div>
+    </section>
+
+    <section class="demo-section">
+      <div class="section-header">
+        <div>
+          <h2>Step 4: Start your application</h2>
+          <p>Run your Angular application.</p>
+        </div>
+      </div>
+
+      <div class="code-container">
+        <pre><code>ng serve</code></pre>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      Angular UI Kit · Built for reusable applications
+    </footer>
+
+  </section>
+}
 
     <!-- ================================================= -->
     <!-- BUTTON DOCUMENTATION -->

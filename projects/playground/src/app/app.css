@@ -1352,3 +1352,87 @@
     transition: none;
   }
 }
+
+/* Documentation Pages */
+
+.docs-page {
+  max-width: 1050px;
+}
+
+.docs-text {
+  color: var(--app-muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.requirements-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.requirement-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  background: var(--app-bg);
+}
+
+.requirement-item strong {
+  font-size: 13px;
+}
+
+.requirement-item span {
+  color: var(--app-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.docs-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.docs-step:last-child {
+  margin-bottom: 0;
+}
+
+.step-number {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--app-accent) 12%, transparent);
+  color: var(--app-accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.docs-step h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.docs-step p {
+  margin: 7px 0 12px;
+  color: var(--app-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+@media (max-width: 650px) {
+  .requirements-list {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-step {
+    gap: 10px;
+  }
+}
