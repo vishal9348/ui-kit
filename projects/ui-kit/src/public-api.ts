@@ -117,3 +117,6 @@ export * from './lib/components/stepper/ui-stepper-content.directive';
 
 export * from './lib/components/tree-view/ui-tree-view.component';
 export * from './lib/components/tree-view/ui-tree-view.types';
+
+export * from './lib/components/chip/ui-chip.component';
+export * from './lib/components/chip/ui-chip.types';

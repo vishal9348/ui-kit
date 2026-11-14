@@ -1,0 +1,8 @@
+npx ng build ui-kit --configuration production
+
+Copy-Item README.md dist/ui-kit/README.md -Force
+Copy-Item LICENSE dist/ui-kit/LICENSE -Force
+
+cd dist/ui-kit
+npm pack --dry-run
+npm publish

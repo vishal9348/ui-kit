@@ -1,59 +1,108 @@
-# AngularUiKit
+# Angular UI Kit
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.6.
+A reusable Angular component library built with standalone components, Angular CDK and TypeScript.
 
-## Development server
+## Requirements
 
-To start a local development server, run:
+- Node.js 22+
+- Angular 22+
+- Angular CDK 22+
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Installation
 
 ```bash
-ng generate component component-name
+npm install @vishal_team/angular-ui-kit
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Global Styles
+
+Add the following import to your application's `src/styles.css`:
+
+```css
+@import '@vishal_team/angular-ui-kit/styles/global.css';
+```
+
+This stylesheet includes:
+- Angular CDK overlay styles
+- UI Kit global styles
+- Default design tokens
+- Theme variables
+
+## Usage
+
+Import the standalone component into your Angular component.
+
+Example:
+
+```typescript
+import { Component } from '@angular/core';
+import { UiButtonComponent } from '@vishal_team/angular-ui-kit';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [UiButtonComponent],
+  template: `
+    <ui-button>Click me</ui-button>
+  `
+})
+export class AppComponent {}
+```
+
+## Available Components
+
+- Button
+- Dropdown
+- Checkbox
+- Radio Group
+- Dialog
+- Loader
+- Progress Bar
+- Breadcrumb
+- Toast
+- Input
+- Textarea
+- Switch
+- Data Table
+- Date Picker
+- Tabs
+- Tooltip
+- Ellipsis
+- Avatar
+- Badge
+- Accordion
+- Select
+- File Upload
+- Stepper
+- Tree View
+- Chip
+
+## Theming
+
+The library provides CSS custom properties for colors, surfaces, borders, focus rings and border radius.
+
+Use the `data-ui-theme="dark"` attribute to activate the provided dark theme variables.
+
+```html
+<div data-ui-theme="dark">
+  <!-- UI Kit components -->
+</div>
+```
+
+## Development
+
+Build the library:
 
 ```bash
-ng generate --help
+npx ng build ui-kit --configuration production
 ```
 
-## Building
+The distributable package is generated in:
 
-To build the project run:
-
-```bash
-ng build
+```text
+dist/ui-kit
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## License
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT

@@ -34,6 +34,7 @@ import {
   UiStepperComponent,
   UiStepperContentDirective,
   UiTreeViewComponent,
+  UiChipComponent,
 } from 'ui-kit';
 
 import { FormsModule } from '@angular/forms';
@@ -114,6 +115,7 @@ interface Employee extends Record<string, unknown> {
     UiStepperComponent,
     UiStepperContentDirective,
     UiTreeViewComponent,
+    UiChipComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -151,6 +153,7 @@ export class App {
     | 'file-upload'
     | 'stepper'
     | 'tree-view'
+    | 'chip'
   >('button');
 
   readonly variant = signal<UiVariant>('primary');
@@ -232,7 +235,8 @@ export class App {
       | 'select'
       | 'file-upload'
       | 'stepper'
-      | 'tree-view',
+      | 'tree-view'
+      | 'chip',
   ): void {
     this.activeComponent.set(component);
   }
@@ -2018,6 +2022,107 @@ expandedIds = signal<string[]>(['company']);`;
       this.treeViewCopyLabel.set('Copied!');
     } catch {
       this.treeViewCopyLabel.set('Copy unavailable');
+    }
+  }
+
+  // ======================================
+  // CHIP
+  // ======================================
+
+  readonly chipVariant = signal<'filled' | 'outlined' | 'soft'>('soft');
+
+  readonly chipColor = signal<'primary' | 'success' | 'warning' | 'danger' | 'neutral'>('primary');
+
+  readonly chipSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  readonly chipSelectable = signal(true);
+  readonly chipRemovable = signal(true);
+  readonly chipDisabled = signal(false);
+  readonly chipSelected = signal(false);
+
+  readonly chipCopyLabel = signal('Copy code');
+
+  readonly chipItems = signal([
+    { id: 1, label: 'Angular', selected: false },
+    { id: 2, label: 'Java', selected: true },
+    { id: 3, label: 'Spring Boot', selected: false },
+    { id: 4, label: 'TypeScript', selected: false },
+    { id: 5, label: 'PostgreSQL', selected: false },
+  ]);
+
+  readonly chipSelectionMessage = signal('Select a chip to see its state.');
+  readonly chipRemovalMessage = signal('');
+
+  handleChipSelection(id: number, selected: boolean): void {
+    this.chipItems.update((items) =>
+      items.map((item) => (item.id === id ? { ...item, selected } : item)),
+    );
+
+    const chip = this.chipItems().find((item) => item.id === id);
+
+    if (chip) {
+      this.chipSelectionMessage.set(`${chip.label} ${selected ? 'selected' : 'deselected'}`);
+    }
+  }
+
+  removeChip(id: number): void {
+    const chip = this.chipItems().find((item) => item.id === id);
+
+    if (!chip) {
+      return;
+    }
+
+    this.chipItems.update((items) => items.filter((item) => item.id !== id));
+
+    this.chipRemovalMessage.set(`${chip.label} removed successfully.`);
+  }
+
+  resetChips(): void {
+    this.chipItems.set([
+      { id: 1, label: 'Angular', selected: false },
+      { id: 2, label: 'Java', selected: true },
+      { id: 3, label: 'Spring Boot', selected: false },
+      { id: 4, label: 'TypeScript', selected: false },
+      { id: 5, label: 'PostgreSQL', selected: false },
+    ]);
+
+    this.chipVariant.set('soft');
+    this.chipColor.set('primary');
+    this.chipSize.set('md');
+    this.chipSelectable.set(true);
+    this.chipRemovable.set(true);
+    this.chipDisabled.set(false);
+    this.chipSelected.set(false);
+
+    this.chipSelectionMessage.set('Select a chip to see its state.');
+    this.chipRemovalMessage.set('');
+  }
+
+  readonly chipUsageCode = computed(
+    () => `
+<ui-chip
+  variant="${this.chipVariant()}"
+  color="${this.chipColor()}"
+  size="${this.chipSize()}"
+  [selectable]="${this.chipSelectable()}"
+  [removable]="${this.chipRemovable()}"
+  [disabled]="${this.chipDisabled()}"
+  [(selected)]="selected"
+>
+  Angular
+</ui-chip>
+
+// Component TypeScript
+selected = false;
+`,
+  );
+
+  async copyChipCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.chipUsageCode());
+      this.chipCopyLabel.set('Copied!');
+    } catch {
+      this.chipCopyLabel.set('Copy unavailable');
     }
   }
 }

@@ -268,14 +268,23 @@
           <span class="nav-status">Ready</span>
         </button>
         <button
-  class="nav-item"
-  [class.active]="activeComponent() === 'tree-view'"
-  (click)="setActiveComponent('tree-view')"
->
-  <span class="nav-icon">⌘</span>
-  Tree View
-  <span class="nav-status">Ready</span>
-</button>
+          class="nav-item"
+          [class.active]="activeComponent() === 'tree-view'"
+          (click)="setActiveComponent('tree-view')"
+        >
+          <span class="nav-icon">⌘</span>
+          Tree View
+          <span class="nav-status">Ready</span>
+        </button>
+        <button
+          class="nav-item"
+          [class.active]="activeComponent() === 'chip'"
+          (click)="setActiveComponent('chip')"
+        >
+          <span class="nav-icon">◈</span>
+          Chip
+          <span class="nav-status">Ready</span>
+        </button>
       </div>
     </div>
 
@@ -328,8 +337,10 @@
                                           : activeComponent() === 'stepper'
                                             ? 'Stepper'
                                             : activeComponent() === 'tree-view'
-  ? 'Tree View'
-                                            : 'Button'
+                                              ? 'Tree View'
+                                              : activeComponent() === 'chip'
+                                                ? 'Chip'
+                                                : 'Button'
           }}
         </strong>
       </div>
@@ -4144,251 +4155,528 @@
       </section>
     }
 
+    <!-- ====================================== -->
+    <!-- TREE VIEW DOCUMENTATION -->
+    <!-- ====================================== -->
 
+    @if (activeComponent() === 'tree-view') {
+      <section class="page-content">
+        <div class="page-heading">
+          <div class="eyebrow">DATA DISPLAY COMPONENTS</div>
+          <h1>Tree View</h1>
 
-<!-- ====================================== -->
-<!-- TREE VIEW DOCUMENTATION -->
-<!-- ====================================== -->
+          <p>
+            Display hierarchical data with expandable nodes, single or multiple selection, optional
+            checkbox selection and searchable nested structures.
+          </p>
 
-@if (activeComponent() === 'tree-view') {
-  <section class="page-content">
-
-    <div class="page-heading">
-      <div class="eyebrow">DATA DISPLAY COMPONENTS</div>
-      <h1>Tree View</h1>
-
-      <p>
-        Display hierarchical data with expandable nodes, single or multiple selection,
-        optional checkbox selection and searchable nested structures.
-      </p>
-
-      <div class="component-tags">
-        <span>Standalone</span>
-        <span>Nested Data</span>
-        <span>Keyboard Navigation</span>
-        <span>Searchable</span>
-      </div>
-    </div>
-
-    <!-- Preview -->
-    <section class="demo-section">
-      <div class="section-header">
-        <div>
-          <h2>Preview</h2>
-          <p>Expand folders, select nodes and try the search field.</p>
-        </div>
-        <span class="preview-label">LIVE PREVIEW</span>
-      </div>
-
-      <div class="preview-box tree-view-preview">
-        <div class="tree-view-preview-inner">
-          <ui-tree-view
-            id="playground-tree"
-            [nodes]="treeNodes"
-            [selectionMode]="treeSelectionMode()"
-            [selectedIds]="treeSelectedIds()"
-            [checkedIds]="treeCheckedIds()"
-            [expandedIds]="treeExpandedIds()"
-            [selectable]="treeSelectable()"
-            [checkboxes]="treeCheckboxes()"
-            [searchable]="treeSearchable()"
-            [showExpandAll]="treeShowExpandAll()"
-            [disabled]="treeDisabled()"
-            (selectedIdsChange)="treeSelectedIds.set($event)"
-            (checkedIdsChange)="treeCheckedIds.set($event)"
-            (expandedIdsChange)="treeExpandedIds.set($event)"
-            (nodeSelected)="treeLastEvent.set('Selected: ' + $event.node.label)"
-            (nodeChecked)="treeLastEvent.set('Checkbox changed: ' + $event.node.label)"
-            (nodeExpanded)="treeLastEvent.set($event.node.label + ' expanded/collapsed')"
-          />
-        </div>
-      </div>
-
-      <p class="tree-event-message">
-        {{ treeLastEvent() || 'Select, expand or check a node to see its event here.' }}
-      </p>
-    </section>
-
-    <!-- Configuration -->
-    <section class="demo-section">
-      <div class="section-header">
-        <div>
-          <h2>Configuration</h2>
-          <p>Change the tree behavior and see the preview update immediately.</p>
-        </div>
-
-        <button
-          class="reset-button"
-          (click)="resetTreeViewConfiguration()"
-        >
-          ↺ Reset
-        </button>
-      </div>
-
-      <div class="config-grid">
-        <div class="config-field">
-          <label for="tree-selection-mode">Selection mode</label>
-
-          <select
-            id="tree-selection-mode"
-            [value]="treeSelectionMode()"
-            (change)="treeSelectionMode.set($any($event.target).value)"
-          >
-            <option value="single">Single</option>
-            <option value="multiple">Multiple</option>
-          </select>
-        </div>
-
-        <div class="config-field">
-          <label for="tree-expanded-preset">Initial expansion</label>
-
-          <select
-            id="tree-expanded-preset"
-            [value]="treeExpandedPreset()"
-            (change)="setTreeExpandedPreset($any($event.target).value)"
-          >
-            <option value="root">Root folders</option>
-            <option value="all">All folders</option>
-            <option value="none">Collapsed</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="config-options">
-        <label class="config-checkbox">
-          <input
-            type="checkbox"
-            [checked]="treeCheckboxes()"
-            (change)="treeCheckboxes.set($any($event.target).checked)"
-          />
-          Show checkboxes
-        </label>
-
-        <label class="config-checkbox">
-          <input
-            type="checkbox"
-            [checked]="treeSearchable()"
-            (change)="treeSearchable.set($any($event.target).checked)"
-          />
-          Searchable
-        </label>
-
-        <label class="config-checkbox">
-          <input
-            type="checkbox"
-            [checked]="treeSelectable()"
-            (change)="treeSelectable.set($any($event.target).checked)"
-          />
-          Selectable
-        </label>
-
-        <label class="config-checkbox">
-          <input
-            type="checkbox"
-            [checked]="treeShowExpandAll()"
-            (change)="treeShowExpandAll.set($any($event.target).checked)"
-          />
-          Show expand/collapse all
-        </label>
-
-        <label class="config-checkbox">
-          <input
-            type="checkbox"
-            [checked]="treeDisabled()"
-            (change)="treeDisabled.set($any($event.target).checked)"
-          />
-          Disabled
-        </label>
-      </div>
-
-      <!-- Selection summary -->
-      <div class="tree-selection-summary">
-        <div>
-          <strong>Selected nodes</strong>
-          <span>
-            {{ treeSelectedIds().length ? treeSelectedIds().join(', ') : 'None' }}
-          </span>
-        </div>
-
-        @if (treeCheckboxes()) {
-          <div>
-            <strong>Checked nodes</strong>
-            <span>
-              {{ treeCheckedIds().length ? treeCheckedIds().join(', ') : 'None' }}
-            </span>
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Nested Data</span>
+            <span>Keyboard Navigation</span>
+            <span>Searchable</span>
           </div>
-        }
-      </div>
-    </section>
-
-    <!-- Examples -->
-    <section class="demo-section">
-      <div class="section-header">
-        <div>
-          <h2>Examples</h2>
-          <p>Common ways to use the Tree View component.</p>
-        </div>
-      </div>
-
-      <div class="tree-view-examples">
-
-        <div class="tree-view-example">
-          <strong>Single selection</strong>
-
-          <ui-tree-view
-            [nodes]="treeExampleNodes"
-            selectionMode="single"
-            [selectedIds]="treeExampleSingleSelected()"
-            [expandedIds]="['engineering']"
-            (selectedIdsChange)="treeExampleSingleSelected.set($event)"
-          />
         </div>
 
-        <div class="tree-view-example">
-          <strong>Checkbox selection</strong>
+        <!-- Preview -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Preview</h2>
+              <p>Expand folders, select nodes and try the search field.</p>
+            </div>
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
 
-          <ui-tree-view
-            [nodes]="treeExampleNodes"
-            selectionMode="multiple"
-            [checkboxes]="true"
-            [checkedIds]="treeExampleChecked()"
-            [expandedIds]="['engineering']"
-            (checkedIdsChange)="treeExampleChecked.set($event)"
-          />
+          <div class="preview-box tree-view-preview">
+            <div class="tree-view-preview-inner">
+              <ui-tree-view
+                id="playground-tree"
+                [nodes]="treeNodes"
+                [selectionMode]="treeSelectionMode()"
+                [selectedIds]="treeSelectedIds()"
+                [checkedIds]="treeCheckedIds()"
+                [expandedIds]="treeExpandedIds()"
+                [selectable]="treeSelectable()"
+                [checkboxes]="treeCheckboxes()"
+                [searchable]="treeSearchable()"
+                [showExpandAll]="treeShowExpandAll()"
+                [disabled]="treeDisabled()"
+                (selectedIdsChange)="treeSelectedIds.set($event)"
+                (checkedIdsChange)="treeCheckedIds.set($event)"
+                (expandedIdsChange)="treeExpandedIds.set($event)"
+                (nodeSelected)="treeLastEvent.set('Selected: ' + $event.node.label)"
+                (nodeChecked)="treeLastEvent.set('Checkbox changed: ' + $event.node.label)"
+                (nodeExpanded)="treeLastEvent.set($event.node.label + ' expanded/collapsed')"
+              />
+            </div>
+          </div>
+
+          <p class="tree-event-message">
+            {{ treeLastEvent() || 'Select, expand or check a node to see its event here.' }}
+          </p>
+        </section>
+
+        <!-- Configuration -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change the tree behavior and see the preview update immediately.</p>
+            </div>
+
+            <button class="reset-button" (click)="resetTreeViewConfiguration()">↺ Reset</button>
+          </div>
+
+          <div class="config-grid">
+            <div class="config-field">
+              <label for="tree-selection-mode">Selection mode</label>
+
+              <select
+                id="tree-selection-mode"
+                [value]="treeSelectionMode()"
+                (change)="treeSelectionMode.set($any($event.target).value)"
+              >
+                <option value="single">Single</option>
+                <option value="multiple">Multiple</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="tree-expanded-preset">Initial expansion</label>
+
+              <select
+                id="tree-expanded-preset"
+                [value]="treeExpandedPreset()"
+                (change)="setTreeExpandedPreset($any($event.target).value)"
+              >
+                <option value="root">Root folders</option>
+                <option value="all">All folders</option>
+                <option value="none">Collapsed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="config-options">
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeCheckboxes()"
+                (change)="treeCheckboxes.set($any($event.target).checked)"
+              />
+              Show checkboxes
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeSearchable()"
+                (change)="treeSearchable.set($any($event.target).checked)"
+              />
+              Searchable
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeSelectable()"
+                (change)="treeSelectable.set($any($event.target).checked)"
+              />
+              Selectable
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeShowExpandAll()"
+                (change)="treeShowExpandAll.set($any($event.target).checked)"
+              />
+              Show expand/collapse all
+            </label>
+
+            <label class="config-checkbox">
+              <input
+                type="checkbox"
+                [checked]="treeDisabled()"
+                (change)="treeDisabled.set($any($event.target).checked)"
+              />
+              Disabled
+            </label>
+          </div>
+
+          <!-- Selection summary -->
+          <div class="tree-selection-summary">
+            <div>
+              <strong>Selected nodes</strong>
+              <span>
+                {{ treeSelectedIds().length ? treeSelectedIds().join(', ') : 'None' }}
+              </span>
+            </div>
+
+            @if (treeCheckboxes()) {
+              <div>
+                <strong>Checked nodes</strong>
+                <span>
+                  {{ treeCheckedIds().length ? treeCheckedIds().join(', ') : 'None' }}
+                </span>
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common ways to use the Tree View component.</p>
+            </div>
+          </div>
+
+          <div class="tree-view-examples">
+            <div class="tree-view-example">
+              <strong>Single selection</strong>
+
+              <ui-tree-view
+                [nodes]="treeExampleNodes"
+                selectionMode="single"
+                [selectedIds]="treeExampleSingleSelected()"
+                [expandedIds]="['engineering']"
+                (selectedIdsChange)="treeExampleSingleSelected.set($event)"
+              />
+            </div>
+
+            <div class="tree-view-example">
+              <strong>Checkbox selection</strong>
+
+              <ui-tree-view
+                [nodes]="treeExampleNodes"
+                selectionMode="multiple"
+                [checkboxes]="true"
+                [checkedIds]="treeExampleChecked()"
+                [expandedIds]="['engineering']"
+                (checkedIdsChange)="treeExampleChecked.set($event)"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage -->
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation of the current configuration.</p>
+            </div>
+
+            <button class="copy-button" (click)="copyTreeViewCode()">
+              {{ treeViewCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ treeViewUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
+
+    <!-- ================================================= -->
+    <!-- CHIP DOCUMENTATION -->
+    <!-- ================================================= -->
+
+    @if (activeComponent() === 'chip') {
+      <section class="page-content chip-page">
+        <div class="page-heading">
+          <div class="eyebrow">DISPLAY COMPONENTS</div>
+
+          <h1>Chip</h1>
+
+          <p>
+            Compact elements for displaying labels, selectable values, categories and removable
+            items. Supports multiple variants, colors, sizes and interactive states.
+          </p>
+
+          <div class="component-tags">
+            <span>Standalone</span>
+            <span>Selectable</span>
+            <span>Removable</span>
+            <span>Configurable</span>
+          </div>
         </div>
 
-      </div>
-    </section>
+        <!-- Live Preview -->
 
-    <!-- Usage -->
-    <section class="demo-section">
-      <div class="section-header">
-        <div>
-          <h2>Usage</h2>
-          <p>Angular implementation of the current configuration.</p>
-        </div>
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Live Preview</h2>
+              <p>Select chips or remove them to see how the component behaves.</p>
+            </div>
 
-        <button class="copy-button" (click)="copyTreeViewCode()">
-          {{ treeViewCopyLabel() }}
-        </button>
-      </div>
+            <span class="preview-label">INTERACTIVE</span>
+          </div>
 
-      <div class="code-container">
-        <div class="code-header">
-          <span>HTML + TYPESCRIPT</span>
-          <span>Angular</span>
-        </div>
+          <div class="preview-box chip-preview">
+            <div class="chip-preview-heading">
+              <strong>Technology Stack</strong>
 
-        <pre><code>{{ treeViewUsageCode() }}</code></pre>
-      </div>
-    </section>
+              <button type="button" class="reset-button" (click)="resetChips()">
+                ↺ Reset chips
+              </button>
+            </div>
 
-    <footer class="page-footer">
-      Angular UI Kit · Built for reusable applications
-    </footer>
+            <div class="chip-list">
+              @for (chip of chipItems(); track chip.id) {
+                <ui-chip
+                  [variant]="chipVariant()"
+                  [color]="chipColor()"
+                  [size]="chipSize()"
+                  [selectable]="chipSelectable()"
+                  [removable]="chipRemovable()"
+                  [disabled]="chipDisabled()"
+                  [selected]="chip.selected"
+                  (selectionChange)="handleChipSelection(chip.id, $event)"
+                  (removed)="removeChip(chip.id)"
+                >
+                  {{ chip.label }}
+                </ui-chip>
+              } @empty {
+                <p class="chip-empty-state">
+                  All chips have been removed. Click Reset chips to restore them.
+                </p>
+              }
+            </div>
 
-  </section>
-}
+            <div class="chip-feedback">
+              <p>{{ chipSelectionMessage() }}</p>
 
+              @if (chipRemovalMessage()) {
+                <p class="chip-removal-message">
+                  {{ chipRemovalMessage() }}
+                </p>
+              }
+
+              <p>
+                Remaining chips:
+                <strong>{{ chipItems().length }}</strong>
+              </p>
+
+              <p>
+                Selected chips:
+                <strong>
+                  {{ chipItems().filter((item) => item.selected).length }}
+                </strong>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuration -->
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Configuration</h2>
+              <p>Change the properties and observe the live preview.</p>
+            </div>
+
+            <button type="button" class="reset-button" (click)="resetChips()">↺ Reset</button>
+          </div>
+
+          <div class="chip-config-layout">
+            <div class="config-grid">
+              <div class="config-field">
+                <label for="chip-variant">Variant</label>
+
+                <select
+                  id="chip-variant"
+                  [value]="chipVariant()"
+                  (change)="chipVariant.set($any($event.target).value)"
+                >
+                  <option value="filled">Filled</option>
+                  <option value="outlined">Outlined</option>
+                  <option value="soft">Soft</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="chip-color">Color</label>
+
+                <select
+                  id="chip-color"
+                  [value]="chipColor()"
+                  (change)="chipColor.set($any($event.target).value)"
+                >
+                  <option value="primary">Primary</option>
+                  <option value="success">Success</option>
+                  <option value="warning">Warning</option>
+                  <option value="danger">Danger</option>
+                  <option value="neutral">Neutral</option>
+                </select>
+              </div>
+
+              <div class="config-field">
+                <label for="chip-size">Size</label>
+
+                <select
+                  id="chip-size"
+                  [value]="chipSize()"
+                  (change)="chipSize.set($any($event.target).value)"
+                >
+                  <option value="sm">Small</option>
+                  <option value="md">Medium</option>
+                  <option value="lg">Large</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="config-options">
+              <label class="config-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="chipSelectable()"
+                  (change)="chipSelectable.set($any($event.target).checked)"
+                />
+                Selectable
+              </label>
+
+              <label class="config-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="chipRemovable()"
+                  (change)="chipRemovable.set($any($event.target).checked)"
+                />
+                Removable
+              </label>
+
+              <label class="config-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="chipDisabled()"
+                  (change)="chipDisabled.set($any($event.target).checked)"
+                />
+                Disabled
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Examples -->
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Examples</h2>
+              <p>Common Chip component use cases.</p>
+            </div>
+          </div>
+
+          <div class="chip-examples">
+            <div class="chip-example">
+              <div>
+                <strong>Filled Chips</strong>
+                <p>Solid background with contrasting text.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip variant="filled" color="primary">Primary</ui-chip>
+                <ui-chip variant="filled" color="success">Success</ui-chip>
+                <ui-chip variant="filled" color="danger">Danger</ui-chip>
+              </div>
+            </div>
+
+            <div class="chip-example">
+              <div>
+                <strong>Outlined Chips</strong>
+                <p>Bordered appearance with transparent background.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip variant="outlined" color="primary">Angular</ui-chip>
+                <ui-chip variant="outlined" color="success">Java</ui-chip>
+                <ui-chip variant="outlined" color="warning">Database</ui-chip>
+              </div>
+            </div>
+
+            <div class="chip-example">
+              <div>
+                <strong>Selectable Chips</strong>
+                <p>Click to toggle the selected state.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip [selectable]="true" color="primary">Frontend</ui-chip>
+                <ui-chip [selectable]="true" color="success">Backend</ui-chip>
+                <ui-chip [selectable]="true" color="warning">DevOps</ui-chip>
+              </div>
+            </div>
+
+            <div class="chip-example">
+              <div>
+                <strong>Removable Chips</strong>
+                <p>Click the close icon to trigger the remove event.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip [removable]="true" color="primary">Angular</ui-chip>
+                <ui-chip [removable]="true" color="success">React</ui-chip>
+                <ui-chip [removable]="true" color="warning">Vue</ui-chip>
+              </div>
+            </div>
+
+            <div class="chip-example">
+              <div>
+                <strong>Disabled Chips</strong>
+                <p>Disabled chips cannot be selected or removed.</p>
+              </div>
+
+              <div class="chip-list">
+                <ui-chip [disabled]="true">Disabled</ui-chip>
+
+                <ui-chip [disabled]="true" [selectable]="true" [selected]="true">
+                  Selected
+                </ui-chip>
+
+                <ui-chip [disabled]="true" [removable]="true"> Removable </ui-chip>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Generated Usage -->
+
+        <section class="demo-section">
+          <div class="section-header">
+            <div>
+              <h2>Usage</h2>
+              <p>Angular implementation based on the current configuration.</p>
+            </div>
+
+            <button type="button" class="copy-button" (click)="copyChipCode()">
+              {{ chipCopyLabel() }}
+            </button>
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span>HTML + TYPESCRIPT</span>
+              <span>Angular</span>
+            </div>
+
+            <pre><code>{{ chipUsageCode() }}</code></pre>
+          </div>
+        </section>
+
+        <footer class="page-footer">Angular UI Kit · Built for reusable applications</footer>
+      </section>
+    }
   </main>
 </div>
